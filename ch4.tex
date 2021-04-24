@@ -2,10 +2,10 @@
 \label{ch:exp}
 
 \section{Gradient peak}\label{sec:gradient-peak}
-As stated before, the input perturbation, output-correlation method in \cite{Hammer_2021} did not point to high-gamma frequency amplitude as being strikingly important to the network. The gradient visualization also did not show particularly high gradients in the high-gamma band, unless the input window for the network was shortened so that the network had only one output, i.e. predicted one time-point. Two interesting observations could be made for the one-output gradient visualization:
+As stated before, the input perturbation, output-correlation method in~\cite{Hammer-2021} did not point to high-gamma frequency amplitude as being strikingly important to the network. The gradient visualization also did not show particularly high gradients in the high-gamma band, unless the input window for the network was shortened so that the network had only one output, i.e. predicted one time-point. Two interesting observations could be made for the one-output gradient visualization:
 begin{itemize}
-\item[1.] A gradient peak occurs at 83.88 Hz in both the untrained and the trained network and it is amplified with training. Figure \ref{}.
-\item[2.] If we add noise of a certain frequency or white noise to the input, frequencies around 83.33 Hz increases in the output of the network. Figure \ref{}
+\item[1.] A gradient peak occurs at 83.88 Hz in both the untrained and the trained network and it is amplified with training. Figure~\ref{}.
+\item[2.] If we add noise of a certain frequency or white noise to the input, frequencies around 83.33 Hz increases in the output of the network. Figure~\ref{}
 end{itemize}
 
 83.33Hz seems like a random frequency to have such a sharp peak in the frequency and also does not seem to be caused by a physiological property of the input signal.
@@ -177,7 +177,13 @@ This again suggests that the using information from the high-gamma frequency is 
 
 \subsection{Performance}\label{subsec:pw-performance}
 How the networks react to datasets which were whitened as described in Section~\ref{methods-spectral-whitening} was one of our interests because when we look at the spectrum of the original signal, the amplitudes of frequencies decrease exponentially with increase in the frequency.
-This is common in biological signals but could be a reason for the network to ignore high-frequencies when making predictions. Figure \ref{pw_performances_full_data} shows how the predictions changed compared to predictions on non-whitened signals when using the full dataset.
-It is obvious that the correlation coefficient of all networks dropped significantly. When looking at Figure \ref{pw-performaces-hp-data} we see that in the case of high-passed datasets the decrease was lower, but even for the high-passed data, the performance did not increase.
+This is common in biological signals but could be a reason for the network to ignore high-frequencies when making predictions. Figure~\ref{pw_performances_full_data} shows how the predictions changed compared to predictions on non-whitened signals when using the full dataset.
+It is obvious that the correlation coefficient of all networks dropped significantly. When looking at Figure~\ref{pw-performaces-hp-data} we see that in the case of high-passed datasets the decrease was lower, but even for the high-passed data, the performance did not increase.
 
 \subsection{Gradients}\label{subsec:pw-gradients2}
+
+When looking at the gradients of the networks trained on whitened data, we observe that the networks indeed use modulations in the high-gamma frequency bands for their predictions.
+Interestingly instead of having uniform gradients across all frequencies, they inverted their focus from low frequencies to high-frequencies.
+The only architectures for which this did not happen are the models vel\_k1 and absVel\_k1 which are the networks without a max-pool layer.
+When looking at the performance graphs in Figure~\ref{} though, these are the networks for which the performance dropped least.
+This again suggests that the using information from the high-gamma frequency is possible, but it does not seem to help achieve better correlation coefficients.

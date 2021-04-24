@@ -1,14 +1,14 @@
 \chapter{Methodology}
 
 \section{Dataset}
-The dataset was the same as in the unpublished study of Hammer et al~\cite{}.
-Modified with the authors permission, the description from~\cite{Hammer_2021} of the experiment settings,
+The dataset was the same as in the unpublished study of Hammer et al~\cite{Hammer-2021}.
+Modified with the authors permission, the description from~\cite{hammer-predominance-2016} of the experiment settings,
 and the pre-processing follows.
 It was not a part of this thesis to perform the modifications described below.
 We were provided with the pre-processed dataset.
 
 \subsection{Movement task and kinematic variables}\label{subsec:movement-task-and-kinematic-variables}
-A dataset that was already successfully used in several other iEEG studies to examine decoding of movement kinematic parameters \cite{Hammer_2021, 2016, 2013} was utilized for the purposes of this thesis.
+A dataset that was already successfully used in several other iEEG studies to examine decoding of movement kinematic parameters \cite{Hammer-2021}\cite{hammer-predominance-2016}\cite{hammer-role-2013} was utilized for the purposes of this thesis.
 The participants performed a motor task consisting in a car-driving computer simulation.
 They controlled the position of the car on a computer screen using a steering wheel which they held in both hands.
 The task was to keep the car on a curved road.
@@ -24,8 +24,8 @@ Therefore, to account for faster movements, the low-pass cutoff frequency was se
 From the horizontal, 1-D trajectory, the following two kinematic parameters were derived:
 1. velocity computed as a derivative of position, 2. speed as the absolute value of velocity.
 Velocity thus contained the directional information in its sign;
-for example, velocity values smaller than zero implicated movement to the left and vice versa, while speed indicated how fast the car was moving left or right (irrespective of its direction). T
-he time-series of the kinematic parameters were resampled at 250 Hz and temporally aligned to the iEEG data.
+for example, velocity values smaller than zero implicated movement to the left and vice versa, while speed indicated how fast the car was moving left or right (irrespective of its direction).
+The time-series of the kinematic parameters were resampled at 250 Hz and temporally aligned to the iEEG data.
 
 \subsection{Recording}\label{subsec:recording}
 The recordings were performed in the University Medical Centre in Freiburg, Germany and in the Motol University Hospital in Prague, Czech Republic.
@@ -33,15 +33,15 @@ The study included 12 epilepsy patients (6 male, age 19 - 50, mean = 33, SD = 10
 Some of the implantations were placed in the region of the motor cortex.
 The location of the electrodes was dependent solely on the needs for medical evaluation of their medication-resistant epilepsy.
 Both sEEG and ECoG electrodes were present among patients.
-Detailed information about electrode type and placement is presented in Table \ref{table_with_patient_info} and Figure \ref{fig}.
+Detailed information about electrode type and placement is presented in Table\ref{table_with_patient_info} and Figure\ref{fig}.
 
 \subsection{Separation of motor and non-motor channels}\label{subsec:separation-of-motor-and-non-motor-channels}
-A specific aim in the study of Hammer et al. was to show what the CNNs learned from the raw brain signals.
+A specific aim in the study of Hammer et al.\cite{Hammer-2021} was to show what the CNNs learned from the raw brain signals.
 The hypothesis was that the CNNs would focus on information from the hand-motor cortex when solving a movement-related task.
 To verify this hypothesis, the recorded channels were divided into two distinct, non-overlapping groups: 1. hand-motor channels and 2. non-motor channels.
 The hand-motor channels induced a clear hand motor response after the electrical stimulation at low intensities underneath or around the electrode contacts.
 The non-motor channels, on the other hand, produced no sensory/motor response after the stimulation.
-Furthermore, a requirement of at least 1 cm distance from the motor and premotor areas (i.e. Area 4a, Area 4p and Area 6 from the SPM Anatomy toolbox52) had to be satisfied for a channel to be included in the non-motor group.
+Furthermore, a requirement of at least 1 cm distance from the motor and premotor areas (i.e. Area 4a, Area 4p and Area 6 from the SPM Anatomy toolbox\cite{eickhoff-new-2005}) had to be satisfied for a channel to be included in the non-motor group.
 To this end, all MRI brain scans (T1-weighted sequence) were normalized to the MNI space and the electrodes' coordinates were read out from either the post-implantation MRI or CT scans53.
 The average number of hand-motor channels was 13 ± 9 (mean ± SD), while there were 29 ± 18 (mean ± SD) non-motor channels.
 Some electrodes did not fall into either of the hand-motor and non-motor channel groups (e.g. channels in the motor cortex the electrical stimulation of which induced leg-motor response).
@@ -49,13 +49,19 @@ These electrodes were then left out in some analysis, because the aim was to del
 
 
 \subsection{IEEG data preprocessing}\label{subsec:ieeg-data-preprocessing}
-The iEEG data preprocessing was also the same as in \cite{hammer_2021}. A comprehensive rejection of “epileptic” channels based on the information from the respective epilepsy centers was performed, because the primary aim was to investigate the physiological brain activity. Thus, the channels, i.e. those located in the seizure onset zone and/or containing a large number of inter-ictal epileptiform discharges, were rejected from this study (20 ± 13, mean ± SD over subjects Table \ref{}). All non-rejected iEEG channels (85 ± 28, mean +- SD) were referenced to their common average, high-pass filtered at 0.15 Hz (3rd order Butterworth filter), normalized to the inter-quartile range of each channel, and resampled to 250 Hz, to yield consistent data sets from the different recording systems used at both aforementioned epilepsy centers. The iEEG data were resampled to 250 Hz in order to emulate the same setup of the Deep4Net from \cite{Schirrmeister_2017}, which was successfully applied to demonstrate high-gamma (70 - 90 Hz) effects in decoding motor behaviour from non-invasive EEG. Importantly, any overfitting in the preprocessing was carefully avoided (i.e., all parameters of the preprocessing of the test set were estimated on the training set) and only acausal, finite impulse response filters were applied. Therefore, the decoding approach could be readily applied also in a closed-loop, online BMI.
+The iEEG data preprocessing was also the same as in \cite{Hammer-2021}.
+A comprehensive rejection of \textit{epileptic} channels based on the information from the respective epilepsy centers was performed, because the primary aim was to investigate the physiological brain activity.
+Thus, the channels, i.e. those located in the seizure onset zone and/or containing a large number of inter-ictal epileptiform discharges, were rejected from this study (20 ± 13, mean ± SD over subjects Table \ref{}).
+All non-rejected iEEG channels (85 ± 28, mean +- SD) were referenced to their common average, high-pass filtered at 0.15 Hz (3rd order Butterworth filter), normalized to the inter-quartile range of each channel, and resampled to 250 Hz, to yield consistent data sets from the different recording systems used at both aforementioned epilepsy centers.
+The iEEG data were resampled to 250 Hz in order to emulate the same setup of the Deep4Net from~\cite{schirrmeister-deep-2017}, which was successfully applied to demonstrate high-gamma (70 - 90 Hz) effects in decoding motor behaviour from non-invasive EEG. Importantly, any over-fitting in the preprocessing was carefully avoided (i.e., all parameters of the preprocessing of the test set were estimated on the training set) and only accusal, finite impulse response filters were applied.
+Therefore, the decoding approach could be readily applied also in a closed-loop, online BMI.
 
-The aligned iEEG and kinematic time-series were divided into 25-s long data segments. In order to minimize a potential influence of temporal correlations in neighbouring data parts, the segments had a 2-s margins in between each other. Additionally, the last two minutes of the recordings were left as a test set. The evaluation test set was not a part of the dataset that was utilized in this thesis.
+The aligned iEEG and kinematic time-series were divided into 25-s long data segments.
+In order to minimize a potential influence of temporal correlations in neighbouring data parts, the segments had a 2-s margins in between each other. Additionally, the last two minutes of the recordings were left as a test set. The evaluation test set was not a part of the dataset that was utilized in this thesis.
 
-\subsection{Modifications to the dataset}
+\subsection{Modifications to the dataset}\label{subsec:modifications-to-the-dataset}
 In the scope of this thesis, we refer to multiple datasets which all are variations of the original dataset provided by the Motol University Hospital.
-We performed the modifications to see how the network’s performance/gradients change.
+We performed the modifications to see how the network's performance/gradients change.
 The modifications were of the three following types: 1. filtering of certain frequencies, 2. shifting the predicted time-point with respect to the input window, 3. spectral whitening.
 \begin{itemize}
 \item \textbf{Filtering} We created two types of datasets using filtering.
@@ -66,17 +72,24 @@ The name of the model includes information about the data the model was trained 
 For example if a model name contains full-low it was trained on full data and validated on low-passed data.
 If it contains high-high it was both trained and validated on high-passed data.
 
-\item \textbf{Shifting} Originally in Hammer et al. the network was constructed so that the predictions were made from signals recorded prior to their execution.
+\item \textbf{Shifting} Originally in Hammer et al.~\cite{Hammer-2021} the network was constructed so that the predictions were made from signals recorded prior to their execution.
 Besides using this, we also created a dataset which shifted the predicted time-point to the middle of the input window that is used for its prediction.
 Such a dataset is not suitable for training a network suitable for online BCI since half of the input window is recorded after movement execution and therefore in the future with respect to what is being predicted.
 Nevertheless, we were interested in what the shifting does to performance and the gradients.
 
 
-\item \textbf{Spectral whitening} Lastly we also created whitened datasets. Spectral whitening was performed so that amplitudes of all frequencies were normalized to one.
+\item \textbf{Spectral whitening} Lastly we also created whitened datasets.
+Spectral whitening was performed so that amplitudes of all frequencies were normalized to one.
 This was achieved using a Fourier transformation of each 25s long segment into the power spectrum, obtaining information about phase and amplitude.
 Then dividing the amplitudes with their absolute value and then, via inverse Fourier transformation, transforming it back to signal.
-The whitened signal was then iqr-normalized. This normalization was calculated and applied to each segment on the training set and the same parameters averaged over all 25s long segments of the training set were applied to the validation set.
-
+The whitened signal was then iqr-normalized.
+This normalization was calculated and applied to each segment on the training set and the same parameters averaged over all 25s long segments of the training set were applied to the validation set.
+\begin{figure}
+\centering
+\includegraphics[width=.6\linewidth]{img/ch3/spectral-whitening.pdf}
+\caption{A figure with a plot, not entirely related to anything. If you copy the figures from anywhere, always refer to the original author, ideally by citation (if possible). In particular, this picture --- and many others, also a lot of surrounding code --- was taken from the example bachelor thesis of MFF, originally created by Martin Mareš and others.}
+\label{fig:spectral-whitening}
+\end{figure}
 \end{itemize}
 
 \section{Deep4Net}\label{sec:deep4net}
@@ -85,25 +98,32 @@ In this section, we describe it in more detail together with the architectural c
 We also focus on how classification and regression differ and what it means with respect to the architecture, its inputs and outputs. 
 
 \subsection{Architecture}\label{subsec:architecture}
-The architecture has been previously used in a number of EEG decoding tasks \cite{}.
-It is implemented using PyTorch \footnote{}.
+The architecture which is available in the Braindecode library\footnote{https://braindecode.org}has been previously used in a number of EEG decoding tasks\cite{Hammer-2021, schirrmeister-deep-2017, hartmann-hierarchical-2018}.
+It is implemented using PyTorch \footnote{https://pytorch.org}.
 The input of the network is a 2D array with time-steps along one axis and channels along the other axis.
-The architecture depicted in Figure \ref{figure_architecture} consists of four convolutional-max-pooling blocks and is designed so that a special first block can learn spatially global filters.
-The following three standard blocks then allow for learning temporal hierarchies of local and global modulations \cite{Schirrmeister_2017}.
+The architecture consists of four convolutional-max-pooling blocks and is designed so that a special first block can learn spatially global filters.
+The following three standard blocks then allow for learning temporal hierarchies of local and global modulations~\cite{schirrmeister-deep-2017}.
 The first convolutional block is split into two parts.
 One performs convolution over time and the second over the channels with weights for all possible electrode pairs using filters of the preceding temporal convolution.
 Because there is no activation function between these two layers, they could be merged, but the authors emphasize the regularization function of this separation because it forces a separation of the linear transformation into a temporal convolution and a spatial filter.
-The convolutional blocks start with a convolutional layer, then a batch normalization layer follows, after which a nonlinearity is added, in the case of the Deep4Net it is the exponential linear unit (ELU) function \cite{}.
+The convolutional blocks start with a convolutional layer, then a batch normalization layer follows, after which a non-linearity is added, in the case of the Deep4Net it is the exponential linear unit (ELU) function \cite{}.
 Finally a max-pool layer closes the convolutional block.
 An output layer, which is a softmax, comes last.
-A scheme of this is in Figure \ref{figure}.
 To use this network for regression which is what we are doing in this thesis, the only modification that needs to be done is removing the last softmax layer.
+The architecture already transformed for regression is depicted in Figure~\ref{fig:architecture}
 Otherwise, no special measures have to be taken.
 Nevertheless, the way the output is interpreted changes.
-This is further described in Section \ref{classification_regression_difference} after we provide important context about cropped decoding.
+This is further described in Section~\ref{subsec:difference-between-deep4net-for-classification-and-regression} after we provide important context about cropped decoding.
+
+\begin{figure}
+\centering
+\includegraphics[width=.6\linewidth]{img/ch3/architektura.pdf}
+\caption{A figure with a plot, not entirely related to anything. If you copy the figures from anywhere, always refer to the original author, ideally by citation (if possible). In particular, this picture --- and many others, also a lot of surrounding code --- was taken from the example bachelor thesis of MFF, originally created by Martin Mareš and others.}
+\label{fig:architecture}
+\end{figure}
 
 \subsection{Cropped decoding}
-Cropped decoding as implemented in \cite{Schirrmeister} augments the dataset.
+Cropped decoding as implemented in~\cite{schirrmeister-deep-2017} augments the dataset.
 Instead of giving one trial and obtaining one prediction, the trial window is separated into multiple smaller overlapping sub-windows each of which produce a prediction.
 In case of classification, these multiple outputs for one input window are then averaged to give the final prediction from which loss is calculated Fig \ref{figure}.
 This way, the dataset is enlarged.
