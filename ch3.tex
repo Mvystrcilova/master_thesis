@@ -87,9 +87,23 @@ In order to implement a network which can process multiple crops at the same tim
 A visual explanation of this is in Fig \ref{}.
 Importantly though, this only works if the network has no padding or only left padding.
 Right padding would disrupt the equivalency of computation.
-The algorithm to replace the strides with dilations is following: \\
-\textbf{Algorithm}
-\\
+Algorithm \ref{alg:stride-to-dilation} describes how a network with stride is converted into a network with dilations.\\
+\begin{algorithm}
+\begin{algorithmic}
+\Function{ExecuteWithHighProbability}{$A$}
+	\State $r \gets$ a random number between $0$ and $1$
+	\State $\varepsilon \gets 0.0000000000000000000000000000000000000042$
+	\If{$r\geq\varepsilon$}
+		\State execute $A$ \Comment{We discard the return value}
+	\Else
+		\State print: \texttt{Not today, sorry.}
+	\EndIf
+\EndFunction
+\end{algorithmic}
+\caption{Algorithm that executes an action with high probability. Do not care about formal semantics in the pseudocode --- semicolons, types, correct function call parameters and similar nonsense from `realistic' languages can be safely omitted. Instead make sure that the intuition behind (and perhaps some hints about its correctness or various corner cases) can be seen as easily as possible.}
+\label{alg:stride-to-dilation}
+\end{algorithm}
+
 This means that for every network with stride and without right padding, there exists an equivalent network with dilations.
 We will refer to it as a dilated network.
 Nevertheless, this relationship is not symmetric.
@@ -124,3 +138,101 @@ Therefore, one prediction is made from 1200 - 679 + 1 = 522 samples measured bef
 This is consistent with Hammer et al. where they used 2 second long segments.
 Importantly to note, in Hammer et al. and also for the most part in this thesis, the input window predicting a time-point was shifted so that all the information used to decode this time-point happened prior to movement execution.
 This makes the network suitable for online BCI.
+
+
+\subsection{Receptive field}
+The fact that the network cannot have right padding and in the case of the Deep4Net has no padding affects its receptive field.
+By receptive field we mean the space of the input of the network which affects one specific output.
+In Figure \ref{receptive_field} we visualize the receptive field for one prediction.
+The figure illustrates how many times each input sample is used in computation throughout the pass through the CNN to obtain the specific prediction.
+Note, that the receptive field in no way illustrates the weights of the network.
+
+The receptive field is worthy of thought especially in the case of regression.
+Figure \ref{receptive_field} illustrates that the predicted time-point (red line) is fairly far from the centre of the receptive field (green line).
+If we make the prediction only based on the data recorder prior to the predicted movement, the prediction is made from signals around the centre of the receptive field and the network pays little attention to the data that directly precede the movement.
+For classification this is not as critical, because the same label is predicted from multiple crops, and the actual classified movement does not happen at the end of the last crop but at some point during the whole input window from which the crops are derived.
+Therefore, the network has a chance to focus on information directly preceding the actual movement.
+This change in the role of the receptive field between classification and regression might be a reason the network when employed to do regression does not use high-gamma.
+The hypothesis here is, that the high-gamma signal is most informative directly before the movement execution.
+Therefore, the distance of the network's receptive field centre to the predicted time-point hinders its usage.
+We explore this in the Section \ref{experiments_and_results}.
+
+\subsection{Training}
+Except for the learning rate, we left all hyper-parameters equal to those in Hammer et al., because it was our goal to reproduce their results and work from there.
+The network was trained for 100 epochs with batch size 32, using Adam \cite{adam_optimizer} as the optimizer and learning rate 0.001.
+The reported learning rate in Hammer et al. was 0.01.
+However, we used a lower learning rate because otherwise, the results were significantly worse than reported in Hammer et al.
+
+For each patient separately, the 25s-long segments were divided into 5 equal or almost equal subsets and a 5-fold cross-validation was performed to estimate decoding accuracy.
+The number of these segments varied among patients.
+Therefore, the dataset sizes varied across models for different patients but the ratio was kept the same 80-20 training-validation.
+In Hammer et. al, they performed leave-one-out cross-validation on the 25s-long segments.
+Nevertheless, with the amount of different architecture and modified datasets we used, this would be extremely time consuming.
+Therefore, we decided to do 5-fold cross-validation because it is also a good way of estimating the network's performance.
+
+
+\subsection{Gradinet visualization}
+In Schirrmeister et al and Hammer et al. the main visualization method was input-perturbation output correlation.
+However, after this method showed minor influence of high-gamma onto the network’s prediction, they further investigated the network using gradient visualization.
+The gradient visualization algorithm is the following.
+First, the input signal is converted into the power spectrum using Fourier transformation.
+After this transformation, hooks are created for the amplitude and phase values.
+Then it is converted back into the original signal, this time using the torch functions so PyTorch can start building its computational graph reaching back to the amplitudes and phases.
+This “hooked” signal is then given to the network, whose weights are frozen, as input.
+After obtaining the outputs, the outputs are averaged and the torch.backward() function is used to derive the gradients with respect to the frequency amplitudes and phases.
+
+Throughout the thesis, the input window used in the above described algorithm was set to twice the size of the receptive field of the network to be consistent with \cite{Hammer_2021}.
+A special case of the gradient visualization, namely when the input window was shortened so that the network had only one output was also explored as a part of this thesis.
+In this special case, the outputs did not have to be averaged before using the torch.backward() function to derive the gradients.
+
+To obtain representative gradients, the above described procedure is always repeated over multiple batches for each patient and the resulting gradients are averaged.
+Because there are no significant differences between the gradients of the networks on the training set and the validation set we chose to always display the gradient values for the training set.
+Also note that in this thesis we only address the gradients for the frequency amplitudes.
+While inspecting the phase gradients would also be interesting, it is out of the scope of this thesis.
+
+
+\subsection{Architerctural modifications}
+Using the above described gradient visualization method, the group working on \cite{Hammer et al.} found, that if the input window for the gradient visualization is set so, that the network only gives one output, and there is no averaging necessary before deriving the gradients, the graphs shows a big 83.33 Hz peak.
+To inspect if this peak is an architectural artifact or not we performed a set of modifications to the architecture of the Deep4Net.
+With our changes we focused on the kernel sizes and dilation parameters of the four max-pool layers present in the network.
+Table \ref{Table} explains the terminology used with respect to the max-pool parameters used throughout the thesis.
+The original Deep4Net corresponds to the {variable}_k3_d3_sbp0 in Table \ref{Table}.
+The suffix \textit{sbp} refers to a parameter of the Deep4Net namely the \textit{stride\_before\_pool} parameter.
+This parameter influences the dilations in the max-pool layers of the network. In Hammer et al \ref{cite} this parameter was set to False (sbp0), nevertheless, in the gradient peak analysis performed by their group which we are referring to in Section \{experiments_gradient_peak}, the studied network had ‘stride_before_pool’ set to True (sbp1).
+Therefore, we focus on the Deep4Net with sbp1 in the gradient peak analysis but the default Deep4Net architecture is the one with sbp0 as in Hammer et al.
+When changing the parameters of the max-pool layers as we describe above, the number of outputs the network has changes.
+It also causes changes in the receptive field of the network. To see how, consider just one max-pool layer with dilation 3 (L3) and one max-pool layer with dilation 1 (L1). If we use a window of the same length as input for L3 and L1 and compare the dimensions of the outputs from these layers, the dimension of the output of L3 will be smaller than of the L1 \ref{figure_output_difference}.
+Consequently, if we alter the dilation (and also kernel) parameters of the max-pool layers in the Deep4Net, we get a different number of outputs from the altered network.
+When one network has dilations 3, 9, 27 and 81 in the max-pool layers (the k*_d3) and the other one 1, 1, 1 and 1 (k*_d1), the difference in the dimension of the output is significant.
+The latter network makes more predictions from the same input length because the dimension of the output is larger.
+It also has a smaller receptive field for one prediction.
+Information about the size of the receptive field can be found in Table \ref{architecture_modifications}.
+
+\begin{table}
+\centering
+{\footnotesize\sf
+\begin{tabular}{llrl}
+\toprule
+Model name & Max-pool kernel size & Max-pool dilations & Stride before pool & Size of the receptive field \\
+\midrule
+{variable}\_k1 & (1, 1), (1, 1), (1, 1), (1, 1) & No dilation & -- & 442 samples \\
+\hline
+{variable}\_k2\_d3 &(2, 1), (2, 1), (2, 1), (2, 1) & (3, 1), (9, 1), (27, 1), (81, 1) & -- & 562 samples \\
+\hline
+{variable}\_k3\_d3\_sbp1 & (3, 1), (3, 1), (3, 1), (3, 1) & (3, 1), (9, 1), (27, 1), (81, 1) & True & 682 samples \\
+\hline
+{variable}\_k3\_d3\_spb0 & (3, 1), (3, 1), (3, 1), (3, 1) & (1, 1), (3, 1), (9, 1), (27, 1) & False & 522 samples \\
+\hline
+{variable}\_k2_d1 & (2, 1), (2, 1), (2, 1), (2, 1) & (1, 1), (1, 1), (1, 1), (1, 1) & -- & 446 samples \\
+\hline
+{variable}\_k3\_d1 &(3, 1), (3, 1), (3, 1), (3, 1) & (1, 1), (1, 1), (1, 1), (1, 1) & -- & 450 samples \\
+\hline
+{variable}\_k2_d2 & (2, 1), (2, 1), (2, 1), (2, 1) & (2, 1), (4, 1), (8, 1), (16, 1) & -- & 472 samples \\
+\hline
+{variable}\_k3\_d2 &(3, 1), (3, 1), (3, 1), (3, 1)& (2, 1), (4, 1), (8, 1), (16, 1) & -- & 502 samples \\
+\hline
+\bottomrule
+\end{tabular}}
+\caption{An example table. Table caption should clearly explain how to interpret the data in the table. Use some visual guide, such as boldface or color coding, to highlight the most important results (e.g., comparison winners).}
+\label{tab:z}
+\end{table}
