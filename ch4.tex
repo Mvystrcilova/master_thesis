@@ -94,16 +94,90 @@ It compares how the performance and gradients of the network change when the pre
 
 
 \subsection{Shifting the predicted time-point to the centre of the receptive field}\label{subsec:shifting-the-predicted-time-point-to-the-centre-of-the-receptive-field}
+An important observation when looking at the performance of the networks described in Section\ref{} was made.
+We noticed that the smaller receptive field seemingly correlates with a higher prediction accuracy especially for absolute velocity decoding.
+To visualize this, we created Figure~\ref{figure\_distance} which sorts the different architectures based on the size of the receptive field from smallest to largest and plots the average correlation coefficient each of these networks achieved.
+There is a clear descending pattern.
+The only exceptional network is the k2\_d3 network which performs well with a large receptive field.
+
+This finding further corroborates the idea to shift the predicted time point to the center of the receptive field.
+The receptive field as described in Section~\ref{methods\_receptive\_field} is non-uniform.
+It considers mostly input-points in its centre while in the original decoding, the predicted time-point is located just outside the receptive field.
+Therefore, we shift the inputs and prediction so that the iEEG signal, which was recorded at the same time as the predicted movement was executed, is in the centre of the receptive field. This causes the procedure to be unsuitable for online BCI because half of the input window uses information from the future.
+The results can be seen in Figure~\ref{shifted\_performance}.
+It is obvious that the shift greatly improves performance of all the networks and the performance differences between the architectures are diminished.
+Notably the performance of the networks on the high-gamma dataset also increased especially for absolute velocity.
+
+The improvement can be caused by two things:
+\begin{itemize}
+    \item By the network being able to focus on signals recorded directly before the movement execution.
+    \item By the network having access to information from the future.
+\end{itemize}
+
+We hypothesise that is most likely a combination of the two.
+Conclusion about how much each of the above described influences the prediction improvement cannot be made from the presented experiments.
+It would be interesting to build a network with a uniform receptive field and then conduct experiments which would clarify this.
+Nevertheless, such an analysis is out of the scope of this thesis.
 
 \subsubsection{Performance}
+In Section \ref{architecture_comparison_gradients} we already saw that the best performing networks are those which use lower frequencies.
+Nevertheless, how the shift influences the gradients remained an open question.
+Hypothetically, the information about the movement in high-gama could be informative only in the moments directly preceding the movement.
+Therefore the networks are unable to use it because they focus on the signal recorded too far in the past.
+To test this hypothesis, we visualized the gradients of the networks trained in shifted settings.
+
+The comparison of the gradients between the networks in the original non-shifted setting and the shifted setting where the predicted time point was centered to the centre of the receptive field.
+This was performed for all the architectures for all their intermediate layers.
+The complete results can be found in the Appendix.
+We performed this gradient analysis on the 1. full dataset and 2. high-passed dataset.
+
+\begin{itemize}
+    \item Gradients of networks which were trained and validated on full data are displayed in Figure~\ref{shifted-gradients-different-architecture}.
+    We chose this graph to illustrate the pattern common to almost all layers.
+    What we observe is that the networks across all architecture seem to refine their focus to more narrow frequency bands.
+    Figure~\ref{} illustrates this behaviour.
+    For example the vel\_k1 network which is the one without max-pools has high-gradient values in the original setting for frequencies up to 25Hz when looking at gradients for motor channels.
+    In the shifted setting the band with high gradient values narrows to frequencies close to 0.
+    The network vek\_k2\_d2 is in the non-shifted setting focused mostly on frequencies between 25 and 60 Hz. Nevertheless, with shifting the gradients for a lot of frequencies in this band decrease, and the network focuses on frequencies around 25Hz. For no network did the shift cause an increase in the use of information from the high-gamma frequency band.
+    Rather it seems, that the shift allowed access to less noisy information in the clearly informative bands such as the alpha and beta bands, and the network did not have to compensate with information from other frequencies.
+    \item On networks which were trained and validated on high-passed data can be found in Figure \ref{}.
+    Again, we only chose to display gradients of one layer to illustrate a behaviour shared by all layers.
+    What we observe in the gradients of the networks trained on high-passed datasets is different from what we observe on gradients of networks trained on full datasets, maybe even the opposite.
+    The networks trained on shifted data exhibit interest in the same or a broader range of frequencies above the 60Hz cut-off frequency than the networks trained in the original, non-shifted setting.
+    This and the increase in performance on high-passed datasets suggests that indeed the information from the future or directly preceding the movement contains more information about movement in the high-gamma band.
+    But the fact that the networks trained on full data do not use high-gamma, and their performance increases significantly compared to the non-shifted setting points to the information in high-gamma being informative but redundant when having access to information from all frequencies.
+\end{itemize}
+
 \subsubsection{Gradients}
+Besides the big shift from the edge of the receptive field to the centre we also studied what happens if we shift the predicted time-point in smaller steps across the receptive field of the network.
+Again, we do not know if the network's performance changes because of the shift in the receptive field or because of having access to information from the future.
+Nevertheless, we can observe the slow decrease in performance when increasing the distance of the predicted time-point to the receptive field centre, which is to be expected for both of the reasons.
+Besides evaluating the performance in the shifted settings, we also visualized the gradients as is described in this section, we also performed gradient visualization.
+This analysis is described in Section~\ref{shifted\_gradient\_visualization}.
+
+This analysis was performed only for the original Deep4Net architecture.
+The shifts were made ranging from  -1 s  to 1 s with respect to the receptive field centre which we denote as 0.
+The step size was 0.1 s which is equivalent to 25 samples.
+
 \subsection{Shifting the predicted time-point across receptive field}\label{subsec:shifting-the-predicted-time-point-across-receptive-field}
-
 \subsubsection{Performance}
+For the original Deep4Net architecture (k3\_d3\_sbp0), we also visualized the gradients for all the smaller shifts across the receptive field of the network.
+The gradients are visualized in Figure~\ref{figure\_shifted\_gradients}.
+In the graph for absolute velocity, we can observe the trend of broadening the frequency ranges with high gradient values when shifting the predicted time-point from the centre of the receptive field both to the left and to the right.
+Interestingly, when plotting the same graph for velocity, we do not observe this behaviour so clearly, instead there is a periodicity in the positive and negative value of the gradients for the different values of the shift.
+It is unclear why this periodicity occurs.
 \subsubsection{Gradients}
+When looking at the gradients of the networks trained on whitened data, we observe that the networks indeed use modulations in the high-gamma frequency bands for their predictions.
+Interestingly instead of having uniform gradients across all frequencies, they inverted their focus from low frequencies to high-frequencies.
+The only architectures for which this did not happen are the models vel\_k1 and absVel\_k1 which are the networks without a max-pool layer.
+When looking at the performance graphs in Figure~\ref{} though, these are the networks for which the performance dropped least.
+This again suggests that the using information from the high-gamma frequency is possible, but it does not seem to help achieve better correlation coefficients.
 
 \section{Spectral whitening}\label{sec:spectral-whitening}
 
 \subsection{Performance}\label{subsec:pw-performance}
+How the networks react to datasets which were whitened as described in Section~\ref{methods-spectral-whitening} was one of our interests because when we look at the spectrum of the original signal, the amplitudes of frequencies decrease exponentially with increase in the frequency.
+This is common in biological signals but could be a reason for the network to ignore high-frequencies when making predictions. Figure \ref{pw_performances_full_data} shows how the predictions changed compared to predictions on non-whitened signals when using the full dataset.
+It is obvious that the correlation coefficient of all networks dropped significantly. When looking at Figure \ref{pw-performaces-hp-data} we see that in the case of high-passed datasets the decrease was lower, but even for the high-passed data, the performance did not increase.
 
 \subsection{Gradients}\label{subsec:pw-gradients2}

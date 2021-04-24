@@ -53,6 +53,32 @@ The iEEG data preprocessing was also the same as in \cite{hammer_2021}. A compre
 
 The aligned iEEG and kinematic time-series were divided into 25-s long data segments. In order to minimize a potential influence of temporal correlations in neighbouring data parts, the segments had a 2-s margins in between each other. Additionally, the last two minutes of the recordings were left as a test set. The evaluation test set was not a part of the dataset that was utilized in this thesis.
 
+\subsection{Modifications to the dataset}
+In the scope of this thesis, we refer to multiple datasets which all are variations of the original dataset provided by the Motol University Hospital.
+We performed the modifications to see how the network’s performance/gradients change.
+The modifications were of the three following types: 1. filtering of certain frequencies, 2. shifting the predicted time-point with respect to the input window, 3. spectral whitening.
+\begin{itemize}
+\item \textbf{Filtering} We created two types of datasets using filtering.
+A high-pass filtered dataset using a 15th order Butterworth filter, cut-off frequency 60Hz, non-zero phase shift and a low-pass dataset using Butterworth filter order 15, cut-off frequency 60Hz, nonz-zero phase shift.
+Besides full training on these datasets, parts of these datasets were combined for training and validation to see for example, how a network trained on full data performs on high-passed data etc.
+
+The name of the model includes information about the data the model was trained on.
+For example if a model name contains full-low it was trained on full data and validated on low-passed data.
+If it contains high-high it was both trained and validated on high-passed data.
+
+\item \textbf{Shifting} Originally in Hammer et al. the network was constructed so that the predictions were made from signals recorded prior to their execution.
+Besides using this, we also created a dataset which shifted the predicted time-point to the middle of the input window that is used for its prediction.
+Such a dataset is not suitable for training a network suitable for online BCI since half of the input window is recorded after movement execution and therefore in the future with respect to what is being predicted.
+Nevertheless, we were interested in what the shifting does to performance and the gradients.
+
+
+\item \textbf{Spectral whitening} Lastly we also created whitened datasets. Spectral whitening was performed so that amplitudes of all frequencies were normalized to one.
+This was achieved using a Fourier transformation of each 25s long segment into the power spectrum, obtaining information about phase and amplitude.
+Then dividing the amplitudes with their absolute value and then, via inverse Fourier transformation, transforming it back to signal.
+The whitened signal was then iqr-normalized. This normalization was calculated and applied to each segment on the training set and the same parameters averaged over all 25s long segments of the training set were applied to the validation set.
+
+\end{itemize}
+
 \section{Deep4Net}\label{sec:deep4net}
 The Deep4Net, which is freely available in the Braindecode library, was already shortly described in Section \ref{Background}. 
 In this section, we describe it in more detail together with the architectural changes that need to be made when cropped decoding is used and how it relates to the changes we were making to the architecture throughout our research. 
@@ -237,31 +263,6 @@ Model name & Max-pool kernel size & Max-pool dilations & Stride before pool & Si
 \label{tab:architectures-description}
 \end{table}
 
-\subsection{Modifications to the dataset}
-In the scope of this thesis, we refer to multiple datasets which all are variations of the original dataset provided by the Motol University Hospital.
-We performed the modifications to see how the network’s performance/gradients change.
-The modifications were of the three following types: 1. filtering of certain frequencies, 2. shifting the predicted time-point with respect to the input window, 3. spectral whitening.
-\begin{itemize}
-\item \textbf{Filtering} We created two types of datasets using filtering.
-A high-pass filtered dataset using a 15th order Butterworth filter, cut-off frequency 60Hz, non-zero phase shift and a low-pass dataset using Butterworth filter order 15, cut-off frequency 60Hz, nonz-zero phase shift.
-Besides full training on these datasets, parts of these datasets were combined for training and validation to see for example, how a network trained on full data performs on high-passed data etc.
-
-The name of the model includes information about the data the model was trained on.
-For example if a model name contains full-low it was trained on full data and validated on low-passed data.
-If it contains high-high it was both trained and validated on high-passed data.
-
-\item \textbf{Shifting} Originally in Hammer et al. the network was constructed so that the predictions were made from signals recorded prior to their execution.
-Besides using this, we also created a dataset which shifted the predicted time-point to the middle of the input window that is used for its prediction.
-Such a dataset is not suitable for training a network suitable for online BCI since half of the input window is recorded after movement execution and therefore in the future with respect to what is being predicted.
-Nevertheless, we were interested in what the shifting does to performance and the gradients.
-
-
-\item \textbf{Spectral whitening} Lastly we also created whitened datasets. Spectral whitening was performed so that amplitudes of all frequencies were normalized to one.
-This was achieved using a Fourier transformation of each 25s long segment into the power spectrum, obtaining information about phase and amplitude.
-Then dividing the amplitudes with their absolute value and then, via inverse Fourier transformation, transforming it back to signal.
-The whitened signal was then iqr-normalized. This normalization was calculated and applied to each segment on the training set and the same parameters averaged over all 25s long segments of the training set were applied to the validation set.
-
-\end{itemize}
 
 \subsection{Performance analysis}
 When comparing two models, we are not comparing them based on the mean-square error (MSE) which is the loss function of the training, but on the correlation coefficient (CC) between the model’s predictions and the predicted kinematic variable.
