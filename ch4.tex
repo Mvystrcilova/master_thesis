@@ -3,10 +3,10 @@
 
 \section{Gradient peak}\label{sec:gradient-peak}
 As stated before, the input perturbation, output-correlation method in~\cite{Hammer-2021} did not point to high-gamma frequency amplitude as being strikingly important to the network. The gradient visualization also did not show particularly high gradients in the high-gamma band, unless the input window for the network was shortened so that the network had only one output, i.e. predicted one time-point. Two interesting observations could be made for the one-output gradient visualization:
-begin{itemize}
+\begin{itemize}
 \item[1.] A gradient peak occurs at 83.88 Hz in both the untrained and the trained network and it is amplified with training. Figure~\ref{}.
 \item[2.] If we add noise of a certain frequency or white noise to the input, frequencies around 83.33 Hz increases in the output of the network. Figure~\ref{}
-end{itemize}
+\end{itemize}
 
 83.33Hz seems like a random frequency to have such a sharp peak in the frequency and also does not seem to be caused by a physiological property of the input signal.
 A hypothesis was that the 83.33 Hz peak occurs due to this frequency being aligned with the dilations of the max-pool layers and therefore is just an architecture artifact.
@@ -40,7 +40,7 @@ In the following points we summarize the findings on the different datasets.
     The higher the filter order, the steeper the attenuation is.
     Therefore, the fact that the performance decrease followed only after the stronger filter was employed suggests, that the network indeed focuses on frequencies above 40Hz but not particularly high frequencies (those in the high-gamma band) which were attenuated by both the 3rd as well as 15th order filter Figure~\ref{filters}.
     \item \textbf{High-pass training and validation} To see if the networks are able to use information from the high-gamma frequency band, the networks were trained and evaluated on the high-pass dataset (>60Hz).
-    As is clear from Figure~\ref{figure\_hp\_performance}, the networks are able to use some information from the high-gamma especially when decoding absolute velocity where the correlations are often not only significantly above chance decoding but also achieve fairly good correlation coefficients.
+    As is clear from Figure~\ref{figure-hp-performance}, the networks are able to use some information from the high-gamma especially when decoding absolute velocity where the correlations are often not only significantly above chance decoding but also achieve fairly good correlation coefficients.
     \item \textbf{Full training and high-pass validation} Another possibility to see if the networks when trained on full data are learning from the high-gamma frequency band, was to train the network on the full dataset and validate only on the high-passed data.
     As is obvious from Figure~\ref{Figure}, only few networks perform significantly better than chance level decoding. The conclusion that the network, when given access to, utilizes primarily information from the low end of the frequency spectrum can be drawn from this result.
     \item \textbf{Low-pass training and high-pass validation}
@@ -71,7 +71,7 @@ Based on the performances of the networks and the gradients these important and 
     \item The networks focus on motor-channels when making predictions.
 This is to be expected when they are tasked with decoding movement.
     \item There are obvious differences between the gradients for velocity and absolute velocity.
-    Nevertheless, for both variables the network without max-pool, here denoted as {variable}_k1 is the best performing architecture.
+    Nevertheless, for both variables the network without max-pool, here denoted as {variable}\_k1 is the best performing architecture.
     And it is in both cases also the network which is most interested in modulations in the low frequency bands.
     This suggests that using the information in the high-gamma frequency band is not necessarily an asset.
     \item The networks which exhibit higher interest in information from the higher frequencies, namely the k2\_d1, k3\_d1 and k2\_d2 are also those, which are able to perform significantly above chance when trained on full data and validated on high-passed data.
@@ -96,15 +96,15 @@ It compares how the performance and gradients of the network change when the pre
 \subsection{Shifting the predicted time-point to the centre of the receptive field}\label{subsec:shifting-the-predicted-time-point-to-the-centre-of-the-receptive-field}
 An important observation when looking at the performance of the networks described in Section\ref{} was made.
 We noticed that the smaller receptive field seemingly correlates with a higher prediction accuracy especially for absolute velocity decoding.
-To visualize this, we created Figure~\ref{figure\_distance} which sorts the different architectures based on the size of the receptive field from smallest to largest and plots the average correlation coefficient each of these networks achieved.
+To visualize this, we created Figure~\ref{figure-distance} which sorts the different architectures based on the size of the receptive field from smallest to largest and plots the average correlation coefficient each of these networks achieved.
 There is a clear descending pattern.
 The only exceptional network is the k2\_d3 network which performs well with a large receptive field.
 
 This finding further corroborates the idea to shift the predicted time point to the center of the receptive field.
-The receptive field as described in Section~\ref{methods\_receptive\_field} is non-uniform.
+The receptive field as described in Section~\ref{methods-receptive-field} is non-uniform.
 It considers mostly input-points in its centre while in the original decoding, the predicted time-point is located just outside the receptive field.
 Therefore, we shift the inputs and prediction so that the iEEG signal, which was recorded at the same time as the predicted movement was executed, is in the centre of the receptive field. This causes the procedure to be unsuitable for online BCI because half of the input window uses information from the future.
-The results can be seen in Figure~\ref{shifted\_performance}.
+The results can be seen in Figure~\ref{shifted-performance}.
 It is obvious that the shift greatly improves performance of all the networks and the performance differences between the architectures are diminished.
 Notably the performance of the networks on the high-gamma dataset also increased especially for absolute velocity.
 
@@ -120,7 +120,7 @@ It would be interesting to build a network with a uniform receptive field and th
 Nevertheless, such an analysis is out of the scope of this thesis.
 
 \subsubsection{Performance}
-In Section \ref{architecture_comparison_gradients} we already saw that the best performing networks are those which use lower frequencies.
+In Section \ref{architecture-comparison-gradients} we already saw that the best performing networks are those which use lower frequencies.
 Nevertheless, how the shift influences the gradients remained an open question.
 Hypothetically, the information about the movement in high-gama could be informative only in the moments directly preceding the movement.
 Therefore the networks are unable to use it because they focus on the signal recorded too far in the past.
@@ -153,7 +153,7 @@ Besides the big shift from the edge of the receptive field to the centre we also
 Again, we do not know if the network's performance changes because of the shift in the receptive field or because of having access to information from the future.
 Nevertheless, we can observe the slow decrease in performance when increasing the distance of the predicted time-point to the receptive field centre, which is to be expected for both of the reasons.
 Besides evaluating the performance in the shifted settings, we also visualized the gradients as is described in this section, we also performed gradient visualization.
-This analysis is described in Section~\ref{shifted\_gradient\_visualization}.
+This analysis is described in Section~\ref{shifted-gradient-visualization}.
 
 This analysis was performed only for the original Deep4Net architecture.
 The shifts were made ranging from  -1 s  to 1 s with respect to the receptive field centre which we denote as 0.
@@ -162,7 +162,7 @@ The step size was 0.1 s which is equivalent to 25 samples.
 \subsection{Shifting the predicted time-point across receptive field}\label{subsec:shifting-the-predicted-time-point-across-receptive-field}
 \subsubsection{Performance}
 For the original Deep4Net architecture (k3\_d3\_sbp0), we also visualized the gradients for all the smaller shifts across the receptive field of the network.
-The gradients are visualized in Figure~\ref{figure\_shifted\_gradients}.
+The gradients are visualized in Figure~\ref{figure-shifted-gradients}.
 In the graph for absolute velocity, we can observe the trend of broadening the frequency ranges with high gradient values when shifting the predicted time-point from the centre of the receptive field both to the left and to the right.
 Interestingly, when plotting the same graph for velocity, we do not observe this behaviour so clearly, instead there is a periodicity in the positive and negative value of the gradients for the different values of the shift.
 It is unclear why this periodicity occurs.
@@ -177,7 +177,7 @@ This again suggests that the using information from the high-gamma frequency is 
 
 \subsection{Performance}\label{subsec:pw-performance}
 How the networks react to datasets which were whitened as described in Section~\ref{methods-spectral-whitening} was one of our interests because when we look at the spectrum of the original signal, the amplitudes of frequencies decrease exponentially with increase in the frequency.
-This is common in biological signals but could be a reason for the network to ignore high-frequencies when making predictions. Figure~\ref{pw_performances_full_data} shows how the predictions changed compared to predictions on non-whitened signals when using the full dataset.
+This is common in biological signals but could be a reason for the network to ignore high-frequencies when making predictions. Figure~\ref{pw-performances-full-data} shows how the predictions changed compared to predictions on non-whitened signals when using the full dataset.
 It is obvious that the correlation coefficient of all networks dropped significantly. When looking at Figure~\ref{pw-performaces-hp-data} we see that in the case of high-passed datasets the decrease was lower, but even for the high-passed data, the performance did not increase.
 
 \subsection{Gradients}\label{subsec:pw-gradients2}

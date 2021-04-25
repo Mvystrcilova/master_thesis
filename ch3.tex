@@ -19,7 +19,7 @@ The position of the car linearly corresponded to the deflection of the steering 
 Importantly, the control of the car's position was possible only in the horizontal dimension (left - right).
 The upward movements of the car (vertical scrolling speed) were kept constant in each run of the game and adjusted for each subject individually.
 
-The difficulty and the recording time of each subject was also adjusted based on the participant's motivation/ability to participate, lasting 25 \pm 7 min (mean \pm SD).
+The difficulty and the recording time of each subject was also adjusted based on the participant's motivation/ability to participate, lasting $25 \pm 7$ min ($mean \pm SD$).
 The car game difficulty was modified by the vertical scrolling speed of the car.
 Therefore, to account for faster movements, the low-pass cutoff frequency was set to 10 Hz for smoothing the raw tracker data prior to the derivation of the kinematic parameters.
 From the horizontal, 1-D trajectory, the following two kinematic parameters were derived:
@@ -36,21 +36,20 @@ The location of the electrodes was dependent solely on the needs for medical eva
 Both sEEG and ECoG electrodes were present among patients.
 Detailed information about electrode type and placement is presented in Table\ref{tab:patient-table} and Figure\ref{fig:electrodes}.
 
-\begin{figure}
+\begin{figure}[!htbp]
 \centering
-\includegraphics[width=\linewidth]{img/ch3/electrodes}
-\caption{The top row shows the original power spectrum of the iEEG signal and the original iEEG signals of the first 25s long segment.
-The bottom row shows how spectral whitening changed both the spectrum and the signal.}
+\includegraphics[width=0.8\linewidth]{img/ch3/electrodes}
+\caption{}
 \label{fig:electrodes}
 \end{figure}
 
-\begin{table}
+\begin{table}[!htbp]
 \centering
-\begin{tabular}{llrl}
+\begin{tabular}{|p{1.3cm}|p{1.05cm}|p{2.15cm}|p{2.2cm}|p{2.2cm}|p{0.5cm}|p{0.65cm}|p{0.6cm}|p{0.8cm}}
 \toprule
-Patient & Sex (Age) & Pathology & Implant loc & Electrode type (N) & $N_r$ & $N_{ch}$ & $N_{m}$ & $N_{n-m}$ \\
+Patient & Sex (Age) & Pathology & Implant loc & Electrode type ($N$) & $N_r$ & $N_{ch}$ & $N_{m}$ & $N_{nm}$ \\
 \midrule
-P1 & F (47) & Right frontal & ECoG (98), intracerebral (12) & 25 & 85 & 14 & 47 \\
+P1 & F (47) & Cryptogenic & Right frontal & ECoG (98), intracerebral (12) & 25 & 85 & 14 & 47 \\
 \hline
 P2 & M (48) & FCD & Right fronto-temporal & ECoG (90), intracerebral (12) & 53 & 49 & 15 & 11 \\
 \hline
@@ -87,7 +86,7 @@ The hand-motor channels induced a clear hand motor response after the electrical
 The non-motor channels, on the other hand, produced no sensory/motor response after the stimulation.
 Furthermore, a requirement of at least 1 cm distance from the motor and premotor areas (i.e. Area 4a, Area 4p and Area 6 from the SPM Anatomy toolbox\cite{eickhoff-new-2005}) had to be satisfied for a channel to be included in the non-motor group.
 To this end, all MRI brain scans (T1-weighted sequence) were normalized to the MNI space and the electrodes' coordinates were read out from either the post-implantation MRI or CT scans53.
-The average number of hand-motor channels was 13 \pm 9 (mean \pm SD), while there were 29 \pm 18 (mean \pm SD) non-motor channels.
+The average number of hand-motor channels was $13 \pm 9$ ($mean \pm SD$), while there were $29 \pm 18$ ($mean \pm SD$) non-motor channels.
 Some electrodes did not fall into either of the hand-motor and non-motor channel groups (e.g. channels in the motor cortex the electrical stimulation of which induced leg-motor response).
 These electrodes were then left out in some analysis, because the aim was to delineate the difference between the two distinct groups of channels (the hand-motor channel group and the non-motor channel group clearly far away from the motor cortex).
 
@@ -95,8 +94,8 @@ These electrodes were then left out in some analysis, because the aim was to del
 \subsection{IEEG data preprocessing}\label{subsec:ieeg-data-preprocessing}
 The iEEG data preprocessing was also the same as in~\cite{Hammer-2021}.
 A comprehensive rejection of \textit{epileptic} channels based on the information from the respective epilepsy centers was performed, because the primary aim was to investigate the physiological brain activity.
-Thus, the channels, i.e. those located in the seizure onset zone and/or containing a large number of inter-ictal epileptiform discharges, were rejected from this study (20 \pm 13, mean \pm SD over subjects Table\ref{tab:patient-table}).
-All non-rejected iEEG channels (85 \pm 28, mean +- SD) were referenced to their common average, high-pass filtered at 0.15 Hz (3rd order Butterworth filter), normalized to the inter-quartile range of each channel, and resampled to 250 Hz, to yield consistent data sets from the different recording systems used at both aforementioned epilepsy centers.
+Thus, the channels, i.e. those located in the seizure onset zone and/or containing a large number of inter-ictal epileptiform discharges, were rejected from this study ($20 \pm 13$, $mean \pm SD$ over subjects Table\ref{tab:patient-table}).
+All non-rejected iEEG channels ($85 \pm 28, mean \pm SD$) were referenced to their common average, high-pass filtered at 0.15 Hz (3rd order Butterworth filter), normalized to the inter-quartile range of each channel, and resampled to 250 Hz, to yield consistent data sets from the different recording systems used at both aforementioned epilepsy centers.
 The iEEG data were resampled to 250 Hz in order to emulate the same setup of the Deep4Net from~\cite{schirrmeister-deep-2017}, which was successfully applied to demonstrate high-gamma (70 - 90 Hz) effects in decoding motor behaviour from non-invasive EEG. Importantly, any over-fitting in the preprocessing was carefully avoided (i.e., all parameters of the preprocessing of the test set were estimated on the training set) and only accusal, finite impulse response filters were applied.
 Therefore, the decoding approach could be readily applied also in a closed-loop, online BMI.
 
@@ -110,8 +109,7 @@ The modifications were of the three following types: 1. filtering of certain fre
 \begin{itemize}
 \item \textbf{Filtering} We created two types of datasets using filtering.
 A high-pass filtered dataset using a 15th order Butterworth filter, cut-off frequency 60Hz, non-zero phase shift and a low-pass dataset using Butterworth filter order 15, cut-off frequency 60Hz, nonz-zero phase shift.
-Besides full training on these datasets, parts of these datasets were combined for training and validation to see for example, how a network trained on full data performs on high-passed data etc.
-
+Besides full training on these datasets, parts of these datasets were combined for training and validation to see for example, how a network trained on full data performs on high-passed data etc.\\
 The name of the model includes information about the data the model was trained on.
 For example if a model name contains full-low it was trained on full data and validated on low-passed data.
 If it contains high-high it was both trained and validated on high-passed data.
@@ -129,7 +127,7 @@ Then dividing the amplitudes with their absolute value and then, via inverse Fou
 The whitened signal was then iqr-normalized.
 This normalization was calculated and applied to each segment on the training set and the same parameters averaged over all 25s long segments of the training set were applied to the validation set.
 
-\begin{figure}
+\begin{figure}[!htbp]
 \centering
 \includegraphics[width=\linewidth]{img/ch3/spectral-whitening}
 \caption{The top row shows the original power spectrum of the iEEG signal and the original iEEG signals of the first 25s long segment.
@@ -144,8 +142,8 @@ In this section, we describe it in more detail together with the architectural c
 We also focus on how classification and regression differ and what it means with respect to the architecture, its inputs and outputs. 
 
 \subsection{Architecture}\label{subsec:architecture}
-The architecture which is available in the Braindecode library\footnote{https://braindecode.org} has been previously used in a number of EEG decoding tasks\cite{Hammer-2021, schirrmeister-deep-2017, hartmann-hierarchical-2018}.
-It is implemented using PyTorch \footnote{https://pytorch.org}.
+The architecture which is available in the Braindecode library\footnote{https://braindecode.org} has been previously used in a number of EEG decoding tasks \cite{Hammer-2021, schirrmeister-deep-2017, hartmann-hierarchical-2018}.
+It is implemented using PyTorch\footnote{https://pytorch.org}.
 The input of the network is a 2D array with time-steps along one axis and channels along the other axis.
 The architecture consists of four convolutional-max-pooling blocks and is designed so that a special first block can learn spatially global filters.
 The following three standard blocks then allow for learning temporal hierarchies of local and global modulations~\cite{schirrmeister-deep-2017}.
@@ -161,7 +159,7 @@ Otherwise, no special measures have to be taken.
 Nevertheless, the way the output is interpreted changes.
 This is further described in Section~\ref{subsec:difference-between-deep4net-for-classification-and-regression} after we provide important context about cropped decoding.
 
-\begin{figure}
+\begin{figure}[!htbp]
 \centering
 \includegraphics[width=\linewidth]{img/ch3/architektura}
 \caption{The architecture of the Deep4Net modified to be suitable for regression.}
@@ -173,23 +171,22 @@ Cropped decoding as implemented in~\cite{schirrmeister-deep-2017} augments the d
 Instead of giving one trial and obtaining one prediction, the trial window is separated into multiple smaller overlapping sub-windows each of which produce a prediction.
 In case of classification, these multiple outputs for one input window are then averaged to give the final prediction from which loss is calculated Figure~\ref{fig:trial-wise-decoding}.
 This way, the dataset is enlarged.
-\lipsum
 
-\begin{figure}
+\begin{figure}[!htbp]
     \centering
-    \begin{minipage}{0.45\textwidth}
+    \RawFloats
+    \begin{minipage}{0.4\textwidth}
         \centering
-        \includegraphics[width=0.9\textwidth]{img/ch3/trialwise-explanation} % first figure itself
+        \includegraphics[width=0.9\textwidth]{img/ch3/trialwise-explanation}
         \caption{Trial-wise decoding - classification}
     \end{minipage}\hfill
-    \begin{minipage}{0.45\textwidth}
+    \begin{minipage}{0.5\textwidth}
         \centering
-        \includegraphics[width=0.9\textwidth]{img/ch3/trialwise-explanation2} % second figure itself
+        \includegraphics[width=0.9\textwidth]{img/ch3/trialwise-explanation2} 
         \caption{Cropped decoding - classification}
     \end{minipage}
 \end{figure}\label{fig:trial-wise-decoding}
 
-\lipsum[3]
 
 To avoid a longer training time, a trick with dilated convolution can be implemented.
 This requires changes in the architecture.
@@ -258,15 +255,15 @@ In \cref{fig:receptive-field} we visualize the receptive field for one predictio
 The figure illustrates how many times each input sample is used in computation throughout the pass through the CNN to obtain the specific prediction.
 Note, that the receptive field in no way illustrates the weights of the network.
 
-\begin{figure}
+\begin{figure}[!htbp]
 \centering
-\includegraphics[width=\linewidth]{img/ch3/deep4net-receptive-field}
-\caption{The receptive field of the original Deep4Net, in this thesis denoted as {variable}\_k3\_d3\_sbp0. The vertical red lines delimit the receptive field of the network used for cal}
+\includegraphics[width=0.8\linewidth]{img/ch3/deep4net-receptive-field}
+\caption{The receptive field of the original Deep4Net, in this thesis denoted as {variable}\_k3\_d3\_sbp0. The vertical red lines delimit the first receptive field (crop) of the network used for calculating the first prediction. The green line represents the centre of the receptive field and the yellow dot on the x axis the first time-point that is being predicted. The gradient bar on the right shows the number of times each input sample was used in the calculations of the output.}
 \label{fig:receptive-field}
 \end{figure}
 
 The receptive field is worthy of thought especially in the case of regression.
-Figure \ref{receptive_field} illustrates that the predicted time-point (red line) is fairly far from the centre of the receptive field (green line).
+Figure \ref{fig:receptive-field} illustrates that the predicted time-point (red line) is fairly far from the centre of the receptive field (green line).
 If we make the prediction only based on the data recorder prior to the predicted movement, the prediction is made from signals around the centre of the receptive field and the network pays little attention to the data that directly precede the movement.
 For classification this is not as critical, because the same label is predicted from multiple crops, and the actual classified movement does not happen at the end of the last crop but at some point during the whole input window from which the crops are derived.
 Therefore, the network has a chance to focus on information directly preceding the actual movement.
@@ -326,10 +323,10 @@ The latter network makes more predictions from the same input length because the
 It also has a smaller receptive field for one prediction as is visulalized in \cref{fig:receptive-field-comparison}.
 Information about the size of the receptive field can also be found in Table\ref{tab:architectures-description}.
 
-\lipsum
 
 \begin{figure}
     \centering
+    \RawFloats
     \begin{minipage}{0.45\textwidth}
         \centering
         \includegraphics[width=0.9\textwidth]{img/ch3/deep4net-receptive-field} % first figure itself
@@ -342,30 +339,29 @@ Information about the size of the receptive field can also be found in Table\ref
     \end{minipage}
 \end{figure}\label{fig:receptive-field-comparison}
 
-\lipsum[3]
 
 
 \begin{table}
 \centering
-\begin{tabular}{llrl}
+\begin{tabular}{lllll}
 \toprule
 Model name & Max-pool kernel size & Max-pool dilations & Stride before pool & Size of the receptive field \\
 \midrule
-{variable}\_k1 & (1, 1), (1, 1), (1, 1), (1, 1) & No dilation & -- & 442 samples \\
+variable\_k1 & (1, 1), (1, 1), (1, 1), (1, 1) & No dilation & -- & 442 samples \\
 \hline
-{variable}\_k2\_d3 &(2, 1), (2, 1), (2, 1), (2, 1) & (3, 1), (9, 1), (27, 1), (81, 1) & -- & 562 samples \\
+variable\_k2\_d3 &(2, 1), (2, 1), (2, 1), (2, 1) & (3, 1), (9, 1), (27, 1), (81, 1) & -- & 562 samples \\
 \hline
-{variable}\_k3\_d3\_sbp1 & (3, 1), (3, 1), (3, 1), (3, 1) & (3, 1), (9, 1), (27, 1), (81, 1) & True & 682 samples \\
+variable\_k3\_d3\_sbp1 & (3, 1), (3, 1), (3, 1), (3, 1) & (3, 1), (9, 1), (27, 1), (81, 1) & True & 682 samples \\
 \hline
-{variable}\_k3\_d3\_spb0 & (3, 1), (3, 1), (3, 1), (3, 1) & (1, 1), (3, 1), (9, 1), (27, 1) & False & 522 samples \\
+variable\_k3\_d3\_spb0 & (3, 1), (3, 1), (3, 1), (3, 1) & (1, 1), (3, 1), (9, 1), (27, 1) & False & 522 samples \\
 \hline
-{variable}\_k2_d1 & (2, 1), (2, 1), (2, 1), (2, 1) & (1, 1), (1, 1), (1, 1), (1, 1) & -- & 446 samples \\
+variable\_k2\_d1 & (2, 1), (2, 1), (2, 1), (2, 1) & (1, 1), (1, 1), (1, 1), (1, 1) & -- & 446 samples \\
 \hline
-{variable}\_k3\_d1 &(3, 1), (3, 1), (3, 1), (3, 1) & (1, 1), (1, 1), (1, 1), (1, 1) & -- & 450 samples \\
+variable\_k3\_d1 &(3, 1), (3, 1), (3, 1), (3, 1) & (1, 1), (1, 1), (1, 1), (1, 1) & -- & 450 samples \\
 \hline
-{variable}\_k2\_d2 & (2, 1), (2, 1), (2, 1), (2, 1) & (2, 1), (4, 1), (8, 1), (16, 1) & -- & 472 samples \\
+variable\_k2\_d2 & (2, 1), (2, 1), (2, 1), (2, 1) & (2, 1), (4, 1), (8, 1), (16, 1) & -- & 472 samples \\
 \hline
-{variable}\_k3\_d2 &(3, 1), (3, 1), (3, 1), (3, 1)& (2, 1), (4, 1), (8, 1), (16, 1) & -- & 502 samples \\
+variable\_k3\_d2 &(3, 1), (3, 1), (3, 1), (3, 1)& (2, 1), (4, 1), (8, 1), (16, 1) & -- & 502 samples \\
 \hline
 \bottomrule
 \end{tabular}
