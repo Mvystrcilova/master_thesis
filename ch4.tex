@@ -10,8 +10,8 @@ end{itemize}
 
 83.33Hz seems like a random frequency to have such a sharp peak in the frequency and also does not seem to be caused by a physiological property of the input signal.
 A hypothesis was that the 83.33 Hz peak occurs due to this frequency being aligned with the dilations of the max-pool layers and therefore is just an architecture artifact.
-Because sampling rate is 250 and the dilations of the max-pool layers are powers of three and 250/3 = 83.33Hz, this frequency aligns with the dilations of the max-pool layers which amplify it.
-However, this does not explain why the peak at 83.33Hz is amplified with training as is apparent from Figure \ref{figure}.
+Because sampling rate is 250 Hz and the dilations of the max-pool layers are powers of three and $250Hz/3 = 83.33Hz$, this frequency aligns with the dilations of the max-pool layers which amplify it.
+However, this does not explain why the peak at 83.33Hz is amplified with training as is apparent from Figure~\ref{figure}.
 
 To test the artifact hypothesis, we systematically changed the dilations of the max-pool layers to powers of 1, 2 and 3 and kernel sizes to 1\footnote{Importantly, when all max-pool layers in a network have their kernel size set to 1, it is equivalent to a network without max-pool layers.}, 2, 3 and 4
 
