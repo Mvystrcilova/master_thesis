@@ -79,26 +79,28 @@ Nevertheless, we were interested in what the shifting does to performance and th
 
 
 \item \textbf{Spectral whitening} Lastly we also created whitened datasets.
-Spectral whitening was performed so that amplitudes of all frequencies were normalized to one.
+Spectral whitening was performed so that amplitudes of all frequencies were normalized to one~\ref{fig:spectral-whitening}.
 This was achieved using a Fourier transformation of each 25s long segment into the power spectrum, obtaining information about phase and amplitude.
 Then dividing the amplitudes with their absolute value and then, via inverse Fourier transformation, transforming it back to signal.
 The whitened signal was then iqr-normalized.
 This normalization was calculated and applied to each segment on the training set and the same parameters averaged over all 25s long segments of the training set were applied to the validation set.
+
 \begin{figure}
 \centering
-\includegraphics[width=.6\linewidth]{img/ch3/spectral-whitening.pdf}
-\caption{A figure with a plot, not entirely related to anything. If you copy the figures from anywhere, always refer to the original author, ideally by citation (if possible). In particular, this picture --- and many others, also a lot of surrounding code --- was taken from the example bachelor thesis of MFF, originally created by Martin Mareš and others.}
+\includegraphics[width=.6\linewidth]{img/ch3/spectral-whitening}
+\caption{The top row shows the original power spectrum of the iEEG signal and the original iEEG signals of the first 25s long segment.
+The bottom row shows how spectral whitening changed both the spectrum and the signal.}
 \label{fig:spectral-whitening}
 \end{figure}
 \end{itemize}
 
 \section{Deep4Net}\label{sec:deep4net}
-The Deep4Net, which is freely available in the Braindecode library, was already shortly described in Section \ref{Background}. 
+The Deep4Net, which is freely available in the Braindecode library, was already shortly described in Section~\ref{Background}.
 In this section, we describe it in more detail together with the architectural changes that need to be made when cropped decoding is used and how it relates to the changes we were making to the architecture throughout our research. 
 We also focus on how classification and regression differ and what it means with respect to the architecture, its inputs and outputs. 
 
 \subsection{Architecture}\label{subsec:architecture}
-The architecture which is available in the Braindecode library\footnote{https://braindecode.org}has been previously used in a number of EEG decoding tasks\cite{Hammer-2021, schirrmeister-deep-2017, hartmann-hierarchical-2018}.
+The architecture which is available in the Braindecode library\footnote{https://braindecode.org} has been previously used in a number of EEG decoding tasks\cite{Hammer-2021, schirrmeister-deep-2017, hartmann-hierarchical-2018}.
 It is implemented using PyTorch \footnote{https://pytorch.org}.
 The input of the network is a 2D array with time-steps along one axis and channels along the other axis.
 The architecture consists of four convolutional-max-pooling blocks and is designed so that a special first block can learn spatially global filters.
@@ -106,7 +108,7 @@ The following three standard blocks then allow for learning temporal hierarchies
 The first convolutional block is split into two parts.
 One performs convolution over time and the second over the channels with weights for all possible electrode pairs using filters of the preceding temporal convolution.
 Because there is no activation function between these two layers, they could be merged, but the authors emphasize the regularization function of this separation because it forces a separation of the linear transformation into a temporal convolution and a spatial filter.
-The convolutional blocks start with a convolutional layer, then a batch normalization layer follows, after which a non-linearity is added, in the case of the Deep4Net it is the exponential linear unit (ELU) function \cite{}.
+The convolutional blocks start with a convolutional layer, then a batch normalization layer follows, after which a non-linearity is added, in the case of the Deep4Net it is the exponential linear unit (ELU) function\cite{clevert-elu-2016}.
 Finally a max-pool layer closes the convolutional block.
 An output layer, which is a softmax, comes last.
 To use this network for regression which is what we are doing in this thesis, the only modification that needs to be done is removing the last softmax layer.
@@ -117,47 +119,50 @@ This is further described in Section~\ref{subsec:difference-between-deep4net-for
 
 \begin{figure}
 \centering
-\includegraphics[width=.6\linewidth]{img/ch3/architektura.pdf}
-\caption{A figure with a plot, not entirely related to anything. If you copy the figures from anywhere, always refer to the original author, ideally by citation (if possible). In particular, this picture --- and many others, also a lot of surrounding code --- was taken from the example bachelor thesis of MFF, originally created by Martin Mareš and others.}
+\includegraphics[width=.6\linewidth]{img/ch3/architektura}
+\caption{The architecture of the Deep4Net modified to be suitable for regression.}
 \label{fig:architecture}
 \end{figure}
 
 \subsection{Cropped decoding}
 Cropped decoding as implemented in~\cite{schirrmeister-deep-2017} augments the dataset.
 Instead of giving one trial and obtaining one prediction, the trial window is separated into multiple smaller overlapping sub-windows each of which produce a prediction.
-In case of classification, these multiple outputs for one input window are then averaged to give the final prediction from which loss is calculated Fig \ref{figure}.
+In case of classification, these multiple outputs for one input window are then axveraged to give the final prediction from which loss is calculated Figure~\ref{figure}.
 This way, the dataset is enlarged.
 To avoid a longer training time, a trick with dilated convolution can be implemented.
-This requires change in the architecture. As can be seen in Fig~\ref{architecture}, the convolutional layers have stride.
+This requires change in the architecture.
+As can be seen in Fig~\ref{fig:architecture}, the convolutional layers have dilations.
+However, a Deep4Net which performs classification has no dilations and has strides instead.
 In order to implement a network which can process multiple crops at the same time and give an equivalent result as the network processing one crop at a time, the strides of the layers can be removed (set to 1) and instead replaced by an increasing dilation.
-A visual explanation of this is in Fig \ref{}.
-Importantly though, this only works if the network has no padding or only left padding.
-Right padding would disrupt the equivalency of computation.
-Algorithm \ref{alg:stride-to-dilation} describes how a network with stride is converted into a network with dilations.\\
+A visual explanation of this is in Fig~\ref{} and the algorithm used to make this transition is described in Algorithm\ref{alg:stride-to-dilation}.
+
+Algorithm~\ref{alg:stride-to-dilation} describes how a network with stride is converted into a network with dilations.\\
 \begin{algorithm}
-\begin{algorithmic}
-\Function{ExecuteWithHighProbability}{$A$}
-	\State $r \gets$ a random number between $0$ and $1$
-	\State $\varepsilon \gets 0.0000000000000000000000000000000000000042$
-	\If{$r\geq\varepsilon$}
-		\State execute $A$ \Comment{We discard the return value}
-	\Else
-		\State print: \texttt{Not today, sorry.}
-	\EndIf
-\EndFunction
-\end{algorithmic}
-\caption{Algorithm that executes an action with high probability. Do not care about formal semantics in the pseudocode --- semicolons, types, correct function call parameters and similar nonsense from `realistic' languages can be safely omitted. Instead make sure that the intuition behind (and perhaps some hints about its correctness or various corner cases) can be seen as easily as possible.}
+\begin{verbatim}
+Function to_dense_prediction(network)
+	current_stride = 1
+	for module in network.modules
+		if module has attribute dilation:
+			module.dilation = current_stride
+		if module has attribute stride:
+			current_stride *= module.stride
+			module.stride = 1
+\end{verbatim}
+\caption{The simplified algorithm used to transform a network with strides to a network with dilations in the Braindecode library.
+This version assumes a 1D stride and dilation which is sufficient for our case as all the strides in the networks are 1D.
+}
 \label{alg:stride-to-dilation}
 \end{algorithm}
 
-This means that for every network with stride and without right padding, there exists an equivalent network with dilations.
-We will refer to it as a dilated network.
+Importantly though, this only works if the network has no padding or only left padding.
+Right padding would disrupt the equivalency of computation.
+This means that for every network with stride and without right padding, there exists an equivalent network with dilations (dilated networks).
 Nevertheless, this relationship is not symmetric.
 For some dilated networks no networks with strides performing an equivalent computation exist.
 An example of such a network is a network where in two consecutive layers with a dilation parameter, the first layer has bigger dilation than the second one.
-This cannot happen if we follow the algorithm above~\ref{algorithm} thus, such a network was not derived from a network with strides.
+This cannot happen if we follow the algorithm above~\ref{alg:stride-to-dilation} thus, such a network was not derived from a network with strides.
 
-In Schirrmeister et al~\cite{Schirrmeister_2017} the architectures were constructed in the space of the networks with stride and then converted into networks with dilations.
+In Schirrmeister et al~\cite{schirrmeister-deep-2017} the architectures were constructed in the space of the networks with stride and then converted into networks with dilations.
 This leaves a whole set of architectures unexplored.
 Namely those dilated networks which cannot be constructed from a network with stride.
 It is important to point out that these dilated networks cannot be used for trial-wise decoding.
