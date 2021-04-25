@@ -119,7 +119,7 @@ This is further described in Section~\ref{subsec:difference-between-deep4net-for
 
 \begin{figure}
 \centering
-\includegraphics[width=.6\linewidth]{img/ch3/architektura}
+\includegraphics[width=\linewidth]{img/ch3/architektura}
 \caption{The architecture of the Deep4Net modified to be suitable for regression.}
 \label{fig:architecture}
 \end{figure}
@@ -138,16 +138,16 @@ A visual explanation of this is in Fig~\ref{} and the algorithm used to make thi
 
 Algorithm~\ref{alg:stride-to-dilation} describes how a network with stride is converted into a network with dilations.\\
 \begin{algorithm}
-\begin{verbatim}
-Function to_dense_prediction(network)
+\begin{lstlisting}[language=Python,label={lst:lstlisting}]
+def to_dense_prediction(network):
 	current_stride = 1
-	for module in network.modules
-		if module has attribute dilation:
+	for module in network.modules:
+		if hasattr(module, 'dilation'):
 			module.dilation = current_stride
-		if module has attribute stride:
+		if hasattr(module, 'stride'):
 			current_stride *= module.stride
 			module.stride = 1
-\end{verbatim}
+\end{lstlisting}
 \caption{The simplified algorithm used to transform a network with strides to a network with dilations in the Braindecode library.
 This version assumes a 1D stride and dilation which is sufficient for our case as all the strides in the networks are 1D.
 }
