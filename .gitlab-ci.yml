@@ -1,4 +1,3 @@
-#
 # This GitLab CI configuration builds the thesis on each push
 # The thesis is stored as an repository artifact
 #
