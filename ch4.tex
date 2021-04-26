@@ -4,26 +4,72 @@
 \section{Gradient peak}\label{sec:gradient-peak}
 As stated before, the input perturbation, output-correlation method in~\cite{Hammer-2021} did not point to high-gamma frequency amplitude as being strikingly important to the network. The gradient visualization also did not show particularly high gradients in the high-gamma band, unless the input window for the network was shortened so that the network had only one output, i.e. predicted one time-point. Two interesting observations could be made for the one-output gradient visualization:
 \begin{itemize}
-\item[1.] A gradient peak occurs at 83.88 Hz in both the untrained and the trained network and it is amplified with training. Figure~\ref{}.
-\item[2.] If we add noise of a certain frequency or white noise to the input, frequencies around 83.33 Hz increases in the output of the network. Figure~\ref{}
+\item[1.] A gradient peak occurs at 83.88 Hz in both the untrained and the trained network and it is amplified with training.
+\item[2.] If we add noise of a certain frequency or white noise to the input, frequencies around 83.33 Hz increases in the output of the network.
 \end{itemize}
 
 83.33Hz seems like a random frequency to have such a sharp peak in the frequency and also does not seem to be caused by a physiological property of the input signal.
 A hypothesis was that the 83.33 Hz peak occurs due to this frequency being aligned with the dilations of the max-pool layers and therefore is just an architecture artifact.
 Because sampling rate is 250 Hz and the dilations of the max-pool layers are powers of three and $250Hz/3 = 83.33Hz$, this frequency aligns with the dilations of the max-pool layers which amplify it.
-However, this does not explain why the peak at 83.33Hz is amplified with training as is apparent from Figure~\ref{figure}.
+However, this does not explain why the peak at 83.33Hz is amplified with training.
 
 To test the artifact hypothesis, we systematically changed the dilations of the max-pool layers to powers of 1, 2 and 3 and kernel sizes to 1\footnote{Importantly, when all max-pool layers in a network have their kernel size set to 1, it is equivalent to a network without max-pool layers.}, 2, 3 and 4
 
-The results in Figure~\ref{Figure} demonstrate that the kernel size change has no effect on the 83.33Hz peak.
+The results in Figure~\ref{fig:gradient-peak} demonstrate that the kernel size change has no effect on the 83.33Hz peak.
 However, with change in the dilations, the 83.33 Hz peak disappears without a decrease in performance.
 This suggests that the 83.33Hz peak really is an architecture artifact and it does not mean, the network is actually focusing on high-gamma and the 83.33 Hz frequency in particular.
+
+\begin{figure}
+\begin{subfigure}{.5\textwidth}
+  \centering
+  \includegraphics[width=.8\linewidth]{img/ch4/absVel-k3-d3}
+  \caption{1a}
+  \label{fig:sfig1}
+\end{subfigure}%
+\begin{subfigure}{.5\textwidth}
+  \centering
+  \includegraphics[width=.8\linewidth]{img/ch4/absVel-k3-d2}
+  \caption{1b}
+  \label{fig:sfig2}
+\end{subfigure}
+\begin{subfigure}{.5\textwidth}
+  \centering
+  \includegraphics[width=.8\linewidth]{img/ch4/absVel-k2-d3}
+  \caption{1a}
+  \label{fig:sfig1}
+\end{subfigure}%
+\begin{subfigure}{.5\textwidth}
+  \centering
+  \includegraphics[width=.8\linewidth]{img/ch4/absVel-k1}
+  \caption{1b}
+  \label{fig:sfig2}
+\end{subfigure}
+\caption{plots of....}
+\label{fig:gradient-peak}
+\end{figure}
 
 We also studied how the signal is affected by max-pool layers only.
 We used one and three max-pool layers with dilations equivalent with those from the Deep4Net.
 When the max-pool layer dilation parameter was three (or powers of three in the case of multiple consecutive max-pool layers), the output signal exhibited periodical peaks with the greatest peak around 83.33Hz.
 When the dilation of the max-pool layers shifted to two and powers of two, the periodicity of the peaks still occurred, however, the period increased and the greatest peak was around 120Hz.
-This is in line with the hypothesis that the alignment of frequencies with the max-pool layer dilations is indeed the reason for the gradient peak we see in Figure~\ref{}.
+This is in line with the hypothesis that the alignment of frequencies with the max-pool layer dilations is indeed the reason for the gradient peak we see in Figure~\ref{fig:max-pool-changes}.
+
+\begin{figure}
+\begin{subfigure}{.5\textwidth}
+  \centering
+  \includegraphics[width=.8\linewidth]{img/ch4/absVel-maxpool-k3-d3}
+  \caption{1a}
+  \label{fig:sfig1}
+\end{subfigure}%
+\begin{subfigure}{.5\textwidth}
+  \centering
+  \includegraphics[width=.8\linewidth]{img/ch4/absVel-maxpool-k3-d2}
+  \caption{1b}
+  \label{fig:sfig2}
+\end{subfigure}
+\caption{plots of....}
+\label{fig:max-pool-changes}
+\end{figure}
 
 \section{Architectural modifications}\label{sec:architectural-modifications}
 \subsection{Performance}\label{subsec:performance}
