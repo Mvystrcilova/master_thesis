@@ -17,32 +17,35 @@ To test the artifact hypothesis, we systematically changed the dilations of the 
 
 The results in Figure~\ref{fig:gradient-peak} demonstrate that the kernel size change has no effect on the 83.33Hz peak.
 However, with change in the dilations, the 83.33 Hz peak disappears without a decrease in performance.
-This suggests that the 83.33Hz peak really is an architecture artifact and it does not mean, the network is actually focusing on high-gamma and the 83.33 Hz frequency in particular.
+Another interesting thing to notice is to observe how the gradients of motor, non-motor and all channels behave with respect to each other.
+The biggest differences between the gradients are in the alpha and beta bend where the motor gradients have visibly higher values than non-motor and all channels.
+For the gradient peak at 83.33 Hz, the values of the motor, non-motor and all channels are almost equivalent.
+This suggests that the 83.33 Hz peak really is an architecture artifact and it does not mean, the network is actually focusing on high-gamma and the 83.33 Hz frequency in particular.
 
 \begin{figure}
 \begin{subfigure}{.5\textwidth}
   \centering
   \includegraphics[width=.8\linewidth]{img/ch4/absVel-k3-d3}
   \caption{1a}
-  \label{fig:sfig1}
+  \label{fig:absVel-k3-d3}
 \end{subfigure}%
 \begin{subfigure}{.5\textwidth}
   \centering
   \includegraphics[width=.8\linewidth]{img/ch4/absVel-k3-d2}
   \caption{1b}
-  \label{fig:sfig2}
+  \label{fig:absVel-k3-d2}
 \end{subfigure}
 \begin{subfigure}{.5\textwidth}
   \centering
   \includegraphics[width=.8\linewidth]{img/ch4/absVel-k2-d3}
   \caption{1a}
-  \label{fig:sfig1}
+  \label{fig:absVel-k2-d3}
 \end{subfigure}%
 \begin{subfigure}{.5\textwidth}
   \centering
   \includegraphics[width=.8\linewidth]{img/ch4/absVel-k1}
   \caption{1b}
-  \label{fig:sfig2}
+  \label{fig:absVel-k1}
 \end{subfigure}
 \caption{plots of....}
 \label{fig:gradient-peak}
@@ -59,48 +62,66 @@ This is in line with the hypothesis that the alignment of frequencies with the m
   \centering
   \includegraphics[width=.8\linewidth]{img/ch4/absVel-maxpool-k3-d3}
   \caption{1a}
-  \label{fig:sfig1}
+  \label{fig:maxpool-k3-d3}
 \end{subfigure}%
 \begin{subfigure}{.5\textwidth}
   \centering
   \includegraphics[width=.8\linewidth]{img/ch4/absVel-maxpool-k3-d2}
   \caption{1b}
-  \label{fig:sfig2}
+  \label{fig:maxpool-k3-d2}
 \end{subfigure}
 \caption{plots of....}
 \label{fig:max-pool-changes}
 \end{figure}
 
+The conclusions that can be made for the findings we made by changing the kernel sizes and dilations of the max-pool layers are summarized below.
+We
 \section{Architectural modifications}\label{sec:architectural-modifications}
 \subsection{Performance}\label{subsec:performance}
 While the gradient peak seemed like a dead end, while studying it, we noticed that some of the networks, especially those with smaller kernel sizes and/or dilation parameters in their max-pool layers seem to perform significantly better.
-Therefore, we decided to do a thorough inspection of how each of the networks performs on the filtered datasets as described in Section~\ref{Filtering}.
-The results can be seen in Figure~\cite{Figure} for velocity and \cite{Figure} for absolute velocity.
+Therefore, we decided to do a thorough inspection of how each of the networks performs on the filtered datasets as described in Section~\ref{subsec:modifications-to-the-dataset}.
+The results can be seen in Figure~\ref{fig:original-performances-velocity} for velocity and Figure~\ref{fig:original-performances-absolute-velocity} for absolute velocity.
 In the following points we summarize the findings on the different datasets.
+\begin{figure}
+\begin{subfigure}{.5\textwidth}
+  \centering
+  \includegraphics[width=.8\linewidth]{img/ch4/original_setting_vel_performance_comparison}
+  \caption{1a}
+  \label{fig:original-performances-velocity}
+\end{subfigure}%
+\begin{subfigure}{.5\textwidth}
+  \centering
+  \includegraphics[width=.8\linewidth]{img/ch4/original_setting_absVel_performance_comparison}
+  \caption{1b}
+  \label{fig:original-performances-absolute-velocity}
+\end{subfigure}
+\caption{plots of....}
+\label{fig:original-performances}
+\end{figure}
 
 \begin{itemize}
     \item \textbf{Full training and validation} Some of the networks significantly outperformed the Deep4Net sbp0 when both trained and validated on full data.The best performing network was the network where the max-pool layer had no influence, namely the one with max-pool layer kernel size 1.
     \item \textbf{Full training and low-pass validation} When the networks were trained on the full dataset and validated on the low-passed dataset (< 40Hz), the performance changed significantly for all the networks as is obvious from the Figure~\ref{}.
-    Nevertheless, in order to achieve a statistically significant decrease in performance, we had to use a Butterworth filter of order 15 instead of order 3 which was previously used in \cite{Hammer\_2021}.The 3rd order filter caused no apparent change in performances.
+    Nevertheless, in order to achieve a statistically significant decrease in performance, we had to use a Butterworth filter of order 15 instead of order 3 which was previously used inZ\cite{Hammer-2021}.The 3rd order filter caused no apparent change in performances.
     The Butterworth filter gradually attenuates the frequencies above the cut-off frequency (40Hz in this case).
     The higher the filter order, the steeper the attenuation is.
     Therefore, the fact that the performance decrease followed only after the stronger filter was employed suggests, that the network indeed focuses on frequencies above 40Hz but not particularly high frequencies (those in the high-gamma band) which were attenuated by both the 3rd as well as 15th order filter Figure~\ref{filters}.
     \item \textbf{High-pass training and validation} To see if the networks are able to use information from the high-gamma frequency band, the networks were trained and evaluated on the high-pass dataset (>60Hz).
-    As is clear from Figure~\ref{figure-hp-performance}, the networks are able to use some information from the high-gamma especially when decoding absolute velocity where the correlations are often not only significantly above chance decoding but also achieve fairly good correlation coefficients.
+    As is clear from Figure~\ref{fig:original-performances}, the networks are able to use some information from the high-gamma especially when decoding absolute velocity where the correlations are often not only significantly above chance decoding but also achieve fairly good correlation coefficients.
     \item \textbf{Full training and high-pass validation} Another possibility to see if the networks when trained on full data are learning from the high-gamma frequency band, was to train the network on the full dataset and validate only on the high-passed data.
-    As is obvious from Figure~\ref{Figure}, only few networks perform significantly better than chance level decoding. The conclusion that the network, when given access to, utilizes primarily information from the low end of the frequency spectrum can be drawn from this result.
+    As is obvious from Figure~\ref{fig:original-performances}, only few networks perform significantly better than chance level decoding. The conclusion that the network, when given access to, utilizes primarily information from the low end of the frequency spectrum can be drawn from this result.
     \item \textbf{Low-pass training and high-pass validation}
 Training on low-passed data and validation on high-passed data was important to further study how the network operates.
 We wanted to find out if it is able to transfer information between two completely separate datasets.
 Because the cut-off frequency for the low-passed data is 40Hz and for the high-passed data 60Hz with a very steep filter, there is no frequency overlap between the two sets.
 Therefore, it would be interesting but also rather surprising if from modulation in the low frequencies (below 40Hz) the network would learn to use information about modulations in the high frequencies (above 60Hz).
-Nevertheless as obvious from Figure~\ref{fig}, the networks were unable to transfer any information.
+Nevertheless as obvious from Figure~\ref{fig:original-performances}, the networks were unable to transfer any information.
 \end{itemize}
 The findings presented in this section lead to two interesting questions.
 The first one  is what do the gradients of the various architectures look like and do some of them use high-gamma?
 This analysis is described in Section\ref{subsec:gradients}.
 The second question that arises is what if  we shift the predicted time-point to the centre of the receptive field.
-This analysis is described in Section ref{shifting\_analysis}.
+This analysis is described in Section \ref{sec:shifting-the-predicted-time-point}.
 
 \subsection{Gradients}\label{subsec:gradients}
 The differences in performance among the networks, reinforce the interest in the gradients of the various architectures.
