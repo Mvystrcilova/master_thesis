@@ -25,6 +25,4 @@ thesis-run.xml
 thesis.run.xml
 *.toc
 *.vrb
-*.pdf
-*.png
 *.xml
