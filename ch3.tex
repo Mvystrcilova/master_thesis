@@ -248,7 +248,7 @@ Importantly to note, in Hammer et al. and also for the most part in this thesis,
 This makes the network suitable for online BCI\@.
 
 
-\subsection{Receptive field}
+\subsection{Receptive field}\label{subsec:receptive-field}
 The fact that the network cannot have right padding and in the case of the Deep4Net has no padding affects its receptive field.
 By receptive field we mean the space of the input of the network which affects one specific output.
 In \cref{fig:receptive-field} we visualize the receptive field for one prediction.
@@ -263,7 +263,7 @@ Note, that the receptive field in no way illustrates the weights of the network.
 \end{figure}
 
 The receptive field is worthy of thought especially in the case of regression.
-Figure \ref{fig:receptive-field} illustrates that the predicted time-point (red line) is fairly far from the centre of the receptive field (green line).
+Figure~\ref{fig:receptive-field} illustrates that the predicted time-point (red line) is fairly far from the centre of the receptive field (green line).
 If we make the prediction only based on the data recorder prior to the predicted movement, the prediction is made from signals around the centre of the receptive field and the network pays little attention to the data that directly precede the movement.
 For classification this is not as critical, because the same label is predicted from multiple crops, and the actual classified movement does not happen at the end of the last crop but at some point during the whole input window from which the crops are derived.
 Therefore, the network has a chance to focus on information directly preceding the actual movement.
@@ -272,7 +272,7 @@ The hypothesis here is, that the high-gamma signal is most informative directly 
 Therefore, the distance of the network's receptive field centre to the predicted time-point hinders its usage.
 We explore this in the \cref{sec:shifting-the-predicted-time-point}.
 
-\subsection{Training}
+\subsection{Training}\label{subsec:training}
 Except for the learning rate, we left all hyper-parameters equal to those in Hammer et al., because it was our goal to reproduce their results and work from there.
 The network was trained for 100 epochs with batch size 32, using Adam~\cite{kingma-adam-2017} as the optimizer and learning rate 0.001.
 The reported learning rate in Hammer et al. was 0.01.
@@ -285,7 +285,7 @@ In Hammer et.\ al, they performed leave-one-out cross-validation on the 25s-long
 Nevertheless, with the amount of different architecture and modified datasets we used, this would be extremely time consuming.
 Therefore, we decided to do 5-fold cross-validation because it is also a good way of estimating the network's performance.
 
-\subsection{Gradinet visualization}\label{subsec:gradinet-visualization}
+\subsection{Gradient visualization}\label{subsec:gradinet-visualization}
 In Schirrmeister et al. and Hammer et\ al. the main visualization method was input-perturbation output correlation.
 However, after this method showed minor influence of high-gamma onto the network's prediction, they further investigated the network using gradient visualization.
 The gradient visualization algorithm is the following.
@@ -322,15 +322,15 @@ Consequently, if we alter the dilation (and also kernel) parameters of the max-p
 
 When one network has dilations 1, 3, 9 and 27 in the max-pool layers (the k*\_d3) and the other one 1, 1, 1 and 1 (k*\_d1), the difference in the dimension of the output is significant.
 The latter network makes more predictions from the same input length because the dimension of the output is larger.
-It also has a smaller receptive field for one prediction as is visulalized in \cref{fig:receptive-field-comparison}.
-Information about the size of the receptive field can also be found in Table\ref{tab:architectures-description}.
+It also has a smaller receptive field for one prediction as is visulalized in~\cref{fig:receptive-field-comparison}.
+Information about the size of the receptive field can also be found in Table~\ref{tab:architectures-description}.
 
 \begin{figure}[!htpb]
 \centering
 \begin{subfigure}[b]{0.48\textwidth}
    \includegraphics[width=0.95\linewidth]{img/ch3/deep4net-receptive-field}
    \caption{}
-\end{subfigure}\label{fig:receptive-field-comparison}
+\end{subfigure}
 \begin{subfigure}[b]{0.48\textwidth}
    \includegraphics[width=0.95\linewidth]{img/ch3/k1-receptive-field}
    \caption{}
@@ -365,8 +365,7 @@ variable\_k3\_d2 &(3, 1), (3, 1), (3, 1), (3, 1)& (2, 1), (4, 1), (8, 1), (16, 1
 \caption{Architectural variations.}
 \end{table}\label{tab:architectures-description}
 
-
-\subsection{Performance analysis}
+\subsection{Performance analysis}\label{subsec:performance-analysis}
 When comparing two models, we are not comparing them based on the mean-square error (MSE) which is the loss function of the training, but on the correlation coefficient (CC) between the model's predictions and the predicted kinematic variable.
 Specifically the Pearson's correlation coefficient.
 Often throughout the thesis we show boxplots of CCs of different architectures.
