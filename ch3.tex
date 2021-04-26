@@ -313,33 +313,30 @@ Table~\ref{tab:architectures-description} explains the terminology used with res
 The original Deep4Net corresponds to the {variable}\_k3\_d3\_sbp0 in Table\ref{tab:architectures-description}.
 The suffix \textit{sbp} refers to a parameter of the Deep4Net namely the \texttt{stride\_before\_pool} parameter.
 This parameter influences the dilations in the max-pool layers of the network. In Hammer et al~\cite{Hammer-2021} and Schirrmeister et al. \cite{schirrmeister-deep-2017}this parameter was set to \texttt{False (sbp0)}, nevertheless, in the gradient peak analysis performed by their group which we are referring to in Section \cref{sec:gradient-peak}, the studied network had \texttt{stride\_before\_pool} set to \texttt{True (sbp1)}.
+
 Therefore, we focus on the Deep4Net with sbp1 in the gradient peak analysis but the default Deep4Net architecture is the one with sbp0 as in Hammer et al.
 When changing the parameters of the max-pool layers as we describe above, the number of outputs the network has changes.
 It also causes changes in the receptive field of the network.
-To see how, consider just one max-pool layer with dilation 3 (L3) and one max-pool layer with dilation 1 (L1). If we use a window of the same length as input for L3 and L1 and compare the dimensions of the outputs from these layers, the dimension of the output of L3 will be smaller than of the L1 \ref{figure_output_difference}.
-Consequently, if we alter the dilation (and also kernel) parameters of the max-pool layers in the Deep4Net, we get a different number of outputs from the altered network.
+To see how, consider just one max-pool layer with dilation 3 (L3) and one max-pool layer with dilation 1 (L1). If we use a window of the same length as input for L3 and L1 and compare the dimensions of the outputs from these layers, the dimension of the output of L3 will be smaller than of the L1.
+Consequently, if we alter the dilation (and also kernel) parameters of the max-pool layers in the Deep4Net, we get a different number of outputs from the altered network. 
+
 When one network has dilations 1, 3, 9 and 27 in the max-pool layers (the k*\_d3) and the other one 1, 1, 1 and 1 (k*\_d1), the difference in the dimension of the output is significant.
 The latter network makes more predictions from the same input length because the dimension of the output is larger.
 It also has a smaller receptive field for one prediction as is visulalized in \cref{fig:receptive-field-comparison}.
 Information about the size of the receptive field can also be found in Table\ref{tab:architectures-description}.
 
-
-\begin{figure}
-    \centering
-    \RawFloats
-    \begin{minipage}{0.45\textwidth}
-        \centering
-        \includegraphics[width=0.9\textwidth]{img/ch3/deep4net-receptive-field} % first figure itself
-        \caption{One example input window in which the receptive field of the network necessary for one prediction is highligted. In this case, the network is the Deep4Net.}
-    \end{minipage}\hfill
-    \begin{minipage}{0.45\textwidth}
-        \centering
-        \includegraphics[width=0.9\textwidth]{img/ch3/k1-receptive-field} % second figure itself
-        \caption{Network withtout max-pool.}
-    \end{minipage}
+\begin{figure}[!htpb]
+\centering
+\begin{subfigure}[b]{0.48\textwidth}
+   \includegraphics[width=0.95\linewidth]{img/ch3/deep4net-receptive-field}
+   \caption{}
+\end{subfigure}\label{fig:receptive-field-comparison}
+\begin{subfigure}[b]{0.48\textwidth}
+   \includegraphics[width=0.95\linewidth]{img/ch3/k1-receptive-field}
+   \caption{}
+\end{subfigure}
+\caption[]{}
 \end{figure}\label{fig:receptive-field-comparison}
-
-
 
 \begin{table}
 \centering
