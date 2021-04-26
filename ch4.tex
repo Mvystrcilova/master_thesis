@@ -22,25 +22,25 @@ This suggests that the 83.33Hz peak really is an architecture artifact and it do
 \begin{figure}
 \begin{subfigure}{.5\textwidth}
   \centering
-  \includegraphics[width=.8\linewidth]{img/ch4/absVel-k3-d3}
+  \includegraphics[width=\linewidth]{img/ch4/absVel-k3-d3}
   \caption{1a}
   \label{fig:sfig1}
 \end{subfigure}%
 \begin{subfigure}{.5\textwidth}
   \centering
-  \includegraphics[width=.8\linewidth]{img/ch4/absVel-k3-d2}
+  \includegraphics[width=\linewidth]{img/ch4/absVel-k3-d2}
   \caption{1b}
   \label{fig:sfig2}
 \end{subfigure}
 \begin{subfigure}{.5\textwidth}
   \centering
-  \includegraphics[width=.8\linewidth]{img/ch4/absVel-k2-d3}
+  \includegraphics[width=\linewidth]{img/ch4/absVel-k2-d3}
   \caption{1a}
   \label{fig:sfig1}
 \end{subfigure}%
 \begin{subfigure}{.5\textwidth}
   \centering
-  \includegraphics[width=.8\linewidth]{img/ch4/absVel-k1}
+  \includegraphics[width=\linewidth]{img/ch4/absVel-k1}
   \caption{1b}
   \label{fig:sfig2}
 \end{subfigure}
@@ -55,20 +55,23 @@ When the dilation of the max-pool layers shifted to two and powers of two, the p
 This is in line with the hypothesis that the alignment of frequencies with the max-pool layer dilations is indeed the reason for the gradient peak we see in Figure~\ref{fig:max-pool-changes}.
 
 \begin{figure}
-\begin{subfigure}{.5\textwidth}
-  \centering
-  \includegraphics[width=.8\linewidth]{img/ch4/absVel-maxpool-k3-d3}
-  \caption{1a}
-  \label{fig:sfig1}
-\end{subfigure}%
-\begin{subfigure}{.5\textwidth}
-  \centering
-  \includegraphics[width=.8\linewidth]{img/ch4/absVel-maxpool-k3-d2}
-  \caption{1b}
-  \label{fig:sfig2}
+\centering
+\begin{subfigure}[b]{0.95\textwidth}
+   \includegraphics[width=1\linewidth]{img/ch4/absVel-maxpool-k3-d3}
+   \caption{}
+   \label{fig:Ng1} 
 \end{subfigure}
-\caption{plots of....}
-\label{fig:max-pool-changes}
+
+\begin{subfigure}[b]{0.95\textwidth}
+   \includegraphics[width=1\linewidth]{img/ch4/absVel-maxpool-k3-d2}
+   \caption{}
+   \label{fig:Ng2}
+\end{subfigure}
+\caption[Two numerical solutions]{(a) Numerical solutions for the small-time system 
+with a constant-curvature body shape showing the scaled leading-order veritcal 
+reaction force $N_0$ versus the scaled body mass $M$ for various values of $g$. 
+Again, $I=M$ for definiteness and $A=0.7$. (b) As for (a) but over a wider range of 
+values of $M,I$.}
 \end{figure}
 
 \section{Architectural modifications}\label{sec:architectural-modifications}
