@@ -269,7 +269,7 @@ It would be interesting to build a network with a uniform receptive field and th
 Nevertheless, such an analysis is out of the scope of this thesis.
 
 \subsubsection{Gradients}
-In Section \ref{subsec:gradinet-visualization} we already saw that the best performing networks are those which use lower frequencies.
+In Section~\ref{subsec:gradinet-visualization} we already saw that the best performing networks are those which use lower frequencies.
 Here we show, how the shift influences the gradients.
 Hypothetically, the information about the movement in high-gamma could be informative only in the moments directly preceding the movement.
 Therefore the networks are unable to use it because they focus on the signal recorded too far in the past.
@@ -282,7 +282,7 @@ Here, we show results from the third convolutional layer which servers as good r
 The trends are different for the full dataset and the high-passed dataset.
 
 \begin{enumerate}
-    \item Gradients of networks which are \textbf{trained and validated on full data} are displayed in Figure~\ref{shifted-gradients-different-architecture}.
+    \item Gradients of networks which are \textbf{trained and validated on full data} are displayed in Figure~\ref{fig:shifted-gradients-different-architecture}.
     What we observe is that the networks across all architecture seem to refine their focus to more narrow frequency bands.
     Figure~\ref{} illustrates this behaviour.
     For example the vel\_k1 network which is the one without max-pools has high-gradient values in the original setting for frequencies up to 25Hz when looking at gradients for motor channels.
@@ -297,8 +297,53 @@ The trends are different for the full dataset and the high-passed dataset.
     But the fact that the networks trained on full data do not use high-gamma, and their performance increases significantly compared to the non-shifted setting points to the information in high-gamma being informative but redundant when having access to information from all frequencies.
 \end{enumerate}
 
+\begin{figure}[!htpb]
+\centering
+\begin{subfigure}[b]{0.45\textwidth}
+   \includegraphics[width=1\linewidth]{img/ch4/vel-conv-3-layer-grads}
+   \caption{}
+\end{subfigure}\label{fig:vel-conv3-layer-grads}
+
+\begin{subfigure}[b]{0.45\textwidth}
+   \includegraphics[width=1\linewidth]{img/ch4/vel-conv-3-layer-grads-shifted}
+   \caption{}
+\end{subfigure}\label{fig:vel-conv3-layer-grads-shifted}
+\caption[]{}
+
+\begin{subfigure}[b]{0.45\textwidth}
+   \includegraphics[width=1\linewidth]{img/ch4/absVel-conv-3-layer-grads}
+   \caption{}
+\end{subfigure}\label{fig:absVel-conv-3-layer-grads}
+
+\begin{subfigure}[b]{0.45\textwidth}
+   \includegraphics[width=1\linewidth]{img/ch4/absVel-conv-3-layer-grads-shifted}
+   \caption{}
+\end{subfigure}\label{fig:absVel-conv-3-layer-grads-shifted}
+\caption[]{}
+\end{figure}\label{fig:shifted-vs-non-shifted-grads}
+
+
 \subsubsection{Summary}\label{subsubsec:centre-shiftig-summary}
-\todo{summarize performance with gradients, point out interesting things}
+When looking at the performances and gradients of the various CNN architectures, the following observation can be made.
+\begin{itemize}
+    \item The shift improves performance 1. when training and validating on the full dataset; 2. when training on the full dataset and validating on low-passed data;
+    3. when training and validating on high-passed data. This is true for both velocity and absolute velocity.
+    \item The shift attenuates the differences in performance between the different CNNs for the full training and validation.
+    When looking at graphs \textbf{B} in both~\ref{fig:shifted-performance-vel} and~\ref{fig:shifted-performance-absVel}, we can see that the number of network which have a significantly better performance than the original Deep4Net (k3\_d3\_sbp0) decreases compared to \textbf{A}.
+    \item The shift does not improve performance for the CNNs trained on full data and validated on high-pass data (graphs \textbf{G} and \textbf{H} in both~\ref{fig:shifted-performance-vel} and~\ref{fig:shifted-performance-absVel}).
+    This result together with the more narrow frequency bands the networks focus on after the shift show, that opposite to the expectation, the networks do not start focusing on high-gamma with the shift.
+    They start to focus more on information from the lower frequency bands which.
+    Modulations in these low frequency bands become more informative with the shift, therefore the performance increase, and the interest of the CNNs in higher frequencies drops.
+    \item It is true in the shifted setting, as was in the non-shifted setting, that the network without max-pool (k1) which is most solely focused on low-frequency modulations performs the best.
+    \item The modulations in the high-gamma band also become more informative for decoding with the shift, thus the increase in performance when training and validating on the high-passed dataset.
+    Nevertheless, as we state in the point above, not even this motivates the networks to use information from the high-gamma band.
+    The opposite happens.
+\end{itemize}
+
+From the observations above, we can state, that the modulations in the high-gamma band are not particularly informative for velocity and absolute velocity decoding.
+They contain information the CNNs are able to use for decoding, nevertheless, it is not an advantage for the CNN, rather it harms its performance.
+It is better for the CNNs to focus on low frequencies.
+
 
 \subsection{Shifting the predicted time-point across receptive field}\label{subsec:shifting-the-predicted-time-point-across-receptive-field}
 Besides the big shift from the edge of the receptive field to the centre we also studied what happens if we shift the predicted time-point in smaller steps across the receptive field of the network. 
