@@ -282,9 +282,8 @@ Here, we show results from the third convolutional layer which servers as good r
 The trends are different for the full dataset and the high-passed dataset.
 
 \begin{enumerate}
-    \item Gradients of networks which are \textbf{trained and validated on full data} are displayed in Figure~\ref{fig:shifted-gradients-different-architecture}.
+    \item Gradients of networks which are \textbf{trained and validated on full data} are displayed in Figures~\ref{fig:vel-shifted-vs-non-shifted-grads} and \ref{fig:absVel-shifted-vs-non-shifted-grads}.
     What we observe is that the networks across all architecture seem to refine their focus to more narrow frequency bands.
-    Figure~\ref{} illustrates this behaviour.
     For example the vel\_k1 network which is the one without max-pools has high-gradient values in the original setting for frequencies up to 25Hz when looking at gradients for motor channels.
     In the shifted setting the band with high gradient values narrows to frequencies closer to 0.
     The network vek\_k2\_d2 is in the non-shifted setting focused mostly on frequencies between 25 and 60 Hz. Nevertheless, with shifting the gradients for a lot of frequencies the width of the band is reduced, and the network focuses on frequencies around 25Hz. For no network did the shift cause an increase in the use of information from the high-gamma frequency band.
@@ -299,29 +298,60 @@ The trends are different for the full dataset and the high-passed dataset.
 
 \begin{figure}[!htpb]
 \centering
-\begin{subfigure}[b]{0.45\textwidth}
+\RawFloats
+\begin{subfigure}[b]{\textwidth}
    \includegraphics[width=1\linewidth]{img/ch4/vel-conv-3-layer-grads}
    \caption{}
 \end{subfigure}\label{fig:vel-conv3-layer-grads}
 
-\begin{subfigure}[b]{0.45\textwidth}
+\begin{subfigure}[b]{\textwidth}
    \includegraphics[width=1\linewidth]{img/ch4/vel-conv-3-layer-grads-shifted}
    \caption{}
 \end{subfigure}\label{fig:vel-conv3-layer-grads-shifted}
 \caption[]{}
+\end{figure}\label{fig:vel-shifted-vs-non-shifted-grads}
 
-\begin{subfigure}[b]{0.45\textwidth}
+\begin{figure}[!hpbp]
+\begin{subfigure}[a]{\textwidth}
    \includegraphics[width=1\linewidth]{img/ch4/absVel-conv-3-layer-grads}
    \caption{}
 \end{subfigure}\label{fig:absVel-conv-3-layer-grads}
 
-\begin{subfigure}[b]{0.45\textwidth}
+\begin{subfigure}[b]{\textwidth}
    \includegraphics[width=1\linewidth]{img/ch4/absVel-conv-3-layer-grads-shifted}
    \caption{}
 \end{subfigure}\label{fig:absVel-conv-3-layer-grads-shifted}
 \caption[]{}
-\end{figure}\label{fig:shifted-vs-non-shifted-grads}
+\end{figure}\label{fig:absVel-shifted-vs-non-shifted-grads}
 
+% high-pass gradients with shift
+\begin{figure}[!htpb]
+\centering
+\RawFloats
+\begin{subfigure}[b]{\textwidth}
+   \includegraphics[width=1\linewidth]{img/ch4/vel-conv-3-layer-grads-hp}
+   \caption{}
+\end{subfigure}\label{fig:vel-conv3-layer-grads-hp}
+
+\begin{subfigure}[b]{\textwidth}
+   \includegraphics[width=1\linewidth]{img/ch4/vel-conv-3-layer-grads-hp-shifted}
+   \caption{}
+\end{subfigure}\label{fig:vel-conv3-layer-grads-shifted-hp}
+\caption[]{}
+\end{figure}\label{fig:vel-shifted-vs-non-shifted-grads-hp}
+
+\begin{figure}[!hpbp]
+\begin{subfigure}[a]{\textwidth}
+   \includegraphics[width=1\linewidth]{img/ch4/absVel-conv-3-layer-grads-hp}
+   \caption{}
+\end{subfigure}\label{fig:absVel-conv-3-layer-grads-hp}
+
+\begin{subfigure}[b]{\textwidth}
+   \includegraphics[width=1\linewidth]{img/ch4/absVel-conv-3-layer-grads-hp-shifted}
+   \caption{}
+\end{subfigure}\label{fig:absVel-conv-3-layer-grads-shifted-hp}
+\caption[]{}
+\end{figure}\label{fig:absVel-shifted-vs-non-shifted-grads-hp}
 
 \subsubsection{Summary}\label{subsubsec:centre-shiftig-summary}
 When looking at the performances and gradients of the various CNN architectures, the following observation can be made.
@@ -329,7 +359,7 @@ When looking at the performances and gradients of the various CNN architectures,
     \item The shift improves performance 1. when training and validating on the full dataset; 2. when training on the full dataset and validating on low-passed data;
     3. when training and validating on high-passed data. This is true for both velocity and absolute velocity.
     \item The shift attenuates the differences in performance between the different CNNs for the full training and validation.
-    When looking at graphs \textbf{B} in both~\ref{fig:shifted-performance-vel} and~\ref{fig:shifted-performance-absVel}, we can see that the number of network which have a significantly better performance than the original Deep4Net (k3\_d3\_sbp0) decreases compared to \textbf{A}.
+    When looking at graphs \textbf{B} in both~\cref{fig:shifted-performance-vel} and~\cref{fig:shifted-performance-absVel}, we can see that the number of network which have a significantly better performance than the original Deep4Net (k3\_d3\_sbp0) decreases compared to \textbf{A}.
     \item The shift does not improve performance for the CNNs trained on full data and validated on high-pass data (graphs \textbf{G} and \textbf{H} in both~\ref{fig:shifted-performance-vel} and~\ref{fig:shifted-performance-absVel}).
     This result together with the more narrow frequency bands the networks focus on after the shift show, that opposite to the expectation, the networks do not start focusing on high-gamma with the shift.
     They start to focus more on information from the lower frequency bands which.
@@ -352,32 +382,45 @@ The step size was 0.1 s which is equivalent to 25 samples.
 This way, we can observe how the shifting gradually influences the performance and gradients of the network. 
 
 Unlike the previous experiments we chose to perform this analysis only on one architecture, namely, the Deep4Net\_sbp0. 
-The shift seems to influence the gradients of all the networks in a similar way. 
+The shift seems to influence the gradients of all the networks similarly.
 And therefore, the amount of time and computational power necessary to train multiple networks for each time-steps seems excessive.  
 
 \subsubsection{Performance}\label{subsubsec:across-shiftig-performace}
-The performance gradually changing with the shift is displayed in Figure \ref{fig:shiftig-performance}.
+The performance gradually changing with the shift is displayed in Figure~\ref{fig:shiftig-performance}.
 We can observe the slow decrease in performance when increasing the distance of the predicted time-point to the receptive field centre, in both directions. 
 This is to be expected. 
-Nevertheless, similarly to performance in section \ref{subsec:shifting-the-predicted-time-point-to-the-centre-of-the-receptive-field} we do not know if the fact that the performance peaks in the centre of the receptive field is due to the predicted time-point being in the centre of the receptive field. 
+Nevertheless, similarly to performance in section~\ref{subsec:shifting-the-predicted-time-point-to-the-centre-of-the-receptive-field} we do not know if the fact that the performance peaks in the centre of the receptive field is due to the predicted time-point being in the centre of the receptive field.
 It could again also be due to the fact that the network has information from the future. 
 Interestingly, the decoding performance drops slower when using information predominantly from the future more than when using information predominantly from the past.
 To properly investigate the informativeness of past vs. future signals however, we would need to have a network with an uniform receptive field. 
 \todo{some literature about this}.
+
+\begin{figure}[!hpbp]
+\begin{subfigure}[a]{\textwidth}
+   \includegraphics[width=1\linewidth]{img/ch4/absVel-conv-3-layer-grads-hp}
+   \caption{}
+\end{subfigure}\label{fig:vel-shifting-performance}
+
+\begin{subfigure}[b]{\textwidth}
+   \includegraphics[width=1\linewidth]{img/ch4/absVel-conv-3-layer-grads-hp-shifted}
+   \caption{}
+\end{subfigure}\label{fig:absVel-shiftig-performance}
+\caption[]{}
+\end{figure}\label{fig:shifting-performance}
 
 Besides observing how performance changes with shifting, we also visualize the gradients as is described in the next section.
 
 \subsubsection{Gradients}\label{subsubsec:across-shiftig-gradients}
 The gradients are visualized in Figure~\ref{figure-shifted-gradients}.
 In the graph for absolute velocity, we can observe the trend of broadening the frequency ranges with high gradient values when shifting the predicted time-point from the centre of the receptive field both to the left and to the right.
-This is what we expected because it corresponds to the results from \ref{subsec:shifting-the-predicted-time-point-to-the-centre-of-the-receptive-field}. 
+This is what we expected because it corresponds to the results from~\cref{subsec:shifting-the-predicted-time-point-to-the-centre-of-the-receptive-field}.
 Interestingly, when plotting the same graph for velocity, we do not observe this behaviour so clearly, instead there is a periodicity in the positive and negative value of the gradients for the different values of the shift.
 It is unclear why this periodicity occurs.
 
 \subsubsection{Summary}\label{subsubsec:across-shiftig-summary}
 Besides the periodicity of the positive and negative values of the gradients in for velocity, we have further confirmed the conclusions we drew previously in \ref{subsec:shifting-the-predicted-time-point-to-the-centre-of-the-receptive-field}. 
 Indeed the network seems to focus on more narrow frequency bands when given better access to information close to its receptive field.
-In the case of the Deep4Net\_spb0 it also means lower interest in the high-gamma frequency band when achieving best performance. 
+In the case of the Deep4Net\_spb0 it also means lower interest in the high-gamma frequency band when achieving better performance.
 This corroborates the what we have established so far about the information in the high-gamma band being inferior for velocity and absolute velocity decoding compared to information from lower frequency bands. 
 
 
@@ -385,9 +428,10 @@ This corroborates the what we have established so far about the information in t
 
 
 \subsection{Performance}\label{subsec:pw-performance}
-How the networks react to datasets which were whitened as described in Section~\ref{methods-spectral-whitening} was one of our interests because when we look at the spectrum of the original signal, the amplitudes of frequencies decrease exponentially with increase in the frequency.
+How the networks react to datasets which were whitened as described in Section~\ref{subsec:modifications-to-the-dataset} was one of our interests because when we look at the spectrum of the original signal, the amplitudes of frequencies decrease exponentially with increase in the frequency.
 This is common in biological signals but could be a reason for the network to ignore high-frequencies when making predictions. Figure~\ref{pw-performances-full-data} shows how the predictions changed compared to predictions on non-whitened signals when using the full dataset.
-It is obvious that the correlation coefficient of all networks dropped significantly. When looking at Figure~\ref{pw-performaces-hp-data} we see that in the case of high-passed datasets the decrease was lower, but even for the high-passed data, the performance did not increase.
+It is obvious that the correlation coefficient of all networks dropped significantly.
+When looking at Figure~\ref{pw-performaces-hp-data} we see that in the case of high-passed datasets the decrease was lower, but even for the high-passed data, the performance did not increase.
 
 \subsection{Gradients}\label{subsec:pw-gradients2}
 
