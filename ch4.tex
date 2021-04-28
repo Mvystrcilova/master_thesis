@@ -398,13 +398,16 @@ To properly investigate the informativeness of past vs. future signals however, 
 \todo{some literature about this}.
 
 \begin{figure}[!hpbp]
+\centering
 \begin{subfigure}[a]{\textwidth}
-   \includegraphics[width=0.8\linewidth]{img/ch4/vel-shifting-performance-comparison}
+    \centering
+   \includegraphics[width=0.7\linewidth]{img/ch4/vel-shifting-performance-comparison}
    \caption{}
 \end{subfigure}\label{fig:vel-shifting-performance}
 
 \begin{subfigure}[b]{\textwidth}
-   \includegraphics[width=0.8\linewidth]{img/ch4/absVel-shifting-performance-comparison}
+    \centering
+   \includegraphics[width=0.7\linewidth]{img/ch4/absVel-shifting-performance-comparison}
    \caption{}
 \end{subfigure}\label{fig:absVel-shiftig-performance}
 \caption[]{The boxplots in \textbf{(a)} show how the CCs of the original Deep4Net (vel\_k3\_d3\_sbp0) changes for velocity decoding when shifting the predicted time-point across the receptive field.
@@ -453,9 +456,18 @@ This corroborates the what we have established so far about the information in t
 
 \subsection{Performance}\label{subsec:pw-performance}
 How the networks react to datasets which were whitened as described in Section~\ref{subsec:modifications-to-the-dataset} was one of our interests because when we look at the spectrum of the original signal, the amplitudes of frequencies decrease exponentially with increase in the frequency.
-This is common in biological signals but could be a reason for the network to ignore high-frequencies when making predictions. Figure~\ref{pw-performances-full-data} shows how the predictions changed compared to predictions on non-whitened signals when using the full dataset.
-It is obvious that the correlation coefficient of all networks dropped significantly.
-When looking at Figure~\ref{fig:pw-performance} graphs we see that in the case of high-passed datasets the decrease was lower, but even for the high-passed data, the performance did not increase.
+See Figure \ref{fig:spectral-whitening}.
+This is common in biological signals but could be a reason for the CNNs to ignore high-frequencies when making predictions.
+We therefore evaluate the performance of all the architectures on the whitened datasets. 
+We carry out the whitening on full as well as filtered datasets. 
+Figure~\ref{pw-performances-full-data} shows how the predictions changed compared to predictions on non-whitened signals when using the full dataset.
+It is obvious that for the full training and validation Figre~\ref{fig:pw-performance} \textbf{graphs A} and \textbf{B}, the correlation coefficient of all networks dropped significantly.
+When looking at Figure~\ref{fig:pw-performance} \textbf{graphs E} and \textbf{F} we see that in the case of high-passed datasets the decrease was lower, but even for the high-passed data, the performance did not increase significantly for any of the networks.
+The only scenario where spectral whitening helped the CNNs to achieve better CCs was when they were trained on full data and validated on high-passed data \ref{fig:pw-performance} \textbf{Graphs G} and \textbf{H}. 
+In the case of velocity \ref{fig:vel-pw-performance} a statistically significant increase was only for the vel\_k1 network.
+In the case of absolute velocity five out of the seven architectures experienced a statistically significant increase in performance due to spectral whitening.\\
+
+These result show us that the networks indeed learned to use high-gamma because when validated on high-passed data, their performance 
 
 \begin{figure}[!htbp]
 \begin{subfigure}[a]{\textwidth}
@@ -463,13 +475,13 @@ When looking at Figure~\ref{fig:pw-performance} graphs we see that in the case o
    \caption{\textbf{Velocity} decoding correlation coefficients comparison between the networks trained on non-whitened datasets \textbf{Graphs A, C, E, G} and the whitened dataset \textbf{Graphs B, D, F, H}.
    In all settings \textbf{A - E} the Deep4Net (k3\_d3\_sbp0) from~\cite{Hammer-2021} is labeled red.
    \\ \textbf{Graphs A} and \textbf{B} compare the performance of the networks when trained and validated on the full dataset.
-   The stars in \textbf{B} denote CCs significantly lower compared to CCs of the same architecture in \textbf{A}. (** p <0.01), (* p < 0.05), one-sided paired t-test.
+   The stars in \textbf{B} denote CCs significantly lower compared to CCs of the same architecture in \textbf{A} (** p <0.01), (* p < 0.05), one-sided paired t-test.
    \\\textbf{Graphs C} and \textbf{D} show the correlation coefficients of the networks trained on full data and validated on low-passed data.
    The stars in \textbf{D} denote if the CCs are significantly lower compared to CCs of the same architecture in \textbf{C} (** p <0.01), (* p < 0.05), one-sided paired t-test.
    \\\textbf{Graphs E} and \textbf{F} compare the CCs of the CNNs when trained and validated on high-passed data.
-   The stars in \textbf{F} denote CCs significantly lower compared to CCs of the same architecture in \textbf{E}. (** p <0.01), (* p < 0.05), one-sided paired t-test.
+   The stars in \textbf{F} denote CCs significantly lower compared to CCs of the same architecture in \textbf{E} (** p <0.01), (* p < 0.05), one-sided paired t-test.
    \textbf{Graphs G} and \textbf{H} compare performance when trained on full data and validated on high-passed data.
-   The stars in \textbf{H} denote CCs significantly lower compared to CCs of the same architecture in \textbf{G}. (** p <0.01), (* p < 0.05), one-sided paired t-test.}
+   The stars in \textbf{H} denote CCs significantly lower compared to CCs of the same architecture in \textbf{G} (** p <0.01), (* p < 0.05), one-sided paired t-test.}
 \end{subfigure}\label{fig:vel-pw-performance}
 \end{figure}
 \clearpage   
@@ -493,13 +505,15 @@ When looking at Figure~\ref{fig:pw-performance} graphs we see that in the case o
 
 \subsection{Gradients}\label{subsec:pw-gradients2}
 
-When looking at the gradients of the networks trained on whitened data, we observe that the networks indeed use modulations in the high-gamma frequency bands for their predictions.
-Interestingly instead of having uniform gradients across all frequencies, they inverted their focus from low frequencies to high-frequencies.
-The only architectures for which this did not happen are the models vel\_k1 and absVel\_k1 which are the networks without a max-pool layer.
-When looking at the performance graphs in Figure~\ref{fig:pw-last-layer-grads} though, these are the networks for which the performance dropped least.
+When looking at the gradients of the networks trained on whitened data in Figure~\ref{fig:pw-last-layer-grads}, we observe that the networks indeed use modulations in the high-gamma frequency bands for their predictions.
+For absolute velocity, the gradients have high values in bands across the whole frequency range. Interestingly, for velocity, instead of having more uniform gradients across all frequencies, they inverted their focus from low frequencies to high-frequencies.
+The only architectures for which this did not happen is the vel\_k1 CNN which is the network without max-pool layers.
+This network stayed mostly focused on low-frequencies below 25 Hz.
+Also for absolute velocity, the network without max-pools (absVel\_k1) stayed mostly focused on the low frequencies even though a slight increase in gradient values for frequencies around 75 Hz can be observed. 
+When combining this information with the performance graphs in Figure~\ref{fig:pw-last-layer-grads}, we can see, that the networks without max-pools which were least influenced by the spectral whitening in terms of focusing on higher frequencies are those for which the CCs dropped least.
 This again suggests that the using information from the high-gamma frequency is possible, but it does not seem to help achieve better correlation coefficients.
 
-\begin{figure}[!hpbp]
+\begin{figure}[!htbp]
 \begin{subfigure}[a]{\textwidth}
    \includegraphics[width=1\linewidth]{img/ch4/vel-pw-last-layer-grads}
    \caption{}
@@ -509,7 +523,5 @@ This again suggests that the using information from the high-gamma frequency is 
    \includegraphics[width=1\linewidth]{img/ch4/absVel-pw-last-layer-grads}
    \caption{}
 \end{subfigure}\label{fig:absVel-pw-last-layet-grads}
-\caption[Spectral whitening - gradients]{Gradients of networks trained to decode velocity \textbf{(a)} and absolute velocity \textbf{(b)} on spectraly-whitened datasets}
+\caption[Spectral whitening - gradients]{Gradients of networks trained to decode \textbf{(a)} velocity and \textbf{(b)} absolute velocity on spectrally-whitened datasets}
 \end{figure}\label{fig:pw-last-layer-grads}
-
-\subsection{Summary}\label{subsec:pw-summary}
