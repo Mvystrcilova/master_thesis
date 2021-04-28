@@ -417,6 +417,7 @@ This is what we expected because it corresponds to the results from~\cref{subsec
 Interestingly, when plotting the same graph for velocity, we do not observe this behaviour so clearly, instead there is a periodicity in the positive and negative value of the gradients for the different values of the shift.
 It is unclear why this periodicity occurs.
 
+
 \subsubsection{Summary}\label{subsubsec:across-shiftig-summary}
 Besides the periodicity of the positive and negative values of the gradients in for velocity, we have further confirmed the conclusions we drew previously in \ref{subsec:shifting-the-predicted-time-point-to-the-centre-of-the-receptive-field}. 
 Indeed the network seems to focus on more narrow frequency bands when given better access to information close to its receptive field.
@@ -431,14 +432,40 @@ This corroborates the what we have established so far about the information in t
 How the networks react to datasets which were whitened as described in Section~\ref{subsec:modifications-to-the-dataset} was one of our interests because when we look at the spectrum of the original signal, the amplitudes of frequencies decrease exponentially with increase in the frequency.
 This is common in biological signals but could be a reason for the network to ignore high-frequencies when making predictions. Figure~\ref{pw-performances-full-data} shows how the predictions changed compared to predictions on non-whitened signals when using the full dataset.
 It is obvious that the correlation coefficient of all networks dropped significantly.
-When looking at Figure~\ref{pw-performaces-hp-data} we see that in the case of high-passed datasets the decrease was lower, but even for the high-passed data, the performance did not increase.
+When looking at Figure~\ref{fig:pw-performance} graphs we see that in the case of high-passed datasets the decrease was lower, but even for the high-passed data, the performance did not increase.
+
+\begin{figure}[!hpbp]
+\begin{subfigure}[a]{\textwidth}
+   \includegraphics[width=1\linewidth]{img/ch4/vel-pw-vs-non-pw-performance}
+   \caption{}
+\end{subfigure}\label{fig:vel-pw-performance}
+
+\begin{subfigure}[b]{\textwidth}
+   \includegraphics[width=1\linewidth]{img/ch4/absVel-pw-vs-non-pw-performance}
+   \caption{}
+\end{subfigure}\label{fig:absVel-pw-performance}
+\caption[]{}
+\end{figure}\label{fig:pw-performance}
 
 \subsection{Gradients}\label{subsec:pw-gradients2}
 
 When looking at the gradients of the networks trained on whitened data, we observe that the networks indeed use modulations in the high-gamma frequency bands for their predictions.
 Interestingly instead of having uniform gradients across all frequencies, they inverted their focus from low frequencies to high-frequencies.
 The only architectures for which this did not happen are the models vel\_k1 and absVel\_k1 which are the networks without a max-pool layer.
-When looking at the performance graphs in Figure~\ref{} though, these are the networks for which the performance dropped least.
+When looking at the performance graphs in Figure~\ref{fig:pw-last-layer-grads} though, these are the networks for which the performance dropped least.
 This again suggests that the using information from the high-gamma frequency is possible, but it does not seem to help achieve better correlation coefficients.
+
+\begin{figure}[!hpbp]
+\begin{subfigure}[a]{\textwidth}
+   \includegraphics[width=1\linewidth]{img/ch4/absVel-conv-3-layer-grads-hp}
+   \caption{}
+\end{subfigure}\label{fig:vel-pw-last-layer-grads}
+
+\begin{subfigure}[b]{\textwidth}
+   \includegraphics[width=1\linewidth]{img/ch4/absVel-conv-3-layer-grads-hp-shifted}
+   \caption{}
+\end{subfigure}\label{fig:absVel-pw-last-layet-grads}
+\caption[]{}
+\end{figure}\label{fig:pw-last-layer-grads}
 
 \subsection{Summary}\label{subsec:pw-summary}
