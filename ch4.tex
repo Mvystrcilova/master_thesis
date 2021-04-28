@@ -2,13 +2,13 @@
 \label{ch:exp}
 
 \section{Gradient peak}\label{sec:gradient-peak}
-In Hammer et al. \cite{Hammer-2021} their perturbation visualization technique did not show the expected utilization of modulations in the high-gamma frequency bands. 
-While studying it further using a different visualization technique, namely the gradient visualization see Section \ref{subsec:gradinet-visualization}, they found that this visualization technique does not show the networks interest in the high-gamma frequency band, unless the input window is shortened so that the CNN has only one output, i.e. predicts one time-point \ref{subsec:gradinet-visualization}. 
+In Hammer et al.~\cite{Hammer-2021} their perturbation visualization technique did not show the expected utilization of modulations in the high-gamma frequency bands.
+While studying it further using a different visualization technique, namely the gradient visualization see Section~\ref{subsec:gradinet-visualization}, they found that this visualization technique does not show the networks interest in the high-gamma frequency band, unless the input window is shortened so that the CNN has only one output, i.e. predicts one time-point \ref{subsec:gradinet-visualization}.
 
-\begin{itemize}
-\item[1.] A gradient peak occurs at 83.88 Hz in both the untrained and the trained network and it is amplified with training.
-\item[2.] If we add noise of a certain frequency or white noise to the input, frequencies around 83.33 Hz increases in the output of the network.
-\end{itemize}
+\begin{enumerate}
+\item A gradient peak occurs at 83.88 Hz in both the untrained and the trained network and it is amplified with training.
+\item If we add noise of a certain frequency or white noise to the input, frequencies around 83.33 Hz increases in the output of the network.
+\end{enumerate}
 
 A hypothesis was that the 83.33 Hz peak occurs due to this frequency being aligned with the dilations of the max-pool layers and therefore is just an architecture artifact.
 Because sampling rate is 250 Hz and the dilations of the max-pool layers are powers of three and $250 Hz / 3 = 83.33 Hz$, this frequency aligns with the dilations of the max-pool layers which amplify it.
@@ -49,7 +49,7 @@ For the gradient peak at 83.33 Hz, the values of the motor, non-motor and all ch
 
 To also account for the increase of the 83.33Hz frequency in the output, we studied how the signal is affected by max-pool layers only.
 We used one and four max-pool layers with dilations equivalent with those from the Deep4Net (k3\_d3\_sbp1).
-The result for one max-pool layer is presented in Figure \ref{fig:max-pool-changes}
+The result for one max-pool layer is presented in Figure~\ref{fig:max-pool-changes}
 When the max-pool layer dilation parameter is three (or powers of three in the case of multiple consecutive max-pool layers), the output signal exhibited periodical peaks with the greatest peak around 83.33Hz \ref{fig:maxpool-k3-d3}.
 When the dilation of the max-pool layers shifted to two and powers of two, the periodicity of the peaks still occurred, however, the period increased and the greatest peak was around 120Hz \ref{fig:maxpool-k3-d2}.
 This is in line with the hypothesis that the alignment of frequencies with the max-pool layer dilations is indeed the reason for the increase of this frequency in the output.
@@ -81,7 +81,7 @@ But because they are almost equal we can deduce that it is likely caused by the 
 The only argument speaking in favor of the gradient peak being informative for the network when making its decision is its amplification with training.
 Nevertheless, this can be also attributed to the network not amplifying the peak but not actively working to suppress it as it occurs naturally when the signal passes through max-pool layers.
 Lastly also the fact that the peak is visible only when the input window is shortened to give only one output diminishes the credibility of the peak containing information useful for decoding.
-Without the averaging, the gradient method is less stable and therefore also less reliable. \todo{\cite{}}
+Without the averaging, the gradient method is less stable and therefore also less reliable.~\todo{\cite{}}
 Overall, the gradient peak definitely cannot be taken as proof that the network is using high-gamma.
 
 \section{Architectural modifications}\label{sec:architectural-modifications}
@@ -117,7 +117,7 @@ In the following points we summarize the findings on the different datasets.
 \begin{subfigure}[b]{\textwidth}
    \includegraphics[width=1\linewidth]{img/ch4/original_setting_vel_performance_comparison}
    \caption{\textbf{Velocity} decoding correlation coefficients of the different CNNs established by architecture modifications. In all settings \textbf{
-   A - E} the Deep4Net (k3\_d3\_sbp0) from \cite{Hammer-2021} is labeled red. \textbf{Graph A} shows the performance of the networks when trained and validated on the full dataset. The stars in this case denote performance significantly above the Deep4Net. (** p <0.01), (* p < 0.05), one-sided paired t-test.
+   A - E} the Deep4Net (k3\_d3\_sbp0) from~\cite{Hammer-2021} is labeled red. \textbf{Graph A} shows the performance of the networks when trained and validated on the full dataset. The stars in this case denote performance significantly above the Deep4Net. (** p <0.01), (* p < 0.05), one-sided paired t-test.
    \textbf{Graph B} shows the correlation coefficients of the networks trained on full data and validated on low-passed data. 
    The stars denote if the drop of performance was significant between this setting and setting \textbf{A}. (** p <0.01), (* p < 0.05), one-sided paired t-test.
    \textbf{Graph C} shows the performance of the CNNs when trained and validated on high-passed data. \textbf{Graph D} shows performance when trained on full data and validated on high-passed data. \textbf{Graph E} shows performance when trained on low-passed data and validated on high-passed data. For \textbf{Graphs C - E} the stars denote above chance performance - (** : p <0.01), (* : p < 0.05), one-sided paired t-test.}
@@ -127,7 +127,7 @@ In the following points we summarize the findings on the different datasets.
 \begin{subfigure}[b]{\textwidth}
    \includegraphics[width=1\linewidth]{img/ch4/original_setting_absVel_performance_comparison}
    \caption{\textbf{Absolute velocity} decoding correlation coefficients of the different CNNs established by architecture modifications. In all settings \textbf{
-   A - E} the Deep4Net (k3\_d3\_sbp0) from \cite{Hammer-2021} is labeled red. \textbf{Graph A} shows the performance of the networks when trained and validated on the full dataset. The stars in this case denote performance significantly above the Deep4Net. (** p <0.01), (* p < 0.05), one-sided paired t-test.
+   A - E} the Deep4Net (k3\_d3\_sbp0) from~\cite{Hammer-2021} is labeled red. \textbf{Graph A} shows the performance of the networks when trained and validated on the full dataset. The stars in this case denote performance significantly above the Deep4Net. (** p <0.01), (* p < 0.05), one-sided paired t-test.
    \textbf{Graph B} shows the correlation coefficients of the networks trained on full data and validated on low-passed data. 
    The stars denote if the drop of performance was significant between this setting and setting \textbf{A}. (** p <0.01), (* p < 0.05), one-sided paired t-test.
    \textbf{Graph C} shows the performance of the CNNs when trained and validated on high-passed data. \textbf{Graph D} shows performance when trained on full data and validated on high-passed data. \textbf{Graph E} shows performance when trained on low-passed data and validated on high-passed data. For \textbf{Graphs C - E} the stars denote above chance performance - (** : p <0.01), (* : p < 0.05), one-sided paired t-test.}
@@ -254,7 +254,7 @@ Notably the performance of the networks on the high-gamma dataset also increased
    \caption{}
 \end{subfigure}\label{fig:shifted-performance-absVel}
 \caption[]{{\textbf{Absolute velocity} decoding correlation coefficients comparison between original causal prediction \textbf{Graphs A, C, E, G} and the shifted (acausal) prediction \textbf{Graphs B, D, F, H}. In all settings \textbf{
-   A - E} the Deep4Net (k3\_d3\_sbp0) from \cite{Hammer-2021} is labeled red.\\ \textbf{Graphs A} and \textbf{B} compare the performance of the networks when trained and validated on the full dataset. A The stars in \textbf{A} and \textbf{B} denote performance significantly above the Deep4Net in the same setting. (** p <0.01), (* p < 0.05), one-sided paired t-test.
+   A - E} the Deep4Net (k3\_d3\_sbp0) from~\cite{Hammer-2021} is labeled red.\\ \textbf{Graphs A} and \textbf{B} compare the performance of the networks when trained and validated on the full dataset. A The stars in \textbf{A} and \textbf{B} denote performance significantly above the Deep4Net in the same setting. (** p <0.01), (* p < 0.05), one-sided paired t-test.
    \\\textbf{Graphs C} and \textbf{D} show the correlation coefficients of the networks trained on full data and validated on low-passed data. 
    The stars in \textbf{C} denote if the CCs are significantly lower compared to \textbf{A}. The stars in \textbf{D} denote if the CCs are significantly lower compared to \textbf{B}. (** p <0.01), (* p < 0.05), one-sided paired t-test.
    \\\textbf{Graphs E} and \textbf{F} compare the CCs of the CNNs when trained and validated on high-passed data. \textbf{Graphs G} and \textbf{H} compare performance when trained on full data and validated on high-passed data. For \textbf{Graphs E - H} the stars denote above chance performance - (** : p <0.01), (* : p < 0.05), one-sided paired t-test.}}
@@ -283,15 +283,16 @@ The complete results can be found in the Appendix.
 Below, we show results from the third convolutional layer which serves as representation of the overall trend. 
 
 \begin{enumerate}
-    \item Gradients of networks which are \textbf{trained and validated on full data} are displayed in Figures~\ref{fig:vel-shifted-vs-non-shifted-grads} and \ref{fig:absVel-shifted-vs-non-shifted-grads}.
+    \item Gradients of networks which are \textbf{trained and validated on full data} are displayed in Figures~\ref{fig:vel-shifted-vs-non-shifted-grads} and~\ref{fig:absVel-shifted-vs-non-shifted-grads}.
     What we observe is that the networks across all architecture seem to refine their focus to more narrow frequency bands.
     An illustration of this is in~\ref{fig:vel-conv3-layer-grads} where vel\_k1 network has high-gradient values in the original setting for frequencies up to 25Hz when looking at gradients for motor channels.
-    In the shifted setting \ref{fig:vel-conv-3-layer-grads-shifted} the band with high gradient values of the same network vel\_k1 narrows to frequencies closer to 0. \\
+    In the shifted setting~\ref{fig:vel-conv3-layer-grads-shifted} the band with high gradient values of the same network vel\_k1 narrows to frequencies closer to 0. \\
     
     For no network  did the shift cause an increase in the use of information from the high-gamma frequency band.
     Rather it seems, that the shift allowed access to less noisy information in the clearly informative bands such as the alpha and beta bands, and the network did not have to compensate with information from other frequencies.
-    \item Networks which were \textbf{trained and validated on high-passed data} can be found in Figures \ref{fig:vel-shifted-vs-non-shifted-grads-hp} and \ref{fig:absVel-shifted-vs-non-shifted-grads-hp}.
-    Again, we only chose to display gradients of one layer to illustrate a behaviour shared by all layers. The gradients of the remaining layers can be found in Appendix \ref{}\todo.
+    \item Networks which were \textbf{trained and validated on high-passed data} can be found in Figures~\ref{fig:vel-shifted-vs-non-shifted-grads-hp} and~\ref{fig:absVel-shifted-vs-non-shifted-grads-hp}.
+    Again, we only chose to display gradients of one layer to illustrate a behaviour shared by all layers.
+    The gradients of the remaining layers can be found in Appendix~\ref{}\todo.
     What we observe in the gradients of the networks trained on high-passed datasets is different from what we observe on gradients of networks trained on full datasets, maybe even the opposite.
     The networks trained on shifted data exhibit interest in the same or a broader range of frequencies above the 60Hz cut-off frequency than the networks trained in the original, non-shifted setting.
     This and the increase in performance on high-passed datasets suggests that indeed the information in signals from the future or directly preceding the movement contains more information about movement in the high-gamma band.
