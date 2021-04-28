@@ -386,7 +386,7 @@ The shift seems to influence the gradients of all the networks similarly.
 And therefore, the amount of time and computational power necessary to train multiple networks for each time-steps seems excessive.  
 
 \subsubsection{Performance}\label{subsubsec:across-shiftig-performace}
-The performance gradually changing with the shift is displayed in Figure~\ref{fig:shiftig-performance}.
+The performance gradually changing with the shift is displayed in Figure~\ref{fig:shifting-performance}.
 We can observe the slow decrease in performance when increasing the distance of the predicted time-point to the receptive field centre, in both directions. 
 This is to be expected. 
 Nevertheless, similarly to performance in section~\ref{subsec:shifting-the-predicted-time-point-to-the-centre-of-the-receptive-field} we do not know if the fact that the performance peaks in the centre of the receptive field is due to the predicted time-point being in the centre of the receptive field.
@@ -397,12 +397,12 @@ To properly investigate the informativeness of past vs. future signals however, 
 
 \begin{figure}[!hpbp]
 \begin{subfigure}[a]{\textwidth}
-   \includegraphics[width=1\linewidth]{img/ch4/absVel-conv-3-layer-grads-hp}
+   \includegraphics[width=1\linewidth]{img/ch4/vel-shifted-gradients}
    \caption{}
 \end{subfigure}\label{fig:vel-shifting-performance}
 
 \begin{subfigure}[b]{\textwidth}
-   \includegraphics[width=1\linewidth]{img/ch4/absVel-conv-3-layer-grads-hp-shifted}
+   \includegraphics[width=1\linewidth]{img/ch4/absVel-shifted-gradients}
    \caption{}
 \end{subfigure}\label{fig:absVel-shiftig-performance}
 \caption[]{}
@@ -411,7 +411,7 @@ To properly investigate the informativeness of past vs. future signals however, 
 Besides observing how performance changes with shifting, we also visualize the gradients as is described in the next section.
 
 \subsubsection{Gradients}\label{subsubsec:across-shiftig-gradients}
-The gradients are visualized in Figure~\ref{figure-shifted-gradients}.
+The gradients are visualized in Figure~\ref{fig:shifting-performance}.
 In the graph for absolute velocity, we can observe the trend of broadening the frequency ranges with high gradient values when shifting the predicted time-point from the centre of the receptive field both to the left and to the right.
 This is what we expected because it corresponds to the results from~\cref{subsec:shifting-the-predicted-time-point-to-the-centre-of-the-receptive-field}.
 Interestingly, when plotting the same graph for velocity, we do not observe this behaviour so clearly, instead there is a periodicity in the positive and negative value of the gradients for the different values of the shift.
