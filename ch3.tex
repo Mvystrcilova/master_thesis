@@ -343,6 +343,14 @@ In Hammer et al~\cite{Hammer-2021} and Schirrmeister et al. \cite{schirrmeister-
 
 Therefore, we focus on the Deep4Net with \texttt{sbp1} in Section \ref{sec:gradient-peak} but the default Deep4Net architecture is the one with \texttt{sbp0} as in Hammer et al. For the other CNNs we created, this parameter becomes meaningless because we manually set the sizes of the dilations for all the max-pool layers with no consideration of this parameter. \\
 
+\begin{figure}[!htpb]
+\centering
+\begin{subfigure}[b]{\textwidth}
+   \includegraphics[width=0.8\linewidth]{img/ch3/dilated-conv.pdf}
+   \caption[Dilated convolution]{An illustration of dilated convolution from \cite{dilated-conv}.}
+\end{subfigure}
+\end{figure}\label{fig:dilation}
+
 When we change the parameters of the max-pool layers as we describe above, the number of outputs the network has changes.
 It also causes changes in the receptive field of the network.
 To see how, consider just one max-pool layer with dilation 3 (L3) and one max-pool layer with dilation 1 (L1). 
