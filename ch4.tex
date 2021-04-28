@@ -240,7 +240,7 @@ Notably the performance of the networks on the high-gamma dataset also increased
 \begin{subfigure}[t]{\textwidth}
    \includegraphics[width=1\linewidth]{img/ch4/shifted_vs_non_shifted_vel_performance_comparison}
    \caption{\textbf{Velocity} decoding correlation coefficients comparison between original causal prediction \textbf{Graphs A, C, E, G} and the shifted (acausal) prediction \textbf{Graphs B, D, F, H}. In all settings \textbf{
-   A - E} the Deep4Net (k3\_d3\_sbp0) from \cite{Hammer-2021} is labeled red.\\ \textbf{Graphs A} and \textbf{B} compare the performance of the networks when trained and validated on the full dataset. A The stars in \textbf{A} and \textbf{B} denote performance significantly above the Deep4Net in the same setting. (** p <0.01), (* p < 0.05), one-sided paired t-test.
+   A - E} the Deep4Net (k3\_d3\_sbp0) from~\cite{Hammer-2021} is labeled red.\\ \textbf{Graphs A} and \textbf{B} compare the performance of the networks when trained and validated on the full dataset. A The stars in \textbf{A} and \textbf{B} denote performance significantly above the Deep4Net in the same setting. (** p <0.01), (* p < 0.05), one-sided paired t-test.
    \\\textbf{Graphs C} and \textbf{D} show the correlation coefficients of the networks trained on full data and validated on low-passed data. 
    The stars in \textbf{C} denote if the CCs are significantly lower compared to \textbf{A}. The stars in \textbf{D} denote if the CCs are significantly lower compared to \textbf{B}. (** p <0.01), (* p < 0.05), one-sided paired t-test.
    \\\textbf{Graphs E} and \textbf{F} compare the CCs of the CNNs when trained and validated on high-passed data. \textbf{Graphs G} and \textbf{H} compare performance when trained on full data and validated on high-passed data. For \textbf{Graphs E - H} the stars denote above chance performance - (** : p <0.01), (* : p < 0.05), one-sided paired t-test.}
@@ -399,15 +399,19 @@ To properly investigate the informativeness of past vs. future signals however, 
 
 \begin{figure}[!hpbp]
 \begin{subfigure}[a]{\textwidth}
-   \includegraphics[width=1\linewidth]{img/ch4/vel-shifted-per}
+   \includegraphics[width=1\linewidth]{img/ch4/vel-shifting-performance-comparison}
    \caption{}
 \end{subfigure}\label{fig:vel-shifting-performance}
 
 \begin{subfigure}[b]{\textwidth}
-   \includegraphics[width=1\linewidth]{img/ch4/absVel-shifted-gradients}
+   \includegraphics[width=1\linewidth]{img/ch4/absVel-shifting-performance-comparison}
    \caption{}
 \end{subfigure}\label{fig:absVel-shiftig-performance}
-\caption[]{}
+\caption[]{The boxplots in \textbf{(a)} show how the CCs of the original Deep4Net (vel\_k3\_d3\_sbp0) changes for velocity decoding when shifting the predicted time-point across the receptive field.
+The boxplots in \textbf{(b)} show the same but for absolute velocity. Zero miliseconds on the x-axis represent the predicted time-point being shifted to the centre of the receptive field.
+Moving to the right, the network uses less information from the future and the predictions becomes more causal.
+The 1041 ms mark on the x-axis is equivalent to the original fully causal prediction as described in \cite{Hammer-2021}.
+When moving from 0 to the left, the network uses more and more information from the future.}
 \end{figure}\label{fig:shifting-performance}
 
 Besides observing how performance changes with shifting, we also visualize the gradients as is described in the next section.
@@ -430,7 +434,11 @@ It is unclear why this periodicity occurs.
    \includegraphics[width=1\linewidth]{img/ch4/absVel-shifted-gradients}
    \caption{}
 \end{subfigure}\label{fig:absVel-shiftig-gradients}
-\caption[]{}
+\caption[]{The graph \textbf{(a)} shows the changes in gradients of the original Deep4Net (vel\_k3\_d3\_sbp0) trained to decode velocity when shifting the predicted time-point across the receptive field.
+The graph \textbf{(b)} show the same but for absolute velocity. Zero miliseconds on the x-axis represent the predicted time-point being shifted to the centre of the receptive field.
+Moving to the right, the network uses less information from the future and the predictions becomes more causal.
+The 1041 ms mark on the x-axis is equivalent to the original fully causal prediction as described in~\cite{Hammer-2021}.
+When moving from 0 to the left, the network uses more and more information from the future.}
 \end{figure}\label{fig:shifting-gradients}
 
 \subsubsection{Summary}\label{subsubsec:across-shiftig-summary}
@@ -452,14 +460,32 @@ When looking at Figure~\ref{fig:pw-performance} graphs we see that in the case o
 \begin{figure}[!hpbp]
 \begin{subfigure}[a]{\textwidth}
    \includegraphics[width=1\linewidth]{img/ch4/vel-pw-vs-non-pw-performance}
-   \caption{}
+   \caption{\textbf{Velocity} decoding correlation coefficients comparison between the networks trained on the original dataset \textbf{Graphs A, C, E, G} and the whitened dataset \textbf{Graphs B, D, F, H}.
+   In all settings \textbf{A - E} the Deep4Net (k3\_d3\_sbp0) from~\cite{Hammer-2021} is labeled red.
+   \\ \textbf{Graphs A} and \textbf{B} compare the performance of the networks when trained and validated on the full dataset.
+   The stars in \textbf{B} denote CCs significantly lower compared to CCs of the same architecture in \textbf{A}. (** p <0.01), (* p < 0.05), one-sided paired t-test.
+   \\\textbf{Graphs C} and \textbf{D} show the correlation coefficients of the networks trained on full data and validated on low-passed data.
+   The stars in \textbf{D} denote if the CCs are significantly lower compared to CCs of the same architecture in \textbf{C} (** p <0.01), (* p < 0.05), one-sided paired t-test.
+   \\\textbf{Graphs E} and \textbf{F} compare the CCs of the CNNs when trained and validated on high-passed data.
+   The stars in \textbf{F} denote CCs significantly lower compared to CCs of the same architecture in \textbf{E}. (** p <0.01), (* p < 0.05), one-sided paired t-test.
+   \textbf{Graphs G} and \textbf{H} compare performance when trained on full data and validated on high-passed data.
+   The stars in \textbf{H} denote CCs significantly lower compared to CCs of the same architecture in \textbf{G}. (** p <0.01), (* p < 0.05), one-sided paired t-test.}
 \end{subfigure}\label{fig:vel-pw-performance}
 
 \begin{subfigure}[b]{\textwidth}
    \includegraphics[width=1\linewidth]{img/ch4/absVel-pw-vs-non-pw-performance}
-   \caption{}
+   \caption{\textbf{Absolute velocity} decoding correlation coefficients comparison between the networks trained on the original dataset \textbf{Graphs A, C, E, G} and the whitened dataset \textbf{Graphs B, D, F, H}.
+   In all settings \textbf{A - E} the Deep4Net (k3\_d3\_sbp0) from~\cite{Hammer-2021} is labeled red.
+   \\ \textbf{Graphs A} and \textbf{B} compare the performance of the networks when trained and validated on the full dataset.
+   The stars in \textbf{B} denote CCs significantly lower compared to CCs of the same architecture in \textbf{A}. (** p <0.01), (* p < 0.05), one-sided paired t-test.
+   \\\textbf{Graphs C} and \textbf{D} show the correlation coefficients of the networks trained on full data and validated on low-passed data.
+   The stars in \textbf{D} denote if the CCs are significantly lower compared to CCs of the same architecture in \textbf{C} (** p <0.01), (* p < 0.05), one-sided paired t-test.
+   \\\textbf{Graphs E} and \textbf{F} compare the CCs of the CNNs when trained and validated on high-passed data.
+   The stars in \textbf{F} denote CCs significantly lower compared to CCs of the same architecture in \textbf{E}. (** p <0.01), (* p < 0.05), one-sided paired t-test.
+   \textbf{Graphs G} and \textbf{H} compare performance when trained on full data and validated on high-passed data.
+   The stars in \textbf{H} denote CCs significantly lower compared to CCs of the same architecture in \textbf{G}. (** p <0.01), (* p < 0.05), one-sided paired t-test.}
 \end{subfigure}\label{fig:absVel-pw-performance}
-\caption[]{}
+\caption[Comparion of CCs between CNNs trained on the original and whitened signal]{}
 \end{figure}\label{fig:pw-performance}
 
 \subsection{Gradients}\label{subsec:pw-gradients2}
