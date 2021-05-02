@@ -246,24 +246,6 @@ Namely, those dilated networks which cannot be constructed from a CNN with strid
 These dilated networks cannot be used for trial-wise decoding.
 Nevertheless, this is no drawback for our task at hand because we .
 
-\subsection{Difference between classification and regression}\label{subsec:difference-between-deep4net-for-classification-and-regression}
-\todo{possibly remove this subsection}
-We now describe the differences between using the Deep4Net for regression instead of classification.
-While the task of the present thesis is a regression task, because we are trying to understand which frequency bands the network utilizes and why, we also consider which frequency bands it utilized when used for classification. 
-Because these frequency bands differed, in \cite{schirrmeister-deep-2017, hartmann-hierarchical-2018} we saw the high-gamma band be informative and in \cite{Hammer-2021} less informative, \\
-In the classification task, one trial window was given as input having one gold label.
-When using cropped decoding, the trial window was split into multiple shorter windows giving multiple outputs.
-To get one output from these multiple outputs, the outputs were averaged to yield the final prediction. \\
-
-In the case of regression we can also create an input window of a certain length and the label it with the corresponding value of the kinematic variable.
-When we perform cropped decoding, we could just like for classification separate the input window in crops and interpret all the outputs as belonging to the same prediction and averaging them.
-However, this becomes unpractical for kinematic variable decoding.
-Unlike for classification in \cite{schirrmeister-deep-2017} where each trial consisting of multiple time-steps has one label, in the case of regression, each time-steps has its own corresponding value of the predicted kinematic variable. 
-Therefore, what Hammer et. al \cite{Hammer-2021} did, and also what we are implementing in this thesis, is cropped decoding where the multiple outputs are interpreted as consecutive values of the predicted variable and are directly used to calculate loss. \\
-
-In this scenario, the cropped decoding does not augment the dataset. 
-It only allows for calculating multiple consecutive outputs in one forward pass instead of processing one window at a time. 
-Because we are performing parallel trial-wise decoding, nothing prevents us from creating modified architectures for which it is impossible to create an equivalent network with strides. \\
 
 \subsection{Receptive field}\label{subsec:receptive-field}
 The fact that the Deep4Net cannot have right padding in order to process multiple windows at the same time affects its receptive field.
@@ -315,9 +297,9 @@ First, the input signal is converted into the power spectrum using Fourier trans
 After this transformation, hooks are created for the amplitude and phase values.
 Then it is converted back into the original signal, this time using the torch functions so PyTorch can start building its computational graph reaching back to the amplitudes and phases.
 This tracked signal is then given to the network, whose weights are frozen, as input.
-After obtaining the outputs, the outputs are averaged and the \texttt{torch.autograd.backward()} function is used to derive the gradients with respect to the frequency amplitudes and phases. \\
+After obtaining the outputs, the outputs are averaged and the \texttt{torch.autograd.backward()} function is used to derive the gradients with respect to the frequency amplitudes and phases \cite{gradient-visualization}. \\
 
-Throughout the thesis, the input window used in the above described algorithm was set to twice the size of the receptive field of the network to be consistent with \cite{Hammer_2021}.
+Throughout the thesis, the input window used in the above described algorithm was set to twice the size of the receptive field of the network to be consistent with \cite{Hammer-2021}.
 A special case is the gradient visualization when the input window is shortened so that the network has only one output was also explored as a part of this thesis.
 See section \ref{sec:gradient-peak}.
 In this special case, the outputs did not have to be averaged before using the \texttt{torch.autograd.backward()} function to derive the gradients. \\
@@ -343,13 +325,7 @@ In Hammer et al~\cite{Hammer-2021} and Schirrmeister et al. \cite{schirrmeister-
 
 Therefore, we focus on the Deep4Net with \texttt{sbp1} in Section \ref{sec:gradient-peak} but the default Deep4Net architecture is the one with \texttt{sbp0} as in Hammer et al. For the other CNNs we created, this parameter becomes meaningless because we manually set the sizes of the dilations for all the max-pool layers with no consideration of this parameter. \\
 
-\begin{figure}[!htpb]
-\centering
-\begin{subfigure}[b]{\textwidth}
-   \includegraphics[width=0.8\linewidth]{img/ch3/dilated-conv.pdf}
-   \caption[Dilated convolution]{An illustration of dilated convolution from \cite{dilated-conv}.}
-\end{subfigure}
-\end{figure}\label{fig:dilation}
+
 
 When we change the parameters of the max-pool layers as we describe above, the number of outputs the network has changes.
 It also causes changes in the receptive field of the network.

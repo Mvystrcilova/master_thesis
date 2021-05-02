@@ -3,8 +3,9 @@
 
 \section{Gradient peak}\label{sec:gradient-peak}
 In Hammer et al.~\cite{Hammer-2021} their perturbation visualization technique did not show the expected utilization of modulations in the high-gamma frequency bands.
-While studying it further using a different visualization technique, namely the gradient visualization see Section~\ref{subsec:gradinet-visualization}, they found that this visualization technique does not show the networks interest in the high-gamma frequency band, unless the input window is shortened so that the CNN has only one output, i.e. predicts one time-point \ref{subsec:gradinet-visualization}.
+While studying it further using a different visualization technique, namely the gradient visualization (see Section~\ref{subsec:gradinet-visualization}), they found that neither this visualization technique shows interest of the CNNs in the high-gamma frequency band, unless the input window is shortened so that the CNN has only one output, i.e. predicts one time-point.
 
+Two interesting observations can be made when shortening the input window so the CNN has only one output:
 \begin{enumerate}
 \item A gradient peak occurs at 83.88 Hz in both the untrained and the trained network and it is amplified with training.
 \item If we add noise of a certain frequency or white noise to the input, frequencies around 83.33 Hz increases in the output of the network.
@@ -12,13 +13,12 @@ While studying it further using a different visualization technique, namely the 
 
 A hypothesis was that the 83.33 Hz peak occurs due to this frequency being aligned with the dilations of the max-pool layers and therefore is just an architecture artifact.
 Because sampling rate is 250 Hz and the dilations of the max-pool layers are powers of three and $250 Hz / 3 = 83.33 Hz$, this frequency aligns with the dilations of the max-pool layers which amplify it.
-However, this does not explain why the peak at 83.33Hz is amplified with training.
+However, this does not explain why the peak at 83.33Hz increases with training.
 
-To test the artifact hypothesis, we systematically changed the dilations of the max-pool layers to powers of 1, 2 and 3 and kernel sizes to 1\footnote{Importantly,a max-pool layer with kernel size one is equivalent to no max-pool layer. Therefore, if all max-pool layers in a DNN have their kernel size set to 1, it is equivalent to a  without max-pool layers.}, 2, 3 and 4
+To test the artifact hypothesis, we systematically changed the dilations of the max-pool layers to powers of 1, 2 and 3 and kernel sizes to 1\footnote{Importantly, a max-pool layer with kernel size one is equivalent to no max-pool layer. Therefore, if all max-pool layers in a DNN have their kernel size set to 1, it is equivalent to a  without max-pool layers.}, 2, 3 and 4
 
 The results in Figure~\ref{fig:gradient-peak} demonstrate that the kernel size change has no effect on the 83.33Hz peak.
 However, with change in the dilations, the 83.33 Hz peak disappears without a decrease in performance.
-The same happens with the increase in 83.33 Hz frequency in the output.
 Another interesting thing to notice is to observe how the gradients of motor, non-motor and all channels behave with respect to each other.
 The biggest differences between the gradients are in the alpha and beta bend where the motor gradients have visibly higher values than non-motor and all channels.
 For the gradient peak at 83.33 Hz, the values of the motor, non-motor and all channels are almost equivalent.
@@ -47,11 +47,12 @@ For the gradient peak at 83.33 Hz, the values of the motor, non-motor and all ch
 \label{fig:gradient-peak}
 \end{figure}
 
-To also account for the increase of the 83.33Hz frequency in the output, we studied how the signal is affected by max-pool layers only.
+The increase of the 83.33 Hz frequency in the output also vanished when changing the dilations of the max-pool layers.
+To study specificaly, how the dilations in the max-pool layers affect the increase of the 83.33Hz frequency in the output, we studied how the signal itself is affected by max-pool layers only.
 We used one and four max-pool layers with dilations equivalent with those from the Deep4Net (k3\_d3\_sbp1).
 The result for one max-pool layer is presented in Figure~\ref{fig:max-pool-changes}
-When the max-pool layer dilation parameter is three (or powers of three in the case of multiple consecutive max-pool layers), the output signal exhibited periodical peaks with the greatest peak around 83.33Hz \ref{fig:maxpool-k3-d3}.
-When the dilation of the max-pool layers shifted to two and powers of two, the periodicity of the peaks still occurred, however, the period increased and the greatest peak was around 120Hz \ref{fig:maxpool-k3-d2}.
+When the max-pool layer dilation parameter is three (or powers of three in the case of multiple consecutive max-pool layers), the output signal exhibits periodical peaks with the greatest peak around 83.33Hz \ref{fig:maxpool-k3-d3}.
+When the dilation of the max-pool layers shifted to two and powers of two, the periodicity of the peaks still occurred, however, the period increased and the greatest peak was around 0 and 120Hz \ref{fig:maxpool-k3-d2}.
 This is in line with the hypothesis that the alignment of frequencies with the max-pool layer dilations is indeed the reason for the increase of this frequency in the output.
 
 
@@ -81,31 +82,31 @@ But because they are almost equal we can deduce that it is likely caused by the 
 The only argument speaking in favor of the gradient peak being informative for the network when making its decision is its amplification with training.
 Nevertheless, this can be also attributed to the network not amplifying the peak but not actively working to suppress it as it occurs naturally when the signal passes through max-pool layers.
 Lastly also the fact that the peak is visible only when the input window is shortened to give only one output diminishes the credibility of the peak containing information useful for decoding.
-Without the averaging, the gradient method is less stable and therefore also less reliable.~\todo{\cite{}}
+Without the averaging, the gradient method is less stable and therefore also less reliable.~\todo{Add citation\cite{}}
 Overall, the gradient peak definitely cannot be taken as proof that the network is using high-gamma.
 
 \section{Architectural modifications}\label{sec:architectural-modifications}
 \subsection{Performance}\label{subsec:performance}
 During our examination of the gradient peak, we noticed substantial differences in performance between the different architectures.
-Especially those with smaller kernel sizes and/or dilation parameters in their max-pool layers, seem to perform significantly better.
+Especially those with smaller kernel sizes and/or dilation parameters in their max-pool layers, seemed to perform significantly better.
 Therefore, we decided to do a thorough inspection of how each of the networks performs on the full and filtered datasets obtained as described in Section~\ref{subsec:modifications-to-the-dataset}.
 The results can be seen in Figure~\ref{fig:original-performances-velocity} for velocity and Figure~\ref{fig:original-performances-absolute-velocity} for absolute velocity.
 In the following points we summarize the findings on the different datasets.
 
 \begin{itemize}
-    \item \textbf{Full training and validation} Some of the networks significantly outperformed the Deep4Net sbp0 when both trained and validated on full data. The best performing network was the network where the max-pool layer had no influence, namely the one with max-pool layer kernel size 1.
-    \item \textbf{Full training and low-pass validation} When the networks were trained on the full dataset and validated on the low-passed dataset (< 40Hz), the performance changed significantly for all the networks as is obvious from the Figure~\ref{fig:original-performances}.
-    Nevertheless, in order to achieve a statistically significant decrease in performance, we had to use a Butterworth filter of order 15 instead of order 3 which was previously used inZ\cite{Hammer-2021}.The 3rd order filter caused no apparent change in performances.
+    \item \textbf{Full training and validation:} Some of the networks significantly outperformed the original Deep4Net sbp0 from \cite{Hammer-2021} when both trained and validated on full data. The best performing network was the network where the max-pool layer had no influence, namely the one with max-pool layer kernel size 1.
+    \item \textbf{Full training and low-pass validation:} When the networks were trained on the full dataset and validated on the low-passed dataset (< 40Hz), the performance changed significantly for all the networks as is obvious from the Figure~\ref{fig:original-performances}.
+    Nevertheless, in order to achieve a statistically significant decrease in performance, we had to use a Butterworth filter of order 15 instead of order 3 which was previously used in~\cite{Hammer-2021}.The 3rd order filter caused no apparent change in the correlation coefficients.
     The Butterworth filter gradually attenuates the frequencies above the cut-off frequency (40Hz in this case).
-    The higher the filter order, the steeper the attenuation is.
+    The higher the filter order, the steeper the attenuation is~\cite{butterworth1930theory}.
     Therefore, the fact that the performance decrease followed only after the stronger filter was employed suggests, that the network indeed focuses on frequencies above 40Hz but not particularly high frequencies (those in the high-gamma band) which were attenuated by both the 3rd as well as 15th order filter Figure~\ref{fig:filters}.
-    \item \textbf{High-pass training and validation} To see if the networks are able to use information from the high-gamma frequency band at all, the networks were trained and evaluated on the high-pass dataset (>60Hz).
+    \item \textbf{High-pass training and validation:} To see if the networks are able to use information from the high-gamma frequency band at all, the networks were trained and evaluated on the high-passed dataset (>60Hz).
     As is clear from Figure~\ref{fig:original-performances}, the networks are able to use some information from the high-gamma especially when decoding absolute velocity where the correlations are often not only significantly above chance decoding but also achieve fairly good correlation coefficients.
     \item \textbf{Full training and high-pass validation} A possibility to find out if the networks when trained on full data are learning from the high-gamma frequency band, is to train the network on the full dataset and validate only on the high-passed data.
     Therefore we also explored this option.
     It is obvious from Figure~\ref{fig:original-performances} that only few networks perform significantly better than chance level decoding.
     The conclusion that the network, when given access to, utilizes primarily information from the low end of the frequency spectrum can be drawn from this result.
-    \item \textbf{Low-pass training and high-pass validation}
+    \item \textbf{Low-pass training and high-pass validation:}
     Training on low-passed data and validation on high-passed data was also important to further study how the network operates.
     We wanted to find out if it is able to somehow transfer information between two completely separate datasets.
     Because the cut-off frequency for the low-passed data is 40Hz and for the high-passed data 60Hz with a very steep filter, there is no frequency overlap between the two sets.
@@ -181,7 +182,7 @@ Figure~\ref{fig:last-layer-grads} includes the gradients of the output layer whi
    \includegraphics[width=1\linewidth]{img/ch4/absVel-last-layer-grads}
    \caption{}
 \end{subfigure}\label{fig:vel-last-layer-grads}
-\caption[]{Gradients of the different CNN architectures decoding \textbf{(a) Velocity} and \textbf{(b)Absolute velocity}. All channels include channels that do not belong to motor neither non-motor channel sets \ref{subsec:ieeg-data-preprocessing}}
+\caption[]{Gradients of the different CNN architectures decoding \textbf{(a) Velocity} and \textbf{(b) Absolute velocity}. All channels include channels that do not belong to motor neither non-motor channel sets. See Section \ref{subsec:ieeg-data-preprocessing}}
 \end{figure}\label{fig:last-layer-grads}
 
 Based on the performances of the networks presented in Section~\ref{subsec:performance} and the gradients presented in this Section these important and interesting observations can be made:
@@ -392,7 +393,7 @@ And therefore, the amount of time and computational power necessary to train mul
 How the performance changes with the shift is displayed in Figure~\ref{fig:shifting-performance}.
 We can observe the slow decrease in performance when increasing the distance of the predicted time-point to the receptive field centre, in both directions. 
 This is to be expected. 
-Nevertheless, similarly to performance in section~\ref{subsec:shifting-the-predicted-time-point-to-the-centre-of-the-receptive-field} we do not know if the fact that the performance peaks in the centre of the receptive field is due to the predicted time-point being in the centre of the receptive field.
+Nevertheless, similarly to performance in Section~\ref{subsec:shifting-the-predicted-time-point-to-the-centre-of-the-receptive-field} we do not know if the fact that the performance peaks in the centre of the receptive field is due to the predicted time-point being in the centre of the receptive field.
 It could again also be due to the fact that the network has information from the future. 
 Interestingly, the decoding performance drops slower when using information predominantly from the future more than when using information predominantly from the past.
 To properly investigate the informativeness of past vs. future signals however, we would need to have a network with an uniform receptive field. 
@@ -461,14 +462,18 @@ See Figure \ref{fig:spectral-whitening}.
 This is common in biological signals but could be a reason for the CNNs to ignore high-frequencies when making predictions.
 We therefore evaluate the performance of all the architectures on the whitened datasets. 
 We carry out the whitening on full as well as filtered datasets. 
-Figure~\ref{pw-performances-full-data} shows how the predictions changed compared to predictions on non-whitened signals when using the full dataset.
-It is obvious that for the full training and validation Figre~\ref{fig:pw-performance} \textbf{graphs A} and \textbf{B}, the correlation coefficient of all networks dropped significantly.
-When looking at Figure~\ref{fig:pw-performance} \textbf{graphs E} and \textbf{F} we see that in the case of high-passed datasets the decrease was lower, but even for the high-passed data, the performance did not increase significantly for any of the networks.
-The only scenario where spectral whitening helped the CNNs to achieve better CCs was when they were trained on full data and validated on high-passed data \ref{fig:pw-performance} \textbf{Graphs G} and \textbf{H}. 
-In the case of velocity \ref{fig:vel-pw-performance} a statistically significant increase was only for the vel\_k1 network.
-In the case of absolute velocity five out of the seven architectures experienced a statistically significant increase in performance due to spectral whitening.\\
+Figure~\ref{fig:pw-performance} shows how the predictions changed compared to predictions on non-whitened signals when using the full dataset.
+It is obvious that for the full training and validation Figre~\ref{fig:pw-performance} graphs \textbf{A} and \textbf{B}, the correlation coefficient of all networks dropped significantly.
+When looking at Figure~\ref{fig:pw-performance} graphs \textbf{E} and \textbf{F} we see that in the case of high-passed datasets the performance did not increase significantly for any of the networks. 
+This shows that the low amplitude of these frequencies is not the issue when decoding from them. \\
 
-These result show us that the networks indeed learned to use high-gamma because when validated on high-passed data, their performance 
+The only scenario where spectral whitening helped the CNNs to achieve better CCs was when they were trained on full data and validated on high-passed data \ref{fig:pw-performance} graphs \textbf{G} and \textbf{H}. 
+In the case of velocity \ref{fig:pw-performance} (a) a statistically significant increase was only for the vel\_k1 network.
+In the case of absolute velocity \ref{fig:pw-performance} (b) five out of the seven architectures experienced a statistically significant increase in performance due to spectral whitening.
+The CC increase this last scenario shows that the networks indeed learned to use high-gamma because when validated on high-passed data. Nevertheless the use of high-gamma did not improve the performance when validated on the full dataset.  \\
+
+Overall spectral whitening forced most of the networks into using high-gamma. 
+At the same time, it harmed the prediction power of the networks. 
 
 \begin{figure}[!htbp]
 \begin{subfigure}[a]{\textwidth}
@@ -507,12 +512,13 @@ These result show us that the networks indeed learned to use high-gamma because 
 \subsection{Gradients}\label{subsec:pw-gradients2}
 
 When looking at the gradients of the networks trained on whitened data in Figure~\ref{fig:pw-last-layer-grads}, we observe that the networks indeed use modulations in the high-gamma frequency bands for their predictions.
-For absolute velocity, the gradients have high values in bands across the whole frequency range. Interestingly, for velocity, instead of having more uniform gradients across all frequencies, they inverted their focus from low frequencies to high-frequencies.
-The only architectures for which this did not happen is the vel\_k1 CNN which is the network without max-pool layers.
+This is also supported by the increased CCs for networks trained on full data and validated on high-passed data.
+For absolute velocity, the gradients have high values in bands across the whole frequency range. Interestingly, for velocity, instead of having more uniform gradients across all frequencies, they invert their focus from low frequencies to high-frequencies.
+The only architectures for which this does not happen is the vel\_k1 CNN which is the network without max-pool layers.
 This network stayed mostly focused on low-frequencies below 25 Hz.
-Also for absolute velocity, the network without max-pools (absVel\_k1) stayed mostly focused on the low frequencies even though a slight increase in gradient values for frequencies around 75 Hz can be observed. 
-When combining this information with the performance graphs in Figure~\ref{fig:pw-last-layer-grads}, we can see, that the networks without max-pools which were least influenced by the spectral whitening in terms of focusing on higher frequencies are those for which the CCs dropped least.
-This again suggests that the using information from the high-gamma frequency is possible, but it does not seem to help achieve better correlation coefficients.
+Also for absolute velocity, the network without max-pools (absVel\_k1) stays mostly focused on the low frequencies even though a slight increase in gradient values for frequencies around 75 Hz can be observed. 
+We can combine this information about the gradients with the performance graphs in Figure~\ref{fig:pw-last-layer-grads}, where we can see, that the networks without max-pools which were least influenced by the spectral whitening in terms of focusing on higher frequencies are those for which the CCs dropped least.
+This combination suggests that the using information from the high-gamma frequency is possible, but it does not seem to help achieve better correlation coefficients.
 
 \begin{figure}[!htbp]
 \begin{subfigure}[a]{\textwidth}
