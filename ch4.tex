@@ -1,27 +1,33 @@
 \chapter{Experiments and results}
 \label{ch:exp}
+In this chapter we go through all the experiments and results conducted as a part of this thesis. 
+The experiments are separated into multiple parts. 
+First we inspect the significance of the peak, discussed in Section \ref{subsec:hammer-et-al}.
+Afterwards we conduct a series of systematic experiments .
+These experiments include 1. changing the parameters of the Deep4Net max-pool layers and observing change in performance and gradients; 2. shifting the predicted time-point across the receptive field of the network and observing the performance and gradients of the architectures defined in the previous step; 3. we perform spectral whitening on the dataset and again observe how it influences the performance and gradients of the established architectures. 
 
 \section{Gradient peak}\label{sec:gradient-peak}
-In Hammer et al.~\cite{Hammer-2021} their perturbation visualization technique did not show the expected utilization of modulations in the high-gamma frequency bands.
-While studying it further using a different visualization technique, namely the gradient visualization (see Section~\ref{subsec:gradinet-visualization}), they found that neither this visualization technique shows interest of the CNNs in the high-gamma frequency band, unless the input window is shortened so that the CNN has only one output, i.e. predicts one time-point.
+In~\cite{Hammer-2021} their input perturbation visualization technique did not show the expected effect of modulations in the high-gamma frequency bands on the network's predictions.
+While studying it further using a different visualization technique, namely the gradient visualization (see Section~\ref{subsec:gradinet-visualization}), they found that this visualization technique also does not show any interest of the CNNs in the high-gamma frequency band, unless the input window is shortened so that the CNN has only one output, i.e. predicts one time-point.
 
-Two interesting observations can be made when shortening the input window so the CNN has only one output:
+Two interesting observations can be made when we visualize gradients of a Deep4Net which makes one prediction:
 \begin{enumerate}
-\item A gradient peak occurs at 83.88 Hz in both the untrained and the trained network and it is amplified with training.
-\item If we add noise of a certain frequency or white noise to the input, frequencies around 83.33 Hz increases in the output of the network.
+\item A gradient peak occurs at 83.88~Hz in both the untrained and the trained network and it is amplified with training.
+\item If we add noise of a certain frequency or white noise to the input, frequencies around 83.33~Hz increase in the output of the network, compared to the original output.
 \end{enumerate}
 
 A hypothesis was that the 83.33 Hz peak occurs due to this frequency being aligned with the dilations of the max-pool layers and therefore is just an architecture artifact.
-Because sampling rate is 250 Hz and the dilations of the max-pool layers are powers of three and $250 Hz / 3 = 83.33 Hz$, this frequency aligns with the dilations of the max-pool layers which amplify it.
+Because the sampling rate is 250 Hz and the dilations of the max-pool layers are powers of three and $250 Hz / 3 = 83.33 Hz$, this frequency aligns with the dilations of the max-pool layers which amplify it.
 However, this does not explain why the peak at 83.33Hz increases with training.
 
-To test the artifact hypothesis, we systematically changed the dilations of the max-pool layers to powers of 1, 2 and 3 and kernel sizes to 1\footnote{Importantly, a max-pool layer with kernel size one is equivalent to no max-pool layer. Therefore, if all max-pool layers in a DNN have their kernel size set to 1, it is equivalent to a  without max-pool layers.}, 2, 3 and 4
+To test the artifact hypothesis, we systematically changed the dilations of the max-pool layers to powers of 1, 2 and 3 and kernel sizes to 1\footnote{Importantly, a max-pool layer with kernel size one is equivalent to no max-pool layer. Therefore, if all max-pool layers in a DNN have their kernel size set to 1, it is equivalent to a  without max-pool layers.}, 2, 3 and 4. For an overview of the tested architectures see Table \ref{tab:architectures-description}.
 
 The results in Figure~\ref{fig:gradient-peak} demonstrate that the kernel size change has no effect on the 83.33Hz peak.
-However, with change in the dilations, the 83.33 Hz peak disappears without a decrease in performance.
-Another interesting thing to notice is to observe how the gradients of motor, non-motor and all channels behave with respect to each other.
+However, with change in the dilations, the 83.33 Hz peak disappears without.
+The disappearance has no effect on the performance of the network. 
+It is also interesting to observe how the gradients of motor, non-motor and all channels behave with respect to each other for different frequencies.
 The biggest differences between the gradients are in the alpha and beta bend where the motor gradients have visibly higher values than non-motor and all channels.
-For the gradient peak at 83.33 Hz, the values of the motor, non-motor and all channels are almost equivalent.
+For the gradient peak at 83.33~Hz, the values of the motor, non-motor and all channels are almost equivalent. \\
 
 \begin{figure}
 \begin{subfigure}{\textwidth}
@@ -48,12 +54,12 @@ For the gradient peak at 83.33 Hz, the values of the motor, non-motor and all ch
 \end{figure}
 
 The increase of the 83.33 Hz frequency in the output also vanished when changing the dilations of the max-pool layers.
-To study specificaly, how the dilations in the max-pool layers affect the increase of the 83.33Hz frequency in the output, we studied how the signal itself is affected by max-pool layers only.
+To study specifically, how the dilations in the max-pool layers affect the increase of the 83.33~Hz frequency in the output, we studied how the signal itself is affected by max-pool layers only.
 We used one and four max-pool layers with dilations equivalent with those from the Deep4Net (k3\_d3\_sbp1).
 The result for one max-pool layer is presented in Figure~\ref{fig:max-pool-changes}
 When the max-pool layer dilation parameter is three (or powers of three in the case of multiple consecutive max-pool layers), the output signal exhibits periodical peaks with the greatest peak around 83.33Hz \ref{fig:maxpool-k3-d3}.
-When the dilation of the max-pool layers shifted to two and powers of two, the periodicity of the peaks still occurred, however, the period increased and the greatest peak was around 0 and 120Hz \ref{fig:maxpool-k3-d2}.
-This is in line with the hypothesis that the alignment of frequencies with the max-pool layer dilations is indeed the reason for the increase of this frequency in the output.
+When the dilation of the max-pool layers are set to two and powers of two, the periodicity of the peaks still occurred, however, the period increased and the greatest peak was around 0 and 120Hz \ref{fig:maxpool-k3-d2}.
+This is in line with the hypothesis that the alignment of frequencies with the max-pool layer dilations is indeed the reason for the increase of this frequency in the output. \\
 
 
 \begin{figure}
@@ -61,47 +67,50 @@ This is in line with the hypothesis that the alignment of frequencies with the m
 \begin{subfigure}[b]{\textwidth}
    \includegraphics[width=1\linewidth]{img/ch4/absVel-maxpool-k3-d3}
    \caption{}
-   \label{fig:Ng1} 
+   \label{fig:maxpool-k3-d3} 
 \end{subfigure}
 
 \begin{subfigure}[b]{\textwidth}
    \includegraphics[width=1\linewidth]{img/ch4/absVel-maxpool-k3-d2}
    \caption{}
-   \label{fig:Ng2}
+   \label{fig:maxpool-k3-d2}
 \end{subfigure}
 
 \caption[]{The blue line represents the difference between the output of a max-pool layer when original signal was given on input and when original signal with added white noise was given on input. The max-pool layer in \textbf{(a)} has dilation (3, 1) and kernel size (3, 1) and in \textbf{(b)} it has kernel size (3, 1) and dilation (2, 1).} 
-\end{figure}\label{fig:max-pool-changes}
+\label{fig:max-pool-changes}
+\end{figure}
 
 The conclusions that can be made about the gradients peak when changing the kernel sizes and dilations of the max-pool layers are summarized below.
-The majority of the above presented results suggests that the gradient peak is indeed the architecture artifact.
+The majority of the above presented results suggests that the gradient peak is indeed an architecture artifact.
 Its disappearance without loss of performance and the behaviour of the output signal when passed through single layers are in line with the hypothesis about frequency alignment.
 The fact that the different kinds of channels (motor, non-motor) have similar gradient values at the peak also suggests that it only emerges because of the alignment.
 If the motor channel gradients for the peak were visibly larger, it would support the hypothesis that some useful information is in this peak.
 But because they are almost equal we can deduce that it is likely caused by the frequency alignment which should affect all channels in the same way.
 The only argument speaking in favor of the gradient peak being informative for the network when making its decision is its amplification with training.
-Nevertheless, this can be also attributed to the network not amplifying the peak but not actively working to suppress it as it occurs naturally when the signal passes through max-pool layers.
+Nevertheless, this can be also attributed to the network not amplifying the peak but not actively working to suppress it as it occurs naturally due to the max-pool layers.
 Lastly also the fact that the peak is visible only when the input window is shortened to give only one output diminishes the credibility of the peak containing information useful for decoding.
 Without the averaging, the gradient method is less stable and therefore also less reliable.~\todo{Add citation\cite{}}
 Overall, the gradient peak definitely cannot be taken as proof that the network is using high-gamma.
 
 \section{Architectural modifications}\label{sec:architectural-modifications}
 \subsection{Performance}\label{subsec:performance}
-During our examination of the gradient peak, we noticed substantial differences in performance between the different architectures.
+During our examination of the gradient peak, we noticed substantial differences in performance among the different architectures.
 Especially those with smaller kernel sizes and/or dilation parameters in their max-pool layers, seemed to perform significantly better.
 Therefore, we decided to do a thorough inspection of how each of the networks performs on the full and filtered datasets obtained as described in Section~\ref{subsec:modifications-to-the-dataset}.
 The results can be seen in Figure~\ref{fig:original-performances-velocity} for velocity and Figure~\ref{fig:original-performances-absolute-velocity} for absolute velocity.
 In the following points we summarize the findings on the different datasets.
 
 \begin{itemize}
-    \item \textbf{Full training and validation:} Some of the networks significantly outperformed the original Deep4Net sbp0 from \cite{Hammer-2021} when both trained and validated on full data. The best performing network was the network where the max-pool layer had no influence, namely the one with max-pool layer kernel size 1.
-    \item \textbf{Full training and low-pass validation:} When the networks were trained on the full dataset and validated on the low-passed dataset (< 40Hz), the performance changed significantly for all the networks as is obvious from the Figure~\ref{fig:original-performances}.
-    Nevertheless, in order to achieve a statistically significant decrease in performance, we had to use a Butterworth filter of order 15 instead of order 3 which was previously used in~\cite{Hammer-2021}.The 3rd order filter caused no apparent change in the correlation coefficients.
-    The Butterworth filter gradually attenuates the frequencies above the cut-off frequency (40Hz in this case).
-    The higher the filter order, the steeper the attenuation is~\cite{butterworth1930theory}.
-    Therefore, the fact that the performance decrease followed only after the stronger filter was employed suggests, that the network indeed focuses on frequencies above 40Hz but not particularly high frequencies (those in the high-gamma band) which were attenuated by both the 3rd as well as 15th order filter Figure~\ref{fig:filters}.
-    \item \textbf{High-pass training and validation:} To see if the networks are able to use information from the high-gamma frequency band at all, the networks were trained and evaluated on the high-passed dataset (>60Hz).
-    As is clear from Figure~\ref{fig:original-performances}, the networks are able to use some information from the high-gamma especially when decoding absolute velocity where the correlations are often not only significantly above chance decoding but also achieve fairly good correlation coefficients.
+    \item \textbf{Full training and validation:} Some of the networks significantly outperformed the original Deep4Net (vel\_k3\_d3\_sbp0) from \cite{Hammer-2021} when both trained and validated on full data. The best performing network was the network where the max-pool layer had no influence, namely the one with max-pool layer kernel size 1.
+    
+    \item \textbf{Full training and low-pass validation:} When the networks were trained on the full dataset and validated on the low-passed dataset~(<~40~Hz), the performance changed significantly for all the networks as is obvious from Figure~\ref{fig:original-performances}.
+    Nevertheless, in order to achieve a statistically significant decrease in performance, we had to use a Butterworth filter of order 15 instead of order 3 which was previously used in~\cite{Hammer-2021}. The 3rd order filter caused no apparent change in the correlation coefficients.
+    A Butterworth filter gradually attenuates the frequencies above the cut-off frequency (40Hz in this case).
+    The higher the filter order, the steeper the attenuation is~(\cite{butterworth1930theory}).
+    Therefore, the fact that the performance decrease followed only after the stronger filter was employed suggests, that the network indeed use some information from frequencies above 40~Hz but not particularly high frequencies (those in the high-gamma band) which were attenuated by both the 3rd as well as 15th order filter Figure~\ref{fig:filters}.
+    
+    \item \textbf{High-pass training and validation:} To see if the networks are able to use information from the high-gamma frequency band at all, the networks were trained and evaluated on the high-passed dataset (>~60~Hz).
+    As is clear from Figure~\ref{fig:original-performances}, the networks are able to use some information from the high-gamma especially when decoding absolute velocity where the correlations for all the different architectures significantly above chance.
     \item \textbf{Full training and high-pass validation} A possibility to find out if the networks when trained on full data are learning from the high-gamma frequency band, is to train the network on the full dataset and validate only on the high-passed data.
     Therefore we also explored this option.
     It is obvious from Figure~\ref{fig:original-performances} that only few networks perform significantly better than chance level decoding.
@@ -109,8 +118,8 @@ In the following points we summarize the findings on the different datasets.
     \item \textbf{Low-pass training and high-pass validation:}
     Training on low-passed data and validation on high-passed data was also important to further study how the network operates.
     We wanted to find out if it is able to somehow transfer information between two completely separate datasets.
-    Because the cut-off frequency for the low-passed data is 40Hz and for the high-passed data 60Hz with a very steep filter, there is no frequency overlap between the two sets.
-    Therefore, it would be interesting but also rather surprising if from modulation in the low frequencies (below 40Hz) the network would learn to use information about modulations in the high frequencies (above 60Hz).
+    Because the cut-off frequency for the low-passed data is 40~Hz and for the high-passed data 60Hz with a very steep filter, there is no frequency overlap between the two sets.
+    Therefore, it would be interesting but also rather surprising if from modulation in the low frequencies (below 40~Hz) the network would learn to use information about modulations in the high frequencies (above 60~Hz).
     Nevertheless, as obvious from Figure~\ref{fig:original-performances}, the networks were unable to transfer any information.
     
 \begin{figure}[!htpb]
@@ -118,7 +127,7 @@ In the following points we summarize the findings on the different datasets.
 \begin{subfigure}[b]{\textwidth}
    \includegraphics[width=1\linewidth]{img/ch4/original_setting_vel_performance_comparison}
    \caption{\textbf{Velocity} decoding correlation coefficients of the different CNNs established by architecture modifications. In all settings \textbf{
-   A - E} the Deep4Net (k3\_d3\_sbp0) from~\cite{Hammer-2021} is labeled red. \textbf{Graph A} shows the performance of the networks when trained and validated on the full dataset. The stars in this case denote performance significantly above the Deep4Net. (** p <0.01), (* p < 0.05), one-sided paired t-test.
+   A - E} the Deep4Net (vel\_k3\_d3\_sbp0) from~\cite{Hammer-2021} is labeled red. \textbf{Graph A} shows the performance of the networks when trained and validated on the full dataset. The stars in this case denote performance significantly above the vel\_k3\_d3\_sbp0. (** p <0.01), (* p < 0.05), one-sided paired t-test.
    \textbf{Graph B} shows the correlation coefficients of the networks trained on full data and validated on low-passed data. 
    The stars denote if the drop of performance was significant between this setting and setting \textbf{A}. (** p <0.01), (* p < 0.05), one-sided paired t-test.
    \textbf{Graph C} shows the performance of the CNNs when trained and validated on high-passed data. \textbf{Graph D} shows performance when trained on full data and validated on high-passed data. \textbf{Graph E} shows performance when trained on low-passed data and validated on high-passed data. For \textbf{Graphs C - E} the stars denote above chance performance - (** : p <0.01), (* : p < 0.05), one-sided paired t-test.}
@@ -128,14 +137,15 @@ In the following points we summarize the findings on the different datasets.
 \begin{subfigure}[b]{\textwidth}
    \includegraphics[width=1\linewidth]{img/ch4/original_setting_absVel_performance_comparison}
    \caption{\textbf{Absolute velocity} decoding correlation coefficients of the different CNNs established by architecture modifications. In all settings \textbf{
-   A - E} the Deep4Net (k3\_d3\_sbp0) from~\cite{Hammer-2021} is labeled red. \textbf{Graph A} shows the performance of the networks when trained and validated on the full dataset. The stars in this case denote performance significantly above the Deep4Net. (** p <0.01), (* p < 0.05), one-sided paired t-test.
+   A - E} the Deep4Net (absVel\_k3\_d3\_sbp0) from~\cite{Hammer-2021} is labeled red. \textbf{Graph A} shows the performance of the networks when trained and validated on the full dataset. The stars in this case denote performance significantly above the absVel\_k3\_d3\_sbp0. (** p <0.01), (* p < 0.05), one-sided paired t-test.
    \textbf{Graph B} shows the correlation coefficients of the networks trained on full data and validated on low-passed data. 
    The stars denote if the drop of performance was significant between this setting and setting \textbf{A}. (** p <0.01), (* p < 0.05), one-sided paired t-test.
    \textbf{Graph C} shows the performance of the CNNs when trained and validated on high-passed data. \textbf{Graph D} shows performance when trained on full data and validated on high-passed data. \textbf{Graph E} shows performance when trained on low-passed data and validated on high-passed data. For \textbf{Graphs C - E} the stars denote above chance performance - (** : p <0.01), (* : p < 0.05), one-sided paired t-test.}
    \label{fig:original-performances-absolute-velocity}
 \end{subfigure}
 \caption[]{}
-\end{figure}\label{fig:original-performances}
+\label{fig:original-performances}
+\end{figure}
 
 
 \end{itemize}
@@ -143,24 +153,27 @@ In the following points we summarize the findings on the different datasets.
 The findings presented in this section lead to two interesting questions.
 The first one  is what do the gradients of the various architectures look like and do some of them use high-gamma?
 This analysis is described in Section~\ref{subsec:gradients}.
-The second question that arises if we notice, that the performance seems to drop with increasing size of the receptive field \cref{fig:distance-from-rf}.
+The second question that arises if we notice, that the performance seems to drop with increasing size of the receptive field: Figure \ref{fig:figure-distance}.
 Networks with a smaller receptive field seem to perform better possibly because the predicted time-point is closer to the centre of the receptive field.
 Therefore, it is interesting to see what happens when we shift the predicted time-point to the centre of the receptive field.
 More details and the analysis are described in Section~\ref{sec:shifting-the-predicted-time-point}.
 
 \begin{figure}[!htpb]
 \centering
-\begin{subfigure}[b]{0.65\textwidth}
+\begin{subfigure}[b]{0.45\textwidth}
    \includegraphics[width=1\linewidth]{img/ch3/lp-butterworth-filter}
-   \caption{Comparison between 3rd and 15th order low-pass Butterworth filter, cutoff frequency 40 Hz}\label{fig:lp-filters}
+   \caption{Comparison between 3rd and 15th order low-pass Butterworth filter, cutoff frequency 40 Hz}
+   \label{fig:lp-filters}
 \end{subfigure}
 
-\begin{subfigure}[b]{0.65\textwidth}
+\begin{subfigure}[b]{0.45\textwidth}
    \includegraphics[width=1\linewidth]{img/ch3/hp-butterworth-filter}
    \caption{Comparison between 3rd and 15th order high-pass Butterworth filter, cutoff frequency 60 Hz}
+   \label{fig:hp-filters}
 \end{subfigure}
-\caption[]{}\label{fig:hp-filters}
-\end{figure}\label{fig:filters}
+\caption[]{}
+label{fig:filters}
+\end{figure}
 
 \subsection{Gradients}\label{subsec:gradients}
 The differences in performance among the networks, reinforce the interest in the gradients of the various architectures.
@@ -168,22 +181,25 @@ Since some of the networks perform significantly better compared to the initial 
 We perform the gradient visualization of all the architectures with kernel sizes 1, 2 and 3 and dilations as powers of 1, 2 and 3.
 
 The results show differences in gradients among the architectures.
-Gradients of all intermediate layers and the visualizations can be found in the Appendix.
-Figure~\ref{fig:last-layer-grads} includes the gradients of the output layer which in our opinion best represents the gradients of the other layers for all the architectures.
+Gradients of all intermediate layers and the visualizations can be found in the Appendix \todo{add apendix}.
+Figure~\ref{fig:last-layer-grads} depicts the gradients of the output layer which in our opinion best represents the gradients of the other layers for all the architectures. 
 
 \begin{figure}[!htpb]
 \centering
 \begin{subfigure}[b]{\textwidth}
    \includegraphics[width=1\linewidth]{img/ch4/vel-last-layer-grads}
    \caption{}
-\end{subfigure}\label{fig:absVel-last-layer-grads}
+   \label{fig:absVel-last-layer-grads}
+\end{subfigure}
 
 \begin{subfigure}[b]{\textwidth}
    \includegraphics[width=1\linewidth]{img/ch4/absVel-last-layer-grads}
    \caption{}
-\end{subfigure}\label{fig:vel-last-layer-grads}
+   \label{fig:vel-last-layer-grads}
+\end{subfigure}
 \caption[]{Gradients of the different CNN architectures decoding \textbf{(a) Velocity} and \textbf{(b) Absolute velocity}. All channels include channels that do not belong to motor neither non-motor channel sets. See Section \ref{subsec:ieeg-data-preprocessing}}
-\end{figure}\label{fig:last-layer-grads}
+\label{fig:last-layer-grads}
+\end{figure}
 
 Based on the performances of the networks presented in Section~\ref{subsec:performance} and the gradients presented in this Section these important and interesting observations can be made:
 
@@ -191,8 +207,8 @@ Based on the performances of the networks presented in Section~\ref{subsec:perfo
     \item The networks focus on motor-channels when making predictions.
 This is to be expected when they are tasked with decoding movement.
     \item There are obvious differences between the gradients for velocity and absolute velocity.
-    Nevertheless, for both variables the network without max-pool, here denoted as {variable}\_k1 is the best performing architecture.
-    And it is in both cases also the network which is most interested in modulations in the low frequency bands.
+    Nevertheless, for both variables the network without max-pool, denoted as \{variable\}\_k1 is the best performing architecture.
+    And in both cases is it also the network which is most interested in modulations in the low frequency bands.
     This suggests that using the information in the high-gamma frequency band is not necessarily an asset.
     \item The networks which exhibit higher interest in information from the higher frequencies, namely the k2\_d1, k3\_d1 and k2\_d2 are also those, which are able to perform significantly above chance when trained on full data and validated on high-passed data for both velocity and absolute velocity.
     This suggests consistency between the gradient visualization and the performance analysis.
@@ -205,18 +221,18 @@ In this section we describe how the performance and gradients change when the pr
 Two kinds of analyses are introduced here.
 
 \begin{enumerate}
-    \item Shifting the predicted time-point to the centre of the receptive field
-This analysis was performed on all the network architectures and compares how the different architectures react to the shift both performance-wise and gradient-wise.
+    \item Shifting the predicted time-point to the centre of the receptive field.
+This analysis was performed on all the network architectures and compares how the different architectures react to the shift, both performance-wise and gradient-wise.
 We highlight the differences and similarities between the architectures.
-    \item Shifting the predicted time-point in steps across the receptive field
-This analysis was performed only on the original Deep4Net sbp0.
-It compares how the performance and gradients of the network change when the predicted time-point is shifted across the receptive field using a different ratio of information from the future and from the past.
+    \item Shifting the predicted time-point in steps across the receptive field.
+This analysis was performed only on the original Deep4Net (k3\_d3\_sbp0.
+It compares how the performance and gradients of the network change when the predicted time-point is shifted across the receptive field, using a different ratio of information from the future and from the past.
 \end{enumerate}
 
 
 \subsection{Shifting the predicted time-point to the centre of the receptive field}\label{subsec:shifting-the-predicted-time-point-to-the-centre-of-the-receptive-field}
-An important observation when looking at the performance of the different architectures described in Section\ref{sec:architectural-modifications} was made.
-We noticed that the smaller receptive field seemingly correlates with a higher prediction accuracy especially for absolute velocity decoding.
+An important observation when looking at the performance of the different architectures described in Section~\ref{sec:architectural-modifications} was made.
+We noticed that a smaller receptive field seemingly correlates with a higher prediction accuracy especially for absolute velocity decoding.
 To visualize this, we created Figure~\ref{fig:figure-distance} which sorts the different architectures based on the size of the receptive field from smallest to largest and plots the average correlation coefficient each of these networks achieved.
 There is a clear descending pattern especially for absolute velocity where the only exceptional network is the k2\_d3 network which performs well with a large receptive field.
 
@@ -225,16 +241,18 @@ There is a clear descending pattern especially for absolute velocity where the o
 \centering
    \includegraphics[width=1\linewidth]{img/ch4/distance-shifted-performance-absVel}
    \caption{The average performance of the different CNN architectures with respect to the size of their receptive field. Blue: Full training and validation CC; Light-blue: full training and validation CC standard deviation; Orange: Full training and low-pass validation CC; Light-orange: Full training and low-pass validation CC standard deviation}
-\end{figure}\label{fig:figure-distance}
+   \label{fig:figure-distance}
+\end{figure}
 
-This finding further corroborates the idea to shift the predicted time point to the center of the receptive field.
+This finding corroborates the idea to shift the predicted time point to the center of the receptive field.
 The receptive field as described in Section~\ref{subsec:receptive-field} is non-uniform.
-It considers mostly input-points in its centre while in the original decoding, the predicted time-point is located just outside the receptive field.
-Therefore, we shift the inputs and prediction so that the iEEG signal, which was recorded at the same time as the predicted movement was executed, is in the centre of the receptive field and present how this affects the performance and gradients of the various architectures.
-This causes the procedure to be unsuitable for online BCI because half of the input window uses information from the future.
+It considers mostly input-points in its centre while in the original, non-shifted setting, the predicted time-point is located just outside the receptive field.
+Therefore, we shift the inputs and prediction so that the iEEG signal, which was recorded at the same time as the predicted movement was executed, is in the centre of the receptive field\footnote{This causes the procedure to be unsuitable for online BCI because half of the input window uses information from the future.}. 
+We present how this affects the performance and gradients of the various architectures.
+
 \subsubsection{Performance}
-The results can be seen in Figure~\ref{fig:shifted-performance}.
-It is obvious that the shift greatly improves performance of all the networks and the performance differences between the architectures are diminished.
+The performance related results are displayed in Figure~\ref{fig:shifted-performance}.
+It is obvious that the shift greatly improves performance of all the networks on the orignal full data training and validation and int this setting the performance differences between the architectures are diminished.
 Notably the performance of the networks on the high-gamma dataset also increased especially for absolute velocity.
 \begin{figure}[!htpb]
 \centering
@@ -245,7 +263,8 @@ Notably the performance of the networks on the high-gamma dataset also increased
    \\\textbf{Graphs C} and \textbf{D} show the correlation coefficients of the networks trained on full data and validated on low-passed data. 
    The stars in \textbf{C} denote if the CCs are significantly lower compared to \textbf{A}. The stars in \textbf{D} denote if the CCs are significantly lower compared to \textbf{B}. (** p <0.01), (* p < 0.05), one-sided paired t-test.
    \\\textbf{Graphs E} and \textbf{F} compare the CCs of the CNNs when trained and validated on high-passed data. \textbf{Graphs G} and \textbf{H} compare performance when trained on full data and validated on high-passed data. For \textbf{Graphs E - H} the stars denote above chance performance - (** : p <0.01), (* : p < 0.05), one-sided paired t-test.}
-\end{subfigure}\label{fig:shifted-performance-vel}
+   \label{fig:shifted-performance-vel}
+\end{subfigure}
 \end{figure}
 \clearpage   
 
@@ -253,51 +272,51 @@ Notably the performance of the networks on the high-gamma dataset also increased
 \begin{subfigure}[t]{\textwidth}
    \includegraphics[width=1\linewidth]{img/ch4/shifted_vs_non_shifted_absVel_performance_comparison}
    \caption{}
-\end{subfigure}\label{fig:shifted-performance-absVel}
+   \label{fig:shifted-performance-absVel}
+\end{subfigure}
 \caption[]{{\textbf{Absolute velocity} decoding correlation coefficients comparison between original causal prediction \textbf{Graphs A, C, E, G} and the shifted (acausal) prediction \textbf{Graphs B, D, F, H}. In all settings \textbf{
    A - E} the Deep4Net (k3\_d3\_sbp0) from~\cite{Hammer-2021} is labeled red.\\ \textbf{Graphs A} and \textbf{B} compare the performance of the networks when trained and validated on the full dataset. A The stars in \textbf{A} and \textbf{B} denote performance significantly above the Deep4Net in the same setting. (** p <0.01), (* p < 0.05), one-sided paired t-test.
    \\\textbf{Graphs C} and \textbf{D} show the correlation coefficients of the networks trained on full data and validated on low-passed data. 
    The stars in \textbf{C} denote if the CCs are significantly lower compared to \textbf{A}. The stars in \textbf{D} denote if the CCs are significantly lower compared to \textbf{B}. (** p <0.01), (* p < 0.05), one-sided paired t-test.
    \\\textbf{Graphs E} and \textbf{F} compare the CCs of the CNNs when trained and validated on high-passed data. \textbf{Graphs G} and \textbf{H} compare performance when trained on full data and validated on high-passed data. For \textbf{Graphs E - H} the stars denote above chance performance - (** : p <0.01), (* : p < 0.05), one-sided paired t-test.}}
-\end{figure}\label{fig:shifted-performance}
+   \label{fig:shifted-performance}
+\end{figure}
 
-The improvement can be caused by two things:
+The improvement in performance can be caused by two things:
 \begin{enumerate}
     \item By the network being able to focus on signals recorded directly before the movement execution.
     \item By the network having access to information from the future.
 \end{enumerate}
 
 We hypothesise that is most likely a combination of the two.
-Conclusion about how much each of the above described influences the prediction improvement cannot be made from the presented experiments.
+Conclusion about how much each of the above described possibilities influences the prediction improvement cannot be made from the presented experiments.
 It would be interesting to build a network with a uniform receptive field and then conduct experiments which would clarify this.
+If the performance improvement was caused solely or mainly by access to information directly preceding the predicted time-step a network with a uniform receptive field (one which allows padding) could potentially bring an improvement, similar to the one we achieved by shifting the predicted time-point, while retaining its usability for online BCI.
 Nevertheless, such an analysis is out of the scope of this thesis.
 
 \subsubsection{Gradients}
-In this section, we show how the shift influences the gradients.
-Hypothetically, the information about the movement in high-gamma could be informative only in the moments directly preceding the movement.
-Therefore the networks are unable to use it because they are biased towards on the signal recorded too far in the past \ref{subsec:receptive-field}.
-To test this hypothesis, we visualize the gradients of the networks trained in the shifted settings.
-
-We compare the gradients between the networks in the original non-shifted setting (causal prediction) and the shifted setting where the predicted time point is in the centre of the receptive field (acausal prediction).
-This was analysis was performed for all the architectures for all their intermediate layers on 1. the full dataset and 2. the high-passed dataset.
-The complete results can be found in the Appendix.
-Below, we show results from the third convolutional layer which serves as representation of the overall trend. 
+We hypothesised that the information about the velocity and absolute velocity of the movement could be encoded in high-gamma frequencies only in the moments directly preceding the movement.
+Therefore, the networks were unable to use it in the original non-shifted setting because they were biased towards signals recorded too far in the past (see Section \ref{subsec:receptive-field}).
+To test this hypothesis, we compared the gradients between the networks in the original non-shifted setting (causal prediction) and the shifted setting where the predicted time point is in the centre of the receptive field (acausal prediction).
+This was analysis was performed for all the architectures for all their intermediate convolutional layers omitting the temporal and spatial conovlution on 1. the full dataset and 2. the high-passed dataset.
+The complete results can be found in Appendix\todo{add appendix}.
+Below, we show results from the convolutional layer in the third convolutional block (conv\_3) which serves as representation of the overall trend. 
 
 \begin{enumerate}
-    \item Gradients of networks which are \textbf{trained and validated on full data} are displayed in Figures~\ref{fig:vel-shifted-vs-non-shifted-grads} and~\ref{fig:absVel-shifted-vs-non-shifted-grads}.
+    \item Gradients of networks which are \textbf{trained and validated on full data} are displayed in Figures~\ref{fig:vel-shifted-vs-non-shifted-grads} (velocity) and~\ref{fig:absVel-shifted-vs-non-shifted-grads} (absolute velocity).
     What we observe is that the networks across all architecture seem to refine their focus to more narrow frequency bands.
-    An illustration of this is in~\ref{fig:vel-conv3-layer-grads} where vel\_k1 network has high-gradient values in the original setting for frequencies up to 25Hz when looking at gradients for motor channels.
-    In the shifted setting~\ref{fig:vel-conv3-layer-grads-shifted} the band with high gradient values of the same network vel\_k1 narrows to frequencies closer to 0. \\
+    This can be illustrated on for example Figure~\ref{fig:vel-conv3-layer-grads} where in the original, non-shifted setting, the vel\_k1 network has high-gradient values for frequencies up to 25Hz when looking at motor channels.
+    In the shifted setting Figure~\ref{fig:vel-conv3-layer-grads-shifted} the band with high gradient values of the same network vel\_k1 narrows to frequencies closer to 0.
     
     For no network  did the shift cause an increase in the use of information from the high-gamma frequency band.
-    Rather it seems, that the shift allowed access to less noisy information in the clearly informative bands such as the alpha and beta bands, and the network did not have to compensate with information from other frequencies.
+    Rather it seems, that the shift allowed access to less noisy information in the clearly informative bands such as the alpha and beta bands, and the network did not compensate with information from other frequencies.
     \item Networks which were \textbf{trained and validated on high-passed data} can be found in Figures~\ref{fig:vel-shifted-vs-non-shifted-grads-hp} and~\ref{fig:absVel-shifted-vs-non-shifted-grads-hp}.
     Again, we only chose to display gradients of one layer to illustrate a behaviour shared by all layers.
-    The gradients of the remaining layers can be found in Appendix~\ref{}\todo.
-    What we observe in the gradients of the networks trained on high-passed datasets is different from what we observe on gradients of networks trained on full datasets, maybe even the opposite.
-    The networks trained on shifted data exhibit interest in the same or a broader range of frequencies above the 60Hz cut-off frequency than the networks trained in the original, non-shifted setting.
+    The gradients of the remaining layers can be found in Appendix~\todo{add appendix}.
+    What we observe in the gradients of the networks trained on high-passed datasets is different from what we observe on gradients of networks trained on the full dataset, even the opposite.
+    When trained on high-passed data the networks in the shifted setting exhibit interest in the same or a broader range of frequencies above the 60Hz cut-off frequency than the networks trained on high-passed data in the original, non-shifted setting.
     This and the increase in performance on high-passed datasets suggests that indeed the information in signals from the future or directly preceding the movement contains more information about movement in the high-gamma band.
-    But the fact that the networks trained on full data do not use high-gamma, and their performance increases significantly compared to the non-shifted setting points to the information in high-gamma being informative but redundant when having access to information from all frequencies.
+    But the fact that the networks trained in the shifted setting on full data do not use high-gamma, and their performance increases significantly compared to the non-shifted setting points to the information in high-gamma being informative but redundant when having access to information from all frequencies.
 \end{enumerate}
 
 \begin{figure}[!htpb]
@@ -306,27 +325,33 @@ Below, we show results from the third convolutional layer which serves as repres
 \begin{subfigure}[b]{\textwidth}
    \includegraphics[width=1\linewidth]{img/ch4/vel-conv-3-layer-grads}
    \caption{}
-\end{subfigure}\label{fig:vel-conv3-layer-grads}
+   \label{fig:vel-conv3-layer-grads}
+\end{subfigure}
 
 \begin{subfigure}[b]{\textwidth}
    \includegraphics[width=1\linewidth]{img/ch4/vel-conv-3-layer-grads-shifted}
    \caption{}
-\end{subfigure}\label{fig:vel-conv3-layer-grads-shifted}
+   \label{fig:vel-conv3-layer-grads-shifted}
+\end{subfigure}
 \caption[]{Gradients of the different CNN architectures trained to decode velocity in \textbf{(a)} the original setting (causal prediction) and \textbf{(b)} in the shifted setting (acausal prediction). Full data was used for both training and validation.}
-\end{figure}\label{fig:vel-shifted-vs-non-shifted-grads}
+\label{fig:vel-shifted-vs-non-shifted-grads}
+\end{figure}
 
 \begin{figure}[!hpbp]
 \begin{subfigure}[a]{\textwidth}
    \includegraphics[width=1\linewidth]{img/ch4/absVel-conv-3-layer-grads}
    \caption{}
-\end{subfigure}\label{fig:absVel-conv-3-layer-grads}
+   \label{fig:absVel-conv-3-layer-grads}
+\end{subfigure}
 
 \begin{subfigure}[b]{\textwidth}
    \includegraphics[width=1\linewidth]{img/ch4/absVel-conv-3-layer-grads-shifted}
    \caption{}
-\end{subfigure}\label{fig:absVel-conv-3-layer-grads-shifted}
+   \label{fig:absVel-conv-3-layer-grads-shifted}
+\end{subfigure}
 \caption[]{Gradients of the different CNN architectures trained to decode absolute velocity in \textbf{(a)} the original setting (causal prediction) and \textbf{(b)} in the shifted setting (acausal prediction). Full data was used for both training and validation.}
-\end{figure}\label{fig:absVel-shifted-vs-non-shifted-grads}
+\label{fig:absVel-shifted-vs-non-shifted-grads}
+\end{figure}
 
 % high-pass gradients with shift
 \begin{figure}[!htpb]
@@ -342,59 +367,68 @@ Below, we show results from the third convolutional layer which serves as repres
    \caption{}
 \end{subfigure}\label{fig:vel-conv3-layer-grads-shifted-hp}
 \caption[]{Gradients of the different CNN architectures trained to decode velocity in \textbf{(a)} the original setting (causal prediction) and \textbf{(b)} in the shifted setting (acausal prediction). High-passed data was used for both training and validation.}
-\end{figure}\label{fig:vel-shifted-vs-non-shifted-grads-hp}
+\label{fig:vel-shifted-vs-non-shifted-grads-hp}
+\end{figure}
 
 \begin{figure}[!hpbp]
 \begin{subfigure}[a]{\textwidth}
    \includegraphics[width=1\linewidth]{img/ch4/absVel-conv-3-layer-grads-hp}
    \caption{}
-\end{subfigure}\label{fig:absVel-conv-3-layer-grads-hp}
+\label{fig:absVel-conv-3-layer-grads-hp}
+\end{subfigure}
 
 \begin{subfigure}[b]{\textwidth}
    \includegraphics[width=1\linewidth]{img/ch4/absVel-conv-3-layer-grads-hp-shifted}
    \caption{}
-\end{subfigure}\label{fig:absVel-conv-3-layer-grads-shifted-hp}
+   \label{fig:absVel-conv-3-layer-grads-shifted-hp}
+\end{subfigure}
 \caption[]{Gradients of the different CNN architectures trained to decode absolute velocity in \textbf{(a)} the original setting (causal prediction) and \textbf{(b)} in the shifted setting (acausal prediction). High-passed data was used for both training and validation.}
-\end{figure}\label{fig:absVel-shifted-vs-non-shifted-grads-hp}
+\label{fig:absVel-shifted-vs-non-shifted-grads-hp}
+\end{figure}
 
 \subsubsection{Summary}\label{subsubsec:centre-shiftig-summary}
-When looking at the performances and gradients of the various CNN architectures, the following observation can be made.
+When looking at the performances and gradients of the various CNN architectures in the shifted vs. non-shifted setting (original), the following observation can be made.
 \begin{itemize}
-    \item The shift improves performance 1. when training and validating on the full dataset; 2. when training on the full dataset and validating on low-passed data;
-    3. when training and validating on high-passed data. This is true for both velocity and absolute velocity.
+    \item The shift improves performance of networks 1. trained and validated on the full dataset; 2. trained on the full dataset and validated on low-passed data;
+    3. trained and validated on high-passed data. This is true for both velocity and absolute velocity.
+    
     \item The shift attenuates the differences in performance between the different CNNs for the full training and validation.
-    When looking at graphs \textbf{B} in both~\cref{fig:shifted-performance-vel}(a) and~\cref{fig:shifted-performance-absVel}(b), we can see that the number of network which have a significantly better performance than the original Deep4Net (k3\_d3\_sbp0) decreases compared to \textbf{A}.
+    When looking at graphs~\textbf{B} in both Figure~\ref{fig:shifted-performance-vel} and Figure~\ref{fig:shifted-performance-absVel}, we can see that the number of network which have a significantly better performance than the original Deep4Net (k3\_d3\_sbp0) decreases compared to \textbf{A}.
+    
     \item The shift does not improve performance for the CNNs trained on full data and validated on high-pass data (graphs \textbf{G} and \textbf{H} in both~\ref{fig:shifted-performance-vel}(a) and~\ref{fig:shifted-performance-absVel}(b)).
-    This result together with the more narrow frequency bands the networks focus on after the shift show, that opposite to the expectation, the networks do not start focusing on high-gamma with the shift.
-    They start to focus more on information from the lower frequency bands which.
-    Modulations in these low frequency bands become more informative with the shift, therefore the performance increase, and the interest of the CNNs in higher frequencies drops.
-    \item It is true in the shifted setting, as was in the non-shifted setting, that the network without max-pool (k1) which is most solely focused on low-frequency modulations performs the best.
+    This result together with the more narrow frequency bands the networks focus on after the shift show that the networks do not start focusing on high-gamma with the shift.
+    Rather the opposite.
+    They start to focus more on information from the lower frequency bands.
+    Modulations in these low frequency bands become more informative with the shift, therefore the performance increases, and the interest of the CNNs in higher frequencies drops.
+    
     \item The modulations in the high-gamma band also become more informative for decoding with the shift, thus the increase in performance when training and validating on the high-passed dataset.
     Nevertheless, as we state in the point above, not even this motivates the networks to use information from the high-gamma band.
-    The opposite happens.
+    
+    \item It is true in the shifted setting, as was in the non-shifted setting, that the network without max-pool (k1) which is most solely focused on low-frequency modulations performs the best and significantly above the original Deep4Net (k3\_d3\_sbp0).
+    
+   
 \end{itemize}
 
 From the observations above, we can state, that the modulations in the high-gamma band are not particularly informative for velocity and absolute velocity decoding.
-They contain information the CNNs are able to use for decoding, nevertheless, it is not an advantage for the CNN, rather it harms its performance.
+They contain information the CNNs are able to use for decoding. 
+Nevertheless, it is not an advantage for the CNN to use high-gamma modulations when having access to all frequencies, rather it harms its performance.
 It is better for the CNNs to focus on low frequencies.
 
-
 \subsection{Shifting the predicted time-point across receptive field}\label{subsec:shifting-the-predicted-time-point-across-receptive-field}
-Besides the big shift from the edge of the receptive field to the centre we also studied what happens if we shift the predicted time-point in smaller steps across the receptive field of the network. 
+Besides the big shift of the predicted time-point from the edge of the receptive field to the centre, we also studied what happens if we shift the predicted time-point in small steps across the receptive field of the network. 
 The shifts are made ranging from  -1 second  to 1 second from the centre of the receptive field which we denote as 0.
 The step size was 0.1 s which is equivalent to 25 samples.
 This experiments allows us to observe how the shifting gradually influences the performance and gradients of the network. 
 
-Unlike the previous experiments we chose to perform this analysis only on one architecture, namely, the Deep4Net\_sbp0. 
+Unlike the previous experiments we chose to perform this analysis only on one architecture, namely, the original Deep4Net (k3\_d3\_sbp0). 
 The shift seems to influence the gradients of all the networks similarly.
-And therefore, the amount of time and computational power necessary to train multiple networks for each of the time-steps seems excessive.  
+And therefore, the amount of time and computational power necessary to train multiple networks for each of the time-steps appeared excessive.  
 
 \subsubsection{Performance}\label{subsubsec:across-shiftig-performace}
-How the performance changes with the shift is displayed in Figure~\ref{fig:shifting-performance}.
+How the performance changes with the gradual shifting is displayed in Figure~\ref{fig:shifting-performance}.
 We can observe the slow decrease in performance when increasing the distance of the predicted time-point to the receptive field centre, in both directions. 
 This is to be expected. 
-Nevertheless, similarly to performance in Section~\ref{subsec:shifting-the-predicted-time-point-to-the-centre-of-the-receptive-field} we do not know if the fact that the performance peaks in the centre of the receptive field is due to the predicted time-point being in the centre of the receptive field.
-It could again also be due to the fact that the network has information from the future. 
+Similarly to performance in Section~\ref{subsec:shifting-the-predicted-time-point-to-the-centre-of-the-receptive-field} we do not know if the fact that the performance peaks in the centre of the receptive field is due to having information directly preceding the movement or having access to information from the future. 
 Interestingly, the decoding performance drops slower when using information predominantly from the future more than when using information predominantly from the past.
 To properly investigate the informativeness of past vs. future signals however, we would need to have a network with an uniform receptive field. 
 \todo{some literature about this}.
@@ -405,75 +439,80 @@ To properly investigate the informativeness of past vs. future signals however, 
     \centering
    \includegraphics[width=0.7\linewidth]{img/ch4/vel-shifting-performance-comparison}
    \caption{}
-\end{subfigure}\label{fig:vel-shifting-performance}
+   \label{fig:vel-shifting-performance}
+\end{subfigure}
 
 \begin{subfigure}[b]{\textwidth}
     \centering
    \includegraphics[width=0.7\linewidth]{img/ch4/absVel-shifting-performance-comparison}
    \caption{}
-\end{subfigure}\label{fig:absVel-shiftig-performance}
+   \label{fig:absVel-shiftig-performance}
+\end{subfigure}
 \caption[]{The boxplots in \textbf{(a)} show how the CCs of the original Deep4Net (vel\_k3\_d3\_sbp0) changes for velocity decoding when shifting the predicted time-point across the receptive field.
 The boxplots in \textbf{(b)} show the same but for absolute velocity. Zero miliseconds on the x-axis represent the predicted time-point being shifted to the centre of the receptive field.
 Moving to the right, the network uses less information from the future and the predictions becomes more causal.
 The 1041 ms mark on the x-axis is equivalent to the original fully causal prediction as described in \cite{Hammer-2021}.
 When moving from 0 to the left, the network uses more and more information from the future.}
-\end{figure}\label{fig:shifting-performance}
+\label{fig:shifting-performance}
+\end{figure}
 
-Besides observing how performance changes with shifting, we also visualize the gradients as is described in the next section.
 
 \subsubsection{Gradients}\label{subsubsec:across-shiftig-gradients}
-The gradients are visualized in Figure~\ref{fig:shifting-performance}.
-In the graph for absolute velocity, we can observe the trend of broadening the frequency ranges with high gradient values when shifting the predicted time-point from the centre of the receptive field both to the left and to the right.
-This is what we expected because it corresponds to the results from~\cref{subsec:shifting-the-predicted-time-point-to-the-centre-of-the-receptive-field}.
-Interestingly, when plotting the same graph for velocity, we do not observe this behaviour so clearly, instead there is a periodicity in the positive and negative value of the gradients for the different values of the shift.
+How the gradients are changing with the gradueal shifting is visualized in Figure~\ref{fig:shifting-gradients}.
+In the graph for absolute velocity Figure~\ref{fig:absVel-shiftig-gradients}, we can observe the trend of broadening the frequency ranges with high gradient values when shifting the predicted time-point from the centre of the receptive field both to the left and to the right.
+This is what we expected because it corresponds to the results from Section~\ref{subsec:shifting-the-predicted-time-point-to-the-centre-of-the-receptive-field}.
+Interestingly, when plotting the same graph for velocity Figure~\ref{fig:vel-shifting-gradients}, we do not observe this behaviour so clearly, instead there is a periodicity in the positive and negative value of the gradients for the different values of the shift.
 It is unclear why this periodicity occurs.
-
 
 \begin{figure}[!hpbp]
 \begin{subfigure}[a]{\textwidth}
    \includegraphics[width=1\linewidth]{img/ch4/vel-shifted-gradients}
    \caption{}
-\end{subfigure}\label{fig:vel-shifting-gradients}
+   \label{fig:vel-shifting-gradients}
+\end{subfigure}
 
 \begin{subfigure}[b]{\textwidth}
    \includegraphics[width=1\linewidth]{img/ch4/absVel-shifted-gradients}
    \caption{}
-\end{subfigure}\label{fig:absVel-shiftig-gradients}
+   \label{fig:absVel-shiftig-gradients}
+\end{subfigure}
 \caption[]{The graph \textbf{(a)} shows the changes in gradients of the original Deep4Net (vel\_k3\_d3\_sbp0) trained to decode velocity when shifting the predicted time-point across the receptive field.
 The graph \textbf{(b)} show the same but for absolute velocity. Zero miliseconds on the x-axis represent the predicted time-point being shifted to the centre of the receptive field.
 Moving to the right, the network uses less information from the future and the predictions becomes more causal.
 The 1041 ms mark on the x-axis is equivalent to the original fully causal prediction as described in~\cite{Hammer-2021}.
 When moving from 0 to the left, the network uses more and more information from the future.}
-\end{figure}\label{fig:shifting-gradients}
+\label{fig:shifting-gradients}
+\end{figure}
 
 \subsubsection{Summary}\label{subsubsec:across-shiftig-summary}
-Besides the periodicity of the positive and negative values of the gradients in for velocity, we have further confirmed the conclusions we drew previously in \ref{subsec:shifting-the-predicted-time-point-to-the-centre-of-the-receptive-field}. 
-Indeed the network seems to focus on more narrow frequency bands when given better access to information close to its receptive field.
-In the case of the Deep4Net\_spb0 it also means lower interest in the high-gamma frequency band when achieving better performance.
-This corroborates the what we have established so far about the information in the high-gamma band being inferior for velocity and absolute velocity decoding compared to information from lower frequency bands. 
+Besides the periodicity of the positive and negative values of the gradients in for velocity, we have further confirmed the conclusions we drew previously in Section \ref{subsec:shifting-the-predicted-time-point-to-the-centre-of-the-receptive-field}. 
+Indeed the network seems to focus on more narrow frequency bands when given better access to information close to the predicted time-point.
+In the case of the Deep4Net (k3\_d3\_spb0) it also means lower interest in the high-gamma frequency band when achieving better performance.
+This corroborates what we have established so far about the information in the high-gamma band being inferior for velocity and absolute velocity decoding compared to information from lower frequency bands. 
 
 
 \section{Spectral whitening}\label{sec:spectral-whitening}
 
+In this section we examine how the networks react when the iEEG data is whitened.
+We focus on the changes in performance and gradient values for the different frequencies between networks trained on the original data and data that was first whitened.
 
 \subsection{Performance}\label{subsec:pw-performance}
-How the networks react to datasets which were whitened as described in Section~\ref{subsec:modifications-to-the-dataset} was one of our interests because when we look at the spectrum of the original signal, the amplitudes of frequencies decrease exponentially with increase in the frequency.
-See Figure \ref{fig:spectral-whitening}.
-This is common in biological signals but could be a reason for the CNNs to ignore high-frequencies when making predictions.
+How the networks react to datasets which were whitened as described in Section~\ref{subsec:modifications-to-the-dataset} was one of our interests because when we look at the spectrum of the original signal (see Figure~\ref{fig:spectral-whitening}), the amplitudes of the frequencies decrease exponentially with increase in frequency.
+
+This is common in biological signals and could be a reason for the CNNs to ignore high-frequencies when making predictions.
 We therefore evaluate the performance of all the architectures on the whitened datasets. 
 We carry out the whitening on full as well as filtered datasets. 
-Figure~\ref{fig:pw-performance} shows how the predictions changed compared to predictions on non-whitened signals when using the full dataset.
-It is obvious that for the full training and validation Figre~\ref{fig:pw-performance} graphs \textbf{A} and \textbf{B}, the correlation coefficient of all networks dropped significantly.
-When looking at Figure~\ref{fig:pw-performance} graphs \textbf{E} and \textbf{F} we see that in the case of high-passed datasets the performance did not increase significantly for any of the networks. 
-This shows that the low amplitude of these frequencies is not the issue when decoding from them. \\
+Figure~\ref{fig:pw-performance} shows how the predictions changed compared to predictions on non-whitened signals.
+It is obvious that for the full training and validation for both velocity (Figure~\ref{fig:vel-pw-performance} graphs~\textbf{A}~and~\textbf{B}) and absolute velocity (Figure~\ref{fig:absVel-pw-performance} graphs~\textbf{A}~and~\textbf{B}), the correlation coefficient of all networks dropped significantly.
+When looking at graphs \textbf{E} and \textbf{F} in both Figure \ref{fig:vel-pw-performance} and \ref{fig:absVel-pw-performance} and we see that in the case of high-passed datasets the performance did not increase significantly for any of the networks. 
+This shows that the low amplitude of these frequencies is not the issue when decoding from them because increasing it does not aid the network in making predictions from them. \\
 
-The only scenario where spectral whitening helped the CNNs to achieve better CCs was when they were trained on full data and validated on high-passed data \ref{fig:pw-performance} graphs \textbf{G} and \textbf{H}. 
-In the case of velocity \ref{fig:pw-performance} (a) a statistically significant increase was only for the vel\_k1 network.
-In the case of absolute velocity \ref{fig:pw-performance} (b) five out of the seven architectures experienced a statistically significant increase in performance due to spectral whitening.
-The CC increase this last scenario shows that the networks indeed learned to use high-gamma because when validated on high-passed data. Nevertheless the use of high-gamma did not improve the performance when validated on the full dataset.  \\
+The only scenario where spectral whitening helped the CNNs to achieve better CCs was when they were trained on full data and validated on high-passed data graphs~\textbf{G} and \textbf{H} in Figure~\ref{fig:vel-pw-performance} and Figure~\ref{fig:absVel-pw-performance}. 
+In this scenario in the case of velocity \ref{fig:vel-pw-performance} a statistically significant increase compared to the same non-whitened setting was only for the vel\_k1 network.
+In the case of absolute velocity \ref{fig:absVel-pw-performance} (b) five out of the seven architectures experienced a statistically significant increase in performance due to spectral whitening.
+The CC increase in this last scenario shows that the networks indeed learned to use more high-gamma when having access to full data.
+Nevertheless the use of high-gamma did not improve the performance when validated on the full dataset.  \\
 
-Overall spectral whitening forced most of the networks into using high-gamma. 
-At the same time, it harmed the prediction power of the networks. 
 
 \begin{figure}[!htbp]
 \begin{subfigure}[a]{\textwidth}
@@ -488,7 +527,8 @@ At the same time, it harmed the prediction power of the networks.
    The stars in \textbf{F} denote CCs significantly lower compared to CCs of the same architecture in \textbf{E} (** p <0.01), (* p < 0.05), one-sided paired t-test.
    \textbf{Graphs G} and \textbf{H} compare performance when trained on full data and validated on high-passed data.
    The stars in \textbf{H} denote CCs significantly lower compared to CCs of the same architecture in \textbf{G} (** p <0.01), (* p < 0.05), one-sided paired t-test.}
-\end{subfigure}\label{fig:vel-pw-performance}
+   \label{fig:vel-pw-performance}
+\end{subfigure}
 \end{figure}
 \clearpage   
 
@@ -505,30 +545,37 @@ At the same time, it harmed the prediction power of the networks.
    The stars in \textbf{F} denote CCs significantly lower compared to CCs of the same architecture in \textbf{E}. (** p <0.01), (* p < 0.05), one-sided paired t-test.
    \textbf{Graphs G} and \textbf{H} compare performance when trained on full data and validated on high-passed data.
    The stars in \textbf{H} denote CCs significantly lower compared to CCs of the same architecture in \textbf{G}. (** p <0.01), (* p < 0.05), one-sided paired t-test.}
-\end{subfigure}\label{fig:absVel-pw-performance}
+   \label{fig:absVel-pw-performance}
+\end{subfigure}
 \caption[Spectral whitening - performance comparison]{}
-\end{figure}\label{fig:pw-performance}
+\label{fig:pw-performance}
+\end{figure}
 
 \subsection{Gradients}\label{subsec:pw-gradients2}
-
-When looking at the gradients of the networks trained on whitened data in Figure~\ref{fig:pw-last-layer-grads}, we observe that the networks indeed use modulations in the high-gamma frequency bands for their predictions.
-This is also supported by the increased CCs for networks trained on full data and validated on high-passed data.
+When looking at the gradients of the networks trained on whitened data in Figure~\ref{fig:pw-last-layer-grads}\footnote{We present the gradients only for the output layer to highlight our observations. 
+The results for all layers can be found in Appendix\todo{add appendix}.}, we observe that the networks indeed use modulations in the high-gamma frequency bands for their predictions. 
+This finding is also supported by the increased CCs for networks trained on full data and validated on high-passed data.
 For absolute velocity, the gradients have high values in bands across the whole frequency range. Interestingly, for velocity, instead of having more uniform gradients across all frequencies, they invert their focus from low frequencies to high-frequencies.
-The only architectures for which this does not happen is the vel\_k1 CNN which is the network without max-pool layers.
-This network stayed mostly focused on low-frequencies below 25 Hz.
-Also for absolute velocity, the network without max-pools (absVel\_k1) stays mostly focused on the low frequencies even though a slight increase in gradient values for frequencies around 75 Hz can be observed. 
+The only architectures which stays mostly focused on frequencies below 25~Hz is the vel\_k1 CNN which is the network without max-pool layers.
+The same is true for absolute velocity, where the network without max-pools (absVel\_k1) also stays mostly focused on the low frequencies even though a slight increase in gradient values for frequencies around 75 Hz can be observed. 
 We can combine this information about the gradients with the performance graphs in Figure~\ref{fig:pw-last-layer-grads}, where we can see, that the networks without max-pools which were least influenced by the spectral whitening in terms of focusing on higher frequencies are those for which the CCs dropped least.
-This combination suggests that the using information from the high-gamma frequency is possible, but it does not seem to help achieve better correlation coefficients.
+This combination suggests that the using information from the high-gamma frequency is possible, but it does not seem to help achieve better correlation coefficients. 
+On the contrary, it shows that using information from the high-gamma frequency band is not helpful for better network performance and that using information in the low frequencies leads to better prediction power.\\
+
+Overall spectral whitening forced most of the networks into using high-gamma. 
+At the same time, it harmed the prediction power of the networks. 
 
 \begin{figure}[!htbp]
 \begin{subfigure}[a]{\textwidth}
    \includegraphics[width=1\linewidth]{img/ch4/vel-pw-last-layer-grads}
    \caption{}
-\end{subfigure}\label{fig:vel-pw-last-layer-grads}
+   \label{fig:vel-pw-last-layer-grads}
+\end{subfigure}
 
 \begin{subfigure}[b]{\textwidth}
    \includegraphics[width=1\linewidth]{img/ch4/absVel-pw-last-layer-grads}
    \caption{}
 \end{subfigure}\label{fig:absVel-pw-last-layet-grads}
 \caption[Spectral whitening - gradients]{Gradients of networks trained to decode \textbf{(a)} velocity and \textbf{(b)} absolute velocity on spectrally-whitened datasets}
-\end{figure}\label{fig:pw-last-layer-grads}
+\label{fig:pw-last-layer-grads}
+\end{figure}

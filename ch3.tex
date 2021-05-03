@@ -72,7 +72,7 @@ P11 & M (34) & FCD & Left and right frontal &  sEEG (126) & 11 & 115 & 21 & 48 \
 \hline
 P12 & M (28) & Not operated & Right frontal &  sEEG (125) & 20 & 105 & 10 & 27 \\
 \bottomrule
-\end{tabular}\label{tab:table}
+\end{tabular}
 \caption[Patient details]{$N_r$, $N_{ch}$, $N_{m}$, $N_{nm}$  : number of rejected, non-reject, hand-motor, and non-motor channels, respectively. FCD: focal cortical dysplasia.}
 \label{tab:patient-table}
 \end{table}
@@ -127,6 +127,7 @@ It was achieved using a Fourier transformation of each 25s long segment (which t
 Then dividing the amplitudes with their absolute value and then, via inverse Fourier transformation, transforming it back to signal.
 The whitened signal was normalized to its inter-quratile range (IQR).
 This normalization was calculated and applied to each segment on the training set and the same parameters averaged over all 25s long segments of the training set were applied to the validation set.
+\end{itemize}
 
 \begin{figure}[!htbp]
 \centering
@@ -135,12 +136,12 @@ This normalization was calculated and applied to each segment on the training se
 The bottom row shows how spectral whitening changed both the spectrum and the signal.}
 \label{fig:spectral-whitening}
 \end{figure}
-\end{itemize}
+
 
 \section{Deep4Net}\label{sec:deep4net}
 The Deep4Net, which is freely available in the Braindecode library, was already shortly described in Section~\ref{Background}.
 In this section, we describe it in more detail. 
-Besides the describing the architecture as used in \cite{Hammer-2021} we focus on how cropped decoding is used \ref{subsec:cropped-decoding}, how classification and regression differ and how they determine the architecture of the DNN and its inputs and outputs \ref{subsec:difference-between-deep4net-for-classification-and-regression}, what the receptive field of the network looks like and how it affects the predictions \ref{subsec:receptive-field}, we describe the training procedure \ref{subsec:training}, the visualization of the networks gradients \ref{subsec:gradinet-visualization}, and architectural modifications we introduce in this thesis \ref{subsec:architectural-modifications}. Lastly we also state how performance is analyzed \ref{subsec:performance-analysis}.
+Besides the describing the architecture as used in \cite{Hammer-2021} we focus on how cropped decoding is used \ref{subsec:cropped-decoding}, what the receptive field of the network looks like and how it affects the predictions \ref{subsec:receptive-field}, we describe the training procedure \ref{subsec:training}, the visualization of the networks gradients \ref{subsec:gradinet-visualization}, and architectural modifications we introduce in this thesis \ref{subsec:architectural-modifications}. Lastly we also state how performance is analyzed \ref{subsec:performance-analysis}.
 
 
 \subsection{Architecture}\label{subsec:architecture}
@@ -192,15 +193,19 @@ In case of classification, these multiple outputs for one input window are then 
 \begin{subfigure}[b]{0.4\textwidth}
    \includegraphics[width=0.9\linewidth]{img/ch3/trialwise-explanation.png}
    \caption{Trial-wise decoding}
-\end{subfigure}\label{fig:trial-wise-decoding-trial-wise}
+   \label{fig:trial-wise-decoding-trial-wise}
+\end{subfigure}
 
 \begin{subfigure}[b]{0.55\textwidth}
-   \includegraphics[width=0.9\linewidth]{img/ch3/trialwise-explanation2.png} \caption{Cropped decoding}
-\end{subfigure}\label{fig:trial-wise-decoding-cropped}
+   \includegraphics[width=0.9\linewidth]{img/ch3/trialwise-explanation2.png} 
+   \caption{Cropped decoding}
+   \label{fig:trial-wise-decoding-cropped}
+\end{subfigure}
 \caption[Trial-wise vs. cropped decoding]{This Figure obtained from the Braindecode library documentation\footnote{https://robintibor.github.io/braindecode/notebooks/Cropped\_Decoding.html} illustrates the difference between cropped decoding and trial-wise decoding for classification.}
-\end{figure}\label{fig:trial-wise-decoding} 
+\label{fig:trial-wise-decoding} 
+\end{figure}
 
-To avoid a longer training time, Schirrmeister et al.\cite{schirrmeister-deep-2017} also introduce trick with dilated convolution.
+To avoid a longer training time, Schirrmeister et al.\cite{schirrmeister-deep-2017} also introduced a feature with dilated convolution.
 It was previously also implemented for speeding up CNNs that make predictions for each pixel of an image \cite{}. 
 This speed-up requires changes in the architecture.
 In order to implement a network which can process multiple crops at the same time and give an equivalent result as the network processing one crop at a time, the strides of the layers can be removed (set to 1) and instead replaced by an increasing dilation.
@@ -350,7 +355,8 @@ Information about the size of the receptive field can also be found in Table~\re
    \caption{Receptive field of the CNN without max-pool (k1).}
 \end{subfigure}
 \caption[Receptive field comparison]{Both graphs \textbf{(a)} and \textbf{(b)} show the receptive field used for making one prediction (delimited by red lines) with respect to one complete 1200 ms long input window which is given to the networks. The receptive field in \textbf{(b)} is smaller, reaching to less than 450, where as the receptive field of \textbf{(a)} reaches beyond 500.} 
-\end{figure}\label{fig:receptive-field-comparison}
+\label{fig:receptive-field-comparison}
+\end{figure}
 
 \begin{table}[!htpb]
 \centering
@@ -377,7 +383,8 @@ variable\_k3\_d2 & 3, 3, 3, 3 & 2, 4, 8, 16 & -- & 502 samples \\
 \bottomrule
 \end{tabular}
 \caption[Architectural modifications]{This table gives an overview of the various CNN architectures we investigated in the scope of this thesis. Modifications were always made to the last four convolutional layers. The two convolutions in the first convolutional block (i.e. the spatial and spectral convolutions) stayed the same for all CNNs. Only information about the first dimension of the kernel sizes and dilations is presented. The second dimension is always 1. I.e. Max-pool kernel sizes 2, 2, 2, 2 actually represent kernel sizes of conv\_2, conv\_3, conv\_4 and conv\_classifier being (2, 1), (2, 1), (2, 1), (2, 1). }
-\end{table}\label{tab:architectures-description}
+\label{tab:architectures-description}
+\end{table}
 
 \subsection{Performance analysis}\label{subsec:performance-analysis}
 When comparing two models, we are not comparing them based on the mean-square error (MSE) which is the loss function of the training, but on the correlation coefficient (CC) between the model's predictions and the predicted kinematic variable.

@@ -32,26 +32,29 @@ Their ability to process complex data in and end-to-end manner together with goo
 
 
 \section*{Motivation}
-Utilizing recent advances in deep learning in movement decoding from (intracranial) EEG has brought considerable progress in this field.
-In multiple cases, deep neural networks have been shown to be more effective when decoding movement from EEG and intracranial EEG than standard machine learning methods \cite{Zhang-2019, Hammer-2021, eeg-net, sleep-eegnet}.
-Nevertheless, there is still room for considerable improvement in both, the decoding accuracies, interpretability and possibility of online applications. \\
+Utilizing recent advances in deep learning (DL) in movement decoding from EEG have brought considerable progress in this field.
+In multiple cases, deep neural networks have been shown to be more effective when decoding from EEG and intracranial EEG than standard machine learning methods \cite{Zhang-2019, eeg-net, sleep-eegnet}.
+Nevertheless, there is still room for considerable improvement in both, the decoding accuracies, interpretability and possibility of online applications \cite{Roy-2019}. 
+These issues are even more substantial in movement decoding from intracranial EEG decoding using deep learning. 
+Because it is more difficult to acquire iEEG data, it is less researched but very prospective because of the higher signal-to-noise ration of iEEG signal compared to EEG \cite{volkova-review}. \\
 
-To address these issues, Schirrmeister et al. \cite{schirrmeister-deep-2017} built several convolutional neural networks (CNNs) and assessed their suitability for movement classification from EEG.
-Without the necessity to manually extract the input features, some of the architectures - including the Deep4Net, which is a central part of this thesis - were able to reach at least the same decoding accuracies as state-of-the-art filter bank common spatial patterns (FBCSP). 
-Input-perturbation, output correlation visualization also showed the most informative spectral power features for the Deep4Net - the alpha, beta and high-gamma band.
-EEG signals tend to have rather poor high-gamma resolution \cite{gamma-eeg-bad-resolution, tam-human-2019, scholg-presence-2002} and the ability of the network to use it was rather surprising. 
-Because the Deep4Net has proven to be suitable for decoding from EEG, Hammer et al. \cite{Hammer-2021} employed it on a regression task, decoding hand velocity and absolute velocity (speed) from intracranial EEG. 
-The high-gamma resolution in iEEG is higher than in EEG and it has been shown to be informative for speed decoding using linear regression on the same data \cite{hammer-predominance-2016}.
-Interestingly, the input-perturbation output-correlation showed that the network failed to utilize the high-gamma frequency bands to the expected extent. \\
+To address these issues, Hammer et al. \cite{Hammer-2021} employed the Deep4Net - a convolutional neural network introduces in \cite{schirrmeister-deep-2017} - on a regression task, decoding hand velocity and absolute velocity (speed) from intracranial EEG. 
+The Deep4Net was chosen because it has proven successful in movement-related classification tasks, reaching comparable accuracy with state-of-the-art methods without the necessity of manual feature extraction.
+It was also shown to use spectral power modulations in the alpha, beta and for the first time in non-invasive EEG also high-gamma band for making its predictions. 
+The fact that this architecture is able to extract information from the high-gamma band makes it suitable for iEEG decoding, where the high frequency resolution is better than in non-invasive EEG \cite{gamma-eeg-bad-resolution}. \\
 
-Without including it in the research paper, they briefly continued exploring this surprising fact.
-Using a different visualization method, namely gradient visualization, they discovered a gradient peak at 83.33 Hz (in the high-gamma band).
+While in \cite{Hammer-2021} the Deep4Net significantly outperformed multi-linear regression in the velocity and absolute velocity decoding, when visualizing which features it focuses on, it has not shown the expected interest in the high-gamma frequency modulations. 
+In the context of previous findings on the same dataset, where high-gamma was found significant, especially for aboslute velocity decoding when using multilinear regression \cite{hammer-predominance-2016} and the fact that the Deep4Net architecture is able to extract information from the high-gamma frequency, the group briefly continued to explore this surprising finding.
+
+Without including it in the research paper, using a different visualization method, namely gradient visualization, they discovered a gradient peak at 83.33~ Hz (in the high-gamma band).
 But this is where their research ended. 
 Multiple questions that arise from this -- Is the gradient peak significant or is it just an architecture artifact?
 Why did the network not use the high-gamma?
 Would other architectures use high-gamma in this setting?
-Could we improve performance by forcing it to use high-gamma?
-Is high-gamma indeed informative for speed decoding? -- remain to be answered.
+Could we improve performance by forcing the network to use high-gamma?
+Is high-gamma indeed informative for speed decoding? -- remain to be answered. \\
+\\
+
 
 \section*{Goals}
 The aim of this thesis is to address the above outlined questions which can be summarized in the two following goals:

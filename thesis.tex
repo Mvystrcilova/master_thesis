@@ -43,13 +43,14 @@
 \usepackage{graphicx}
 \usepackage{xcolor}
 \usepackage{booktabs}
-\usepackage{caption}
 \usepackage{floatrow}
 
 % load bibliography tools
-\usepackage[backend=bibtex,natbib,style=numeric,sorting=none]{biblatex}
+%\usepackage[backend=bibtex,natbib,style=numeric,sorting=none]{biblatex}
 % alternative with alphanumeric citations (more informative than numbers):
-%\usepackage[backend=bibtex,natbib,style=alphabetic]{biblatex}
+\usepackage[backend=bibtex,natbib,style=authoryear,giveninits=true]{biblatex}
+%\usepackage[nottoc]{tocbibind}
+
 %
 % alternatives that conform to iso690
 % (iso690 is not formally required on MFF, but may help elsewhere):
@@ -117,7 +118,7 @@
 \tableofcontents
 
 \include{intro}
-%\include{ch1}
+%\include{ch1} 
 \include{ch2}
 \include{ch3}
 \include{ch4}

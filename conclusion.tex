@@ -1,10 +1,22 @@
 
 \chapwithtoc{Conclusion}
 
-In the conclusion, you should summarize what was achieved by the thesis. In a few paragraphs, try to answer the following:
+
+A deeper understanding of which iEEG features CNNs use for movement decoding broadens our understanding of how the brain encodes movement related information and also partially alleviates the \textit{black box} problem associated with deep neural networks.
+The improvement of performance of such networks makes them more prospective for real-life clinical applications.
+The work of \cite{Hammer-2021} offers both performance improvement and a deeper understanding of which features are crucial for the CNN to make predictions.
+Nevertheless, their findings also raise some questions.
+Mainly the low importance of the high-gamma frequency band for absolute velocity decoding challenges the previous finding about its informativity for absolute velocity decoding.
+The main goal of the thesis was to further study the frequency bans utilized by the CNN with particular focus on the high-gamma frequencies and to identify modifications to the CNN architecture which improves utilization of information across useful frequency bands. 
+
+The contributions of this thesis are following:
 \begin{itemize}
-\item Was the problem stated in the introduction solved? (Ideally include a list of successfully achieved goals.)
-\item What is the quality of the result? Is the problem solved for good and the mankind does not need to ever think about it again, or just partially improved upon? (Is the incompleteness caused by overwhelming problem complexity that would be out of thesis scope\todo{This is quite common.}, or any theoretical reasons, such as computational hardness?)
-\item Does the result have any practical applications that improve upon something realistic?
-\item Is there any good future development or research direction that could further improve the results of this thesis? (This is often summarized in a separate subsection called `Future work'.)
+    \item We successfully reproduced the results of \cite{Hammer-2021}.
+    \item We showed that the high-gamma frequency band contains movement related information, especially for absolute velocity decoding but its usage does not improve performance. On the contrary, its usage correlates with worse prediction when having access to all frequencies.
+    \item We have identified the pooling layers in the architecture of the Deep4Net as unnecessary. Their removal optimizes information extraction from low frequency bands and improves overall performance of the CNN.
+    \item We have identified the non-uniformity of the receptive field as a potential drawback of the architecture. It causes the network to be biased towards signals relatively far from the predicted time-point.
 \end{itemize}
+
+
+\section*{Main finding}
+

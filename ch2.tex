@@ -206,9 +206,15 @@ Lastly, using a perturbation visualization method they explore, which spectral p
 They show there is substantial effect of the frequencies in the alpha and beta band on the networks prediction.
 They also observe an effect of the high-gamma freuquencies on the predictions which, they claim, is for the first time when using non-invasive EEG data.\\
 
+\subsubsection{Classification task}
+Two datasets were used to estimate the abilities of the introduced architectures.
+One was the BCI IV 2a competition dataset \cite{brunner2008bci} where the task was to classify motor imagery tasks of 9 subjects imagining to move the right hand, left hand, both feet or tongue.
+The second dataset they used was one they acquired in their lab called High Gamma dataset (HGD) as it is especially well-suited for extracting information from high frequencies.
+Two additional datasets were used to estimate if the main results hold also on other datasets. 
+To this extend the BCI IV 2b competition and the Mixed Imagedy Dataset (MID) were used and confirmed their findings.
 
 
-\subsection{Hammer et al.}
+\subsection{Hammer et al.}\label{subsec:hammer-et-al}
 In 2021, Hammer et al. \cite{Hammer-2021} used the Deep4Net architecture for regression on intracranial EEG.
 Differing from the original Deep4Net paper \cite{schirrmeister-deep-2017}, not only in the type of task but also in the kind of data, they inspected the performance of the architecture in these altered settings.
 They also visualized the important spectral features investigating learnt specialization of single network units to either phase or amplitude.
@@ -244,6 +250,9 @@ While most findings were in line with previous literature, the low sensitivity o
 Especially considering two things: 
 1. This same architecture was able to use high-gamma information in EEG decoding where high frequencies contain more noise than in iEEG signal.
 2. High-gamma has been shown to be informative in for absolute velocity decoding on a subset of the same data when using linear regression \cite{hammer-predominance-2016}.
+Without including it in the research paper, using a different visualization method, namely gradient visualization, they discovered a gradient peak at 83.33~Hz (in the high-gamma band).
+The significance of this peak was unclear as it occurred only when the input window to the networks was shortened so that it only had one output (see \ref{subsec:gradinet-visualization}.
+
 
 \subsection{Related work}
 In this section we describe more works which are relevant for movement decoding from EEG or iEEG using deep learning, but are not directly used or referenced in our experiments.
