@@ -1,6 +1,6 @@
 \chapter{Experiments and results}
 \label{ch:exp}
-In this chapter we go through all the experiments and results conducted as a part of this thesis. 
+In this chapter we go through all the notable experiments and results conducted as a part of this thesis. 
 The experiments are separated into multiple parts. 
 First we inspect the significance of the peak, discussed in Section \ref{subsec:hammer-et-al}.
 Afterwards we conduct a series of systematic experiments .
@@ -511,7 +511,7 @@ This shows that the low amplitude of these frequencies is not the issue when dec
 
 The only scenario where spectral whitening helped the CNNs to achieve better CCs was when they were trained on full data and validated on high-passed data graphs~\textbf{G} and \textbf{H} in Figure~\ref{fig:vel-pw-performance} and Figure~\ref{fig:absVel-pw-performance}. 
 In this scenario in the case of velocity \ref{fig:vel-pw-performance} a statistically significant increase compared to the same non-whitened setting was only for the vel\_k1 network.
-In the case of absolute velocity \ref{fig:absVel-pw-performance} (b) five out of the seven architectures experienced a statistically significant increase in performance due to spectral whitening.
+In the case of absolute velocity \ref{fig:absVel-pw-performance} five out of the seven architectures experienced a statistically significant increase in performance due to spectral whitening.
 The CC increase in this last scenario shows that the networks indeed learned to use more high-gamma when having access to full data.
 Nevertheless the use of high-gamma did not improve the performance when validated on the full dataset.  \\
 
@@ -555,7 +555,7 @@ Nevertheless the use of high-gamma did not improve the performance when validate
 
 \subsection{Gradients}\label{subsec:pw-gradients2}
 When looking at the gradients of the networks trained on whitened data in Figure~\ref{fig:pw-last-layer-grads}\footnote{We present the gradients only for the output layer to highlight our observations. 
-The results for all layers can be found in Appendix\todo{add appendix}.}, we observe that the networks indeed use modulations in the high-gamma frequency bands for their predictions. 
+The results for all layers can be found in Appendix~\ref{appendixD}}, we observe that the networks indeed use modulations in the high-gamma frequency bands for their predictions. 
 This finding is also supported by the increased CCs for networks trained on full data and validated on high-passed data.
 For absolute velocity, the gradients have high values in bands across the whole frequency range. Interestingly, for velocity, instead of having more uniform gradients across all frequencies, they invert their focus from low frequencies to high-frequencies.
 The only architectures which stays mostly focused on frequencies below 25~Hz is the vel\_k1 CNN which is the network without max-pool layers.
@@ -563,9 +563,6 @@ The same is true for absolute velocity, where the network without max-pools (abs
 We can combine this information about the gradients with the performance graphs in Figure~\ref{fig:pw-last-layer-grads}, where we can see, that the networks without max-pools which were least influenced by the spectral whitening in terms of focusing on higher frequencies are those for which the CCs dropped least.
 This combination suggests that the using information from the high-gamma frequency is possible, but it does not seem to help achieve better correlation coefficients. 
 On the contrary, it shows that using information from the high-gamma frequency band is not helpful for better network performance and that using information in the low frequencies leads to better prediction power.\\
-
-Overall spectral whitening forced most of the networks into using high-gamma. 
-At the same time, it harmed the prediction power of the networks. 
 
 \begin{figure}[!htbp]
 \begin{subfigure}[a]{\textwidth}
@@ -577,7 +574,13 @@ At the same time, it harmed the prediction power of the networks.
 \begin{subfigure}[b]{\textwidth}
    \includegraphics[width=1\linewidth]{img/ch4/absVel-pw-last-layer-grads}
    \caption{}
-\end{subfigure}\label{fig:absVel-pw-last-layet-grads}
+   \label{fig:absVel-pw-last-layet-grads}
+\end{subfigure}
 \caption[Spectral whitening - gradients]{Gradients of networks trained to decode \textbf{(a)} velocity and \textbf{(b)} absolute velocity on spectrally-whitened datasets}
 \label{fig:pw-last-layer-grads}
 \end{figure}
+
+Overall spectral whitening forced most of the networks into using high-gamma. 
+At the same time, it harmed the prediction power of the networks. 
+
+
