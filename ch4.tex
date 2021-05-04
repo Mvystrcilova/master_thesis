@@ -101,10 +101,12 @@ The results can be seen in Figure~\ref{fig:original-performances-velocity} for v
 In the following points we summarize the findings on the different datasets.
 
 \begin{itemize}
-    \item \textbf{Full training and validation:} Some of the networks significantly outperformed the original Deep4Net (vel\_k3\_d3\_sbp0) from \cite{Hammer-2021} when both trained and validated on full data. The best performing network was the network where the max-pool layer had no influence, namely the one with max-pool layer kernel size 1.
+    \item \textbf{Full training and validation:} Some of the networks significantly outperformed the original Deep4Net (vel\_k3\_d3\_sbp0) from~\cite{Hammer-2021} when both trained and validated on full data.
+    The best performing network was the network where the max-pool layer had no influence, namely the one with max-pool layer kernel size 1.
     
     \item \textbf{Full training and low-pass validation:} When the networks were trained on the full dataset and validated on the low-passed dataset~(<~40~Hz), the performance changed significantly for all the networks as is obvious from Figure~\ref{fig:original-performances}.
-    Nevertheless, in order to achieve a statistically significant decrease in performance, we had to use a Butterworth filter of order 15 instead of order 3 which was previously used in~\cite{Hammer-2021}. The 3rd order filter caused no apparent change in the correlation coefficients.
+    Nevertheless, in order to achieve a statistically significant decrease in performance, we had to use a Butterworth filter of order 15 instead of order 3 which was previously used in~\cite{Hammer-2021}.
+    The 3rd order filter caused no apparent change in the correlation coefficients.
     A Butterworth filter gradually attenuates the frequencies above the cut-off frequency (40Hz in this case).
     The higher the filter order, the steeper the attenuation is~(\cite{butterworth1930theory}).
     Therefore, the fact that the performance decrease followed only after the stronger filter was employed suggests, that the network indeed use some information from frequencies above 40~Hz but not particularly high frequencies (those in the high-gamma band) which were attenuated by both the 3rd as well as 15th order filter Figure~\ref{fig:filters}.
@@ -153,7 +155,7 @@ In the following points we summarize the findings on the different datasets.
 The findings presented in this section lead to two interesting questions.
 The first one  is what do the gradients of the various architectures look like and do some of them use high-gamma?
 This analysis is described in Section~\ref{subsec:gradients}.
-The second question that arises if we notice, that the performance seems to drop with increasing size of the receptive field: Figure \ref{fig:figure-distance}.
+The second question that arises if we notice, that the performance seems to drop with increasing size of the receptive field: Figure~\ref{fig:figure-distance}.
 Networks with a smaller receptive field seem to perform better possibly because the predicted time-point is closer to the centre of the receptive field.
 Therefore, it is interesting to see what happens when we shift the predicted time-point to the centre of the receptive field.
 More details and the analysis are described in Section~\ref{sec:shifting-the-predicted-time-point}.
@@ -172,7 +174,7 @@ More details and the analysis are described in Section~\ref{sec:shifting-the-pre
    \label{fig:hp-filters}
 \end{subfigure}
 \caption[]{}
-label{fig:filters}
+\label{fig:filters}
 \end{figure}
 
 \subsection{Gradients}\label{subsec:gradients}
