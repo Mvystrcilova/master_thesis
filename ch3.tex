@@ -18,13 +18,13 @@ The upward movements of the car (vertical scrolling speed) were kept constant in
 
 The difficulty and the recording time of each subject was also adjusted based on the participant's motivation/ability to participate, lasting $25 \pm 7 min (mean \pm SD$).
 The car game difficulty was modified by the vertical scrolling speed of the car.
-Therefore, to account for faster movements, the low-pass cutoff frequency was set to 10 Hz for smoothing the raw tracker data prior to the derivation of the kinematic parameters. \\
+Therefore, to account for faster movements, the low-pass cutoff frequency was set to 10~Hz for smoothing the raw tracker data prior to the derivation of the kinematic parameters. \\
 
 From the horizontal - 1-D trajectory, the following two kinematic parameters were derived:
 1. velocity computed as a derivative of position, 2. speed as the absolute value of velocity.
 Velocity thus contained the directional information in its sign;
 specifically, velocity values smaller than zero implicated movement to the left and vice versa, while speed indicated how fast the car was moving left or right (irrespective of its direction).
-The time-series of the kinematic parameters were resampled at 250 Hz and temporally aligned to the iEEG data.
+The time-series of the kinematic parameters were resampled at 250~Hz and temporally aligned to the iEEG data.
 
 \subsection{Recording}\label{subsec:recording}
 The recordings were performed in the University Medical Centre in Freiburg, Germany and in the Motol University Hospital in Prague, Czech Republic.
@@ -100,8 +100,8 @@ These electrodes were then left out in some analysis, because the aim was to del
 The iEEG data pre-processing was also already completed when we obtained the dataset and it was not carried out as a part of this thesis. Nevertheless, we provide the description of pre-processing from ~\cite{Hammer-2021}.
 A comprehensive rejection of \textit{epileptic} channels based on the information from the respective epilepsy centers was performed, because the primary aim was to investigate the physiological brain activity.
 Thus, the channels, i.e. those located in the seizure onset zone and/or containing a large number of inter-ictal epileptiform discharges, were rejected from this study ($20 \pm 13$, $mean \pm SD$ over subjects Table\ref{tab:patient-table}).
-All non-rejected iEEG channels ($85 \pm 28, mean \pm SD$) were referenced to their common average, high-pass filtered at 0.15 Hz (3rd order Butterworth filter), normalized to the inter-quartile range of each channel, and resampled to 250 Hz, to yield consistent data sets from the different recording systems used at both aforementioned epilepsy centers.
-The iEEG data were resampled to 250 Hz in order to emulate the same setup of the Deep4Net from~\cite{schirrmeister-deep-2017}, which was successfully applied to demonstrate high-gamma (70 - 90 Hz) effects in decoding motor behaviour from non-invasive EEG. Importantly, any over-fitting in the pre-processing was carefully avoided (i.e., all parameters of the pre-processing of the test set were estimated on the training set) and only causal, finite impulse response filters were applied.
+All non-rejected iEEG channels ($85 \pm 28, mean \pm SD$) were referenced to their common average, high-pass filtered at 0.15~Hz (3rd order Butterworth filter), normalized to the inter-quartile range of each channel, and resampled to 250~Hz, to yield consistent data sets from the different recording systems used at both aforementioned epilepsy centers.
+The iEEG data were resampled to 250~Hz in order to emulate the same setup of the Deep4Net from~\cite{schirrmeister-deep-2017}, which was successfully applied to demonstrate high-gamma (70 - 90~Hz) effects in decoding motor behaviour from non-invasive EEG. Importantly, any over-fitting in the pre-processing was carefully avoided (i.e., all parameters of the pre-processing of the test set were estimated on the training set) and only causal, finite impulse response filters were applied.
 Therefore, the decoding approach could be readily applied also in a closed-loop, online BMI. \\
 
 The aligned iEEG and kinematic time-series were divided into 25-s long data segments.
@@ -113,7 +113,7 @@ In this thesis, we refer to multiple variations of the original dataset provided
 Following modifications were explore: 1. filtering out certain frequencies, 2. shifting the predicted time-point with respect to the input window, 3. spectral whitening.
 \begin{itemize}
 \item \textbf{Filtering} We created two types of datasets using filtering.
-A high-pass filtered dataset using a 15th order Butterworth filter, cut-off frequency 60Hz, non-zero phase shift and a low-pass dataset using Butterworth filter order 15, cut-off frequency 40Hz, non-zero phase shift. Besides full training on these datasets, parts of these datasets were combined for training and validation to see how a network trained on full data performs on high-passed data etc.
+A high-pass filtered dataset using a 15th order Butterworth filter, cut-off frequency 60~Hz, non-zero phase shift and a low-pass dataset using Butterworth filter order 15, cut-off frequency 40~Hz, non-zero phase shift. Besides full training on these datasets, parts of these datasets were combined for training and validation to see how a network trained on full data performs on high-passed data etc.
 \\
 
 \item \textbf{Shifting} Originally in Hammer et al.~\cite{Hammer-2021} the dataset was constructed so that the predictions were made from signals recorded prior to their execution (causal prediction).
@@ -139,7 +139,7 @@ The bottom row shows how spectral whitening changed both the spectrum and the si
 
 
 \section{Deep4Net}\label{sec:deep4net}
-The Deep4Net, which is freely available in the Braindecode library, was already shortly described in Section~\ref{Background}.
+The Deep4Net, which is freely available in the Braindecode library, was already shortly described in Section~\ref{subsec:schirrmeister-et-al}.
 In this section, we describe it in more detail. 
 Besides the describing the architecture as used in \cite{Hammer-2021} we focus on how cropped decoding is used \ref{subsec:cropped-decoding}, what the receptive field of the network looks like and how it affects the predictions \ref{subsec:receptive-field}, we describe the training procedure \ref{subsec:training}, the visualization of the networks gradients \ref{subsec:gradinet-visualization}, and architectural modifications we introduce in this thesis \ref{subsec:architectural-modifications}. Lastly we also state how performance is analyzed \ref{subsec:performance-analysis}.
 
