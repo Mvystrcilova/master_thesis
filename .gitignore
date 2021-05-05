@@ -16,6 +16,7 @@
 *.nls
 *.out
 /*.pdf
+.idea
 pdfa.xmpi
 *.snm
 .*.swp
@@ -26,3 +27,5 @@ thesis.run.xml
 *.toc
 *.vrb
 *.xml
+*.DS_Store
+*.iml
