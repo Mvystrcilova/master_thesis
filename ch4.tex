@@ -49,23 +49,23 @@ In the following points we summarize the findings on the different datasets.
 \begin{subfigure}[b]{\textwidth}
    \includegraphics[width=1\linewidth]{img/ch4/original_setting_vel_performance_comparison}
    \caption{\textbf{Velocity} decoding correlation coefficients of the different CNNs established by architecture modifications. In all settings \textbf{
-   A - E} the Deep4Net (vel\_k3\_d3\_sbp0) from~\cite{Hammer-2021} is labeled red. \textbf{Graph A} shows the performance of the networks when trained and validated on the full dataset. The stars in this case denote performance significantly above the vel\_k3\_d3\_sbp0. (** p <0.01), (* p < 0.05), one-sided paired t-test.
+   A - E} the Deep4Net (vel\_k3\_d3\_sbp0) from~\cite{Hammer-2021} is labeled red. \textbf{Graph A} shows the performance of the networks when trained and validated on the full dataset. The stars in this case denote performance significantly above the vel\_k3\_d3\_sbp0. (** p <0.01), (* p < 0.05), Wilcoxon signed rank test.
    \textbf{Graph B} shows the correlation coefficients of the networks trained on full data and validated on low-passed data. 
-   The stars denote if the drop of performance was significant between this setting and setting \textbf{A}. (** p <0.01), (* p < 0.05), one-sided paired t-test.
-   \textbf{Graph C} shows the performance of the CNNs when trained and validated on high-passed data. \textbf{Graph D} shows performance when trained on full data and validated on high-passed data. \textbf{Graph E} shows performance when trained on low-passed data and validated on high-passed data. For \textbf{Graphs C - E} the stars denote above chance performance - (** : p <0.01), (* : p < 0.05), one-sided paired t-test.}
+   The stars denote if the drop of performance was significant between this setting and setting \textbf{A}. (** p <0.01), (* p < 0.05), Wilcoxon signed rank test.
+   \textbf{Graph C} shows the performance of the CNNs when trained and validated on high-passed data. \textbf{Graph D} shows performance when trained on full data and validated on high-passed data. \textbf{Graph E} shows performance when trained on low-passed data and validated on high-passed data. For \textbf{Graphs C - E} the stars denote above chance performance - (** : p <0.01), (* : p < 0.05), Wilcoxon signed rank test.}
    \label{fig:original-performances-velocity} 
 \end{subfigure}
 
 \begin{subfigure}[b]{\textwidth}
    \includegraphics[width=1\linewidth]{img/ch4/original_setting_absVel_performance_comparison}
    \caption{\textbf{Absolute velocity} decoding correlation coefficients of the different CNNs established by architecture modifications. In all settings \textbf{
-   A - E} the Deep4Net (absVel\_k3\_d3\_sbp0) from~\cite{Hammer-2021} is labeled red. \textbf{Graph A} shows the performance of the networks when trained and validated on the full dataset. The stars in this case denote performance significantly above the absVel\_k3\_d3\_sbp0. (** p <0.01), (* p < 0.05), one-sided paired t-test.
+   A - E} the Deep4Net (absVel\_k3\_d3\_sbp0) from~\cite{Hammer-2021} is labeled red. \textbf{Graph A} shows the performance of the networks when trained and validated on the full dataset. The stars in this case denote performance significantly above the absVel\_k3\_d3\_sbp0. (** p <0.01), (* p < 0.05), Wilcoxon signed rank test.
    \textbf{Graph B} shows the correlation coefficients of the networks trained on full data and validated on low-passed data. 
-   The stars denote if the drop of performance was significant between this setting and setting \textbf{A}. (** p <0.01), (* p < 0.05), one-sided paired t-test.
-   \textbf{Graph C} shows the performance of the CNNs when trained and validated on high-passed data. \textbf{Graph D} shows performance when trained on full data and validated on high-passed data. \textbf{Graph E} shows performance when trained on low-passed data and validated on high-passed data. For \textbf{Graphs C - E} the stars denote above chance performance - (** : p <0.01), (* : p < 0.05), one-sided paired t-test.}
+   The stars denote if the drop of performance was significant between this setting and setting \textbf{A}. (** p <0.01), (* p < 0.05), Wilcoxon signed rank test.
+   \textbf{Graph C} shows the performance of the CNNs when trained and validated on high-passed data. \textbf{Graph D} shows performance when trained on full data and validated on high-passed data. \textbf{Graph E} shows performance when trained on low-passed data and validated on high-passed data. For \textbf{Graphs C - E} the stars denote above chance performance - (** : p <0.01), (* : p < 0.05), Wilcoxon signed rank test.}
    \label{fig:original-performances-absolute-velocity}
 \end{subfigure}
-\caption[]{}
+\caption[Non-shifted causal prediction - performances ]{}
 \label{fig:original-performances}
 \end{figure}
 
@@ -93,7 +93,7 @@ More details and the analysis are described in Section~\ref{sec:shifting-the-pre
    \caption{Comparison between 3rd and 15th order high-pass Butterworth filter, cutoff frequency 60~Hz}
    \label{fig:hp-filters}
 \end{subfigure}
-\caption[]{}
+\caption[Butterworth filters - order comparison]{}
 \label{fig:filters}
 \end{figure}
 
@@ -119,7 +119,7 @@ Figure~\ref{fig:last-layer-grads} depicts the gradients of the output layer whic
    \caption{}
    \label{fig:vel-last-layer-grads}
 \end{subfigure}
-\caption[]{Gradients of the different CNN architectures decoding \textbf{(a) Velocity} and \textbf{(b) Absolute velocity}. All channels include channels that do not belong to motor neither non-motor channel sets. See Section \ref{subsec:ieeg-data-preprocessing}}
+\caption[Non-shifted causal prediction - gradients]{Gradients of the different CNN architectures decoding \textbf{(a) Velocity} and \textbf{(b) Absolute velocity}. All channels include channels that do not belong to motor neither non-motor channel sets. See Section \ref{subsec:ieeg-data-preprocessing}}
 \label{fig:last-layer-grads}
 \end{figure}
 
@@ -162,7 +162,7 @@ There is a clear descending pattern especially for absolute velocity where the o
 \begin{figure}[!htbp]
 \centering
    \includegraphics[width=1\linewidth]{img/ch4/distance-shifted-performance-absVel}
-   \caption{The average performance of the different CNN architectures with respect to the size of their receptive field. Blue: Full training and validation CC; Light-blue: full training and validation CC standard deviation; Orange: Full training and low-pass validation CC; Light-orange: Full training and low-pass validation CC standard deviation}
+   \caption[Dependence of performance on receptive field size]{The average performance of the different CNN architectures with respect to the size of their receptive field. Blue: Full training and validation CC; Light-blue: full training and validation CC standard deviation; Orange: Full training and low-pass validation CC; Light-orange: Full training and low-pass validation CC standard deviation}
    \label{fig:figure-distance}
 \end{figure}
 
@@ -180,11 +180,11 @@ Notably the performance of the networks on the high-gamma dataset also increased
 \centering
 \begin{subfigure}[t]{\textwidth}
    \includegraphics[width=1\linewidth]{img/ch4/shifted_vs_non_shifted_vel_performance_comparison}
-   \caption{\textbf{Velocity} decoding correlation coefficients comparison between original causal prediction \textbf{Graphs A, C, E, G} and the shifted (acausal) prediction \textbf{Graphs B, D, F, H}. In all settings \textbf{
-   A - E} the Deep4Net (k3\_d3\_sbp0) from~\cite{Hammer-2021} is labeled red.\\ \textbf{Graphs A} and \textbf{B} compare the performance of the networks when trained and validated on the full dataset. A The stars in \textbf{A} and \textbf{B} denote performance significantly above the Deep4Net in the same setting. (** p <0.01), (* p < 0.05), one-sided paired t-test.
+   \caption[Velocity: non-shifted vs. shifted setting performances]{\textbf{Velocity} decoding correlation coefficients comparison between original causal prediction \textbf{Graphs A, C, E, G} and the shifted (acausal) prediction \textbf{Graphs B, D, F, H}. In all settings \textbf{
+   A - E} the Deep4Net (k3\_d3\_sbp0) from~\cite{Hammer-2021} is labeled red.\\ \textbf{Graphs A} and \textbf{B} compare the performance of the networks when trained and validated on the full dataset. A The stars in \textbf{A} and \textbf{B} denote performance significantly above the Deep4Net in the same setting. (** p <0.01), (* p < 0.05), Wilcoxon signed rank test.
    \\\textbf{Graphs C} and \textbf{D} show the correlation coefficients of the networks trained on full data and validated on low-passed data. 
-   The stars in \textbf{C} denote if the CCs are significantly lower compared to \textbf{A}. The stars in \textbf{D} denote if the CCs are significantly lower compared to \textbf{B}. (** p <0.01), (* p < 0.05), one-sided paired t-test.
-   \\\textbf{Graphs E} and \textbf{F} compare the CCs of the CNNs when trained and validated on high-passed data. \textbf{Graphs G} and \textbf{H} compare performance when trained on full data and validated on high-passed data. For \textbf{Graphs E - H} the stars denote above chance performance - (** : p <0.01), (* : p < 0.05), one-sided paired t-test.}
+   The stars in \textbf{C} denote if the CCs are significantly lower compared to \textbf{A}. The stars in \textbf{D} denote if the CCs are significantly lower compared to \textbf{B}. (** p <0.01), (* p < 0.05), Wilcoxon signed rank test.
+   \\\textbf{Graphs E} and \textbf{F} compare the CCs of the CNNs when trained and validated on high-passed data. \textbf{Graphs G} and \textbf{H} compare performance when trained on full data and validated on high-passed data. For \textbf{Graphs E - H} the stars denote above chance performance - (** : p <0.01), (* : p < 0.05), Wilcoxon signed rank test.}
    \label{fig:shifted-performance-vel}
 \end{subfigure}
 \end{figure}
@@ -196,11 +196,11 @@ Notably the performance of the networks on the high-gamma dataset also increased
    \caption{}
    \label{fig:shifted-performance-absVel}
 \end{subfigure}
-\caption[]{{\textbf{Absolute velocity} decoding correlation coefficients comparison between original causal prediction \textbf{Graphs A, C, E, G} and the shifted (acausal) prediction \textbf{Graphs B, D, F, H}. In all settings \textbf{
-   A - E} the Deep4Net (k3\_d3\_sbp0) from~\cite{Hammer-2021} is labeled red.\\ \textbf{Graphs A} and \textbf{B} compare the performance of the networks when trained and validated on the full dataset. A The stars in \textbf{A} and \textbf{B} denote performance significantly above the Deep4Net in the same setting. (** p <0.01), (* p < 0.05), one-sided paired t-test.
+\caption[Absolute velocity: non-shifted vs. shifted setting performances]{{\textbf{Absolute velocity} decoding correlation coefficients comparison between original causal prediction \textbf{Graphs A, C, E, G} and the shifted (acausal) prediction \textbf{Graphs B, D, F, H}. In all settings \textbf{
+   A - E} the Deep4Net (k3\_d3\_sbp0) from~\cite{Hammer-2021} is labeled red.\\ \textbf{Graphs A} and \textbf{B} compare the performance of the networks when trained and validated on the full dataset. A The stars in \textbf{A} and \textbf{B} denote performance significantly above the Deep4Net in the same setting. (** p <0.01), (* p < 0.05), Wilcoxon signed rank test.
    \\\textbf{Graphs C} and \textbf{D} show the correlation coefficients of the networks trained on full data and validated on low-passed data. 
-   The stars in \textbf{C} denote if the CCs are significantly lower compared to \textbf{A}. The stars in \textbf{D} denote if the CCs are significantly lower compared to \textbf{B}. (** p <0.01), (* p < 0.05), one-sided paired t-test.
-   \\\textbf{Graphs E} and \textbf{F} compare the CCs of the CNNs when trained and validated on high-passed data. \textbf{Graphs G} and \textbf{H} compare performance when trained on full data and validated on high-passed data. For \textbf{Graphs E - H} the stars denote above chance performance - (** : p <0.01), (* : p < 0.05), one-sided paired t-test.}}
+   The stars in \textbf{C} denote if the CCs are significantly lower compared to \textbf{A}. The stars in \textbf{D} denote if the CCs are significantly lower compared to \textbf{B}. (** p <0.01), (* p < 0.05), Wilcoxon signed rank test.
+   \\\textbf{Graphs E} and \textbf{F} compare the CCs of the CNNs when trained and validated on high-passed data. \textbf{Graphs G} and \textbf{H} compare performance when trained on full data and validated on high-passed data. For \textbf{Graphs E - H} the stars denote above chance performance - (** : p <0.01), (* : p < 0.05), Wilcoxon signed rank test.}}
    \label{fig:shifted-performance}
 \end{figure}
 
@@ -255,7 +255,7 @@ Below, we show results from the convolutional layer in the third convolutional b
    \caption{}
    \label{fig:vel-conv3-layer-grads-shifted}
 \end{subfigure}
-\caption[]{Gradients of the different CNN architectures trained to decode velocity in \textbf{(a)} the original setting (causal prediction) and \textbf{(b)} in the shifted setting (acausal prediction). Full data was used for both training and validation.}
+\caption[Velocity: non-shifted vs. shifted gradient, full data]{Gradients of the different CNN architectures trained to decode velocity in \textbf{(a)} the original setting (causal prediction) and \textbf{(b)} in the shifted setting (acausal prediction). Full data was used for both training and validation.}
 \label{fig:vel-shifted-vs-non-shifted-grads}
 \end{figure}
 
@@ -271,7 +271,7 @@ Below, we show results from the convolutional layer in the third convolutional b
    \caption{}
    \label{fig:absVel-conv-3-layer-grads-shifted}
 \end{subfigure}
-\caption[]{Gradients of the different CNN architectures trained to decode absolute velocity in \textbf{(a)} the original setting (causal prediction) and \textbf{(b)} in the shifted setting (acausal prediction). Full data was used for both training and validation.}
+\caption[Absolute velocity: non-shifted vs. shifted gradients, full data]{Gradients of the different CNN architectures trained to decode absolute velocity in \textbf{(a)} the original setting (causal prediction) and \textbf{(b)} in the shifted setting (acausal prediction). Full data was used for both training and validation.}
 \label{fig:absVel-shifted-vs-non-shifted-grads}
 \end{figure}
 
@@ -288,7 +288,7 @@ Below, we show results from the convolutional layer in the third convolutional b
    \includegraphics[width=1\linewidth]{img/ch4/vel-conv-3-layer-grads-hp-shifted}
    \caption{}
 \end{subfigure}\label{fig:vel-conv3-layer-grads-shifted-hp}
-\caption[]{Gradients of the different CNN architectures trained to decode velocity in \textbf{(a)} the original setting (causal prediction) and \textbf{(b)} in the shifted setting (acausal prediction). High-passed data was used for both training and validation.}
+\caption[Velocity: non-shifted vs. shifted gradients, high-passed data]{Gradients of the different CNN architectures trained to decode velocity in \textbf{(a)} the original setting (causal prediction) and \textbf{(b)} in the shifted setting (acausal prediction). High-passed data was used for both training and validation.}
 \label{fig:vel-shifted-vs-non-shifted-grads-hp}
 \end{figure}
 
@@ -304,7 +304,7 @@ Below, we show results from the convolutional layer in the third convolutional b
    \caption{}
    \label{fig:absVel-conv-3-layer-grads-shifted-hp}
 \end{subfigure}
-\caption[]{Gradients of the different CNN architectures trained to decode absolute velocity in \textbf{(a)} the original setting (causal prediction) and \textbf{(b)} in the shifted setting (acausal prediction). High-passed data was used for both training and validation.}
+\caption[Absolute velocity: non-shifted vs. shifted gradients, high-passed data]{Gradients of the different CNN architectures trained to decode absolute velocity in \textbf{(a)} the original setting (causal prediction) and \textbf{(b)} in the shifted setting (acausal prediction). High-passed data was used for both training and validation.}
 \label{fig:absVel-shifted-vs-non-shifted-grads-hp}
 \end{figure}
 
@@ -370,7 +370,7 @@ To properly investigate the informativeness of past vs. future signals however, 
    \caption{}
    \label{fig:absVel-shiftig-performance}
 \end{subfigure}
-\caption[]{The boxplots in \textbf{(a)} show how the CCs of the original Deep4Net (vel\_k3\_d3\_sbp0) changes for velocity decoding when shifting the predicted time-point across the receptive field.
+\caption[Gradual shifting - performance]{The boxplots in \textbf{(a)} show how the CCs of the original Deep4Net (vel\_k3\_d3\_sbp0) changes for velocity decoding when shifting the predicted time-point across the receptive field.
 The boxplots in \textbf{(b)} show the same but for absolute velocity. Zero miliseconds on the x-axis represent the predicted time-point being shifted to the centre of the receptive field.
 Moving to the right, the network uses less information from the future and the predictions becomes more causal.
 The 1041 ms mark on the x-axis is equivalent to the original fully causal prediction as described in \cite{Hammer-2021}.
@@ -380,7 +380,8 @@ When moving from 0 to the left, the network uses more and more information from 
 
 
 \subsubsection{Gradients}\label{subsubsec:across-shiftig-gradients}
-How the gradients are changing with the gradueal shifting is visualized in Figure~\ref{fig:shifting-gradients}.
+How the gradients are changing with the gradual shifting is visualized in Figure~\ref{fig:shifting-gradients}. 
+We again chose one layer (the output layer) to show here and the gradients of the remaining layers for both the full dataset as well as the high-passed data can be found in Appendix~\ref{appendixC}
 In the graph for absolute velocity Figure~\ref{fig:absVel-shiftig-gradients}, we can observe the trend of broadening the frequency ranges with high gradient values when shifting the predicted time-point from the centre of the receptive field both to the left and to the right.
 This is what we expected because it corresponds to the results from Section~\ref{subsec:shifting-the-predicted-time-point-to-the-centre-of-the-receptive-field}.
 Interestingly, when plotting the same graph for velocity Figure~\ref{fig:vel-shifting-gradients}, we do not observe this behaviour so clearly, instead there is a periodicity in the positive and negative value of the gradients for the different values of the shift.
@@ -398,7 +399,7 @@ It is unclear why this periodicity occurs.
    \caption{}
    \label{fig:absVel-shiftig-gradients}
 \end{subfigure}
-\caption[]{The graph \textbf{(a)} shows the changes in gradients of the original Deep4Net (vel\_k3\_d3\_sbp0) trained to decode velocity when shifting the predicted time-point across the receptive field.
+\caption[Gradual shifting - gradients]{The graph \textbf{(a)} shows the changes in gradients of the original Deep4Net (vel\_k3\_d3\_sbp0) trained to decode velocity when shifting the predicted time-point across the receptive field.
 The graph \textbf{(b)} show the same but for absolute velocity. Zero miliseconds on the x-axis represent the predicted time-point being shifted to the centre of the receptive field.
 Moving to the right, the network uses less information from the future and the predictions becomes more causal.
 The 1041 ms mark on the x-axis is equivalent to the original fully causal prediction as described in~\cite{Hammer-2021}.
@@ -442,13 +443,13 @@ Nevertheless the use of high-gamma did not improve the performance when validate
    \caption{\textbf{Velocity} decoding correlation coefficients comparison between the networks trained on non-whitened datasets \textbf{Graphs A, C, E, G} and the whitened dataset \textbf{Graphs B, D, F, H}.
    In all settings \textbf{A - E} the Deep4Net (k3\_d3\_sbp0) from~\cite{Hammer-2021} is labeled red.
    \\ \textbf{Graphs A} and \textbf{B} compare the performance of the networks when trained and validated on the full dataset.
-   The stars in \textbf{B} denote CCs significantly lower compared to CCs of the same architecture in \textbf{A} (** p <0.01), (* p < 0.05), one-sided paired t-test.
+   The stars in \textbf{B} denote CCs significantly lower compared to CCs of the same architecture in \textbf{A} (** p <0.01), (* p < 0.05), Wilcoxon signed rank test.
    \\\textbf{Graphs C} and \textbf{D} show the correlation coefficients of the networks trained on full data and validated on low-passed data.
-   The stars in \textbf{D} denote if the CCs are significantly lower compared to CCs of the same architecture in \textbf{C} (** p <0.01), (* p < 0.05), one-sided paired t-test.
+   The stars in \textbf{D} denote if the CCs are significantly lower compared to CCs of the same architecture in \textbf{C} (** p <0.01), (* p < 0.05), Wilcoxon signed rank test.
    \\\textbf{Graphs E} and \textbf{F} compare the CCs of the CNNs when trained and validated on high-passed data.
-   The stars in \textbf{F} denote CCs significantly lower compared to CCs of the same architecture in \textbf{E} (** p <0.01), (* p < 0.05), one-sided paired t-test.
+   The stars in \textbf{F} denote CCs significantly lower compared to CCs of the same architecture in \textbf{E} (** p <0.01), (* p < 0.05), Wilcoxon signed rank test.
    \textbf{Graphs G} and \textbf{H} compare performance when trained on full data and validated on high-passed data.
-   The stars in \textbf{H} denote CCs significantly lower compared to CCs of the same architecture in \textbf{G} (** p <0.01), (* p < 0.05), one-sided paired t-test.}
+   The stars in \textbf{H} denote CCs significantly lower compared to CCs of the same architecture in \textbf{G} (** p <0.01), (* p < 0.05), Wilcoxon signed rank test.}
    \label{fig:vel-pw-performance}
 \end{subfigure}
 \end{figure}
@@ -460,13 +461,13 @@ Nevertheless the use of high-gamma did not improve the performance when validate
    \caption{\textbf{Absolute velocity} decoding correlation coefficients comparison between the networks trained on the non-whitened datasets \textbf{Graphs A, C, E, G} and the whitened dataset \textbf{Graphs B, D, F, H}.
    In all settings \textbf{A - E} the Deep4Net (k3\_d3\_sbp0) from~\cite{Hammer-2021} is labeled red.
    \\ \textbf{Graphs A} and \textbf{B} compare the performance of the networks when trained and validated on the full dataset.
-   The stars in \textbf{B} denote CCs significantly lower compared to CCs of the same architecture in \textbf{A}. (** p <0.01), (* p < 0.05), one-sided paired t-test.
+   The stars in \textbf{B} denote CCs significantly lower compared to CCs of the same architecture in \textbf{A}. (** p <0.01), (* p < 0.05), Wilcoxon signed rank test.
    \\\textbf{Graphs C} and \textbf{D} show the correlation coefficients of the networks trained on full data and validated on low-passed data.
-   The stars in \textbf{D} denote if the CCs are significantly lower compared to CCs of the same architecture in \textbf{C} (** p <0.01), (* p < 0.05), one-sided paired t-test.
+   The stars in \textbf{D} denote if the CCs are significantly lower compared to CCs of the same architecture in \textbf{C} (** p <0.01), (* p < 0.05), Wilcoxon signed rank test.
    \\\textbf{Graphs E} and \textbf{F} compare the CCs of the CNNs when trained and validated on high-passed data.
-   The stars in \textbf{F} denote CCs significantly lower compared to CCs of the same architecture in \textbf{E}. (** p <0.01), (* p < 0.05), one-sided paired t-test.
+   The stars in \textbf{F} denote CCs significantly lower compared to CCs of the same architecture in \textbf{E}. (** p <0.01), (* p < 0.05), Wilcoxon signed rank test.
    \textbf{Graphs G} and \textbf{H} compare performance when trained on full data and validated on high-passed data.
-   The stars in \textbf{H} denote CCs significantly lower compared to CCs of the same architecture in \textbf{G}. (** p <0.01), (* p < 0.05), one-sided paired t-test.}
+   The stars in \textbf{H} denote CCs significantly lower compared to CCs of the same architecture in \textbf{G}. (** p <0.01), (* p < 0.05), Wilcoxon signed rank test.}
    \label{fig:absVel-pw-performance}
 \end{subfigure}
 \caption[Spectral whitening - performance comparison]{}
