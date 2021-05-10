@@ -45,22 +45,24 @@
 \def\SupervisorsDepartment{Department of Software and Computer Science Education}
 
 % Study programme and specialization
-\def\StudyProgramme{Computer Science (N1801)}
-\def\StudyBranch{IUI (1801T036)}
+\def\StudyProgramme{Computer Science}
+\def\StudyBranch{IUI}
 
-\def\Dedication{%
-Dedication. \xxx{It is nice to say thanks to supervisors, friends, family, book authors and food providers.}
+\def\Dedication{First, I would like to thank my supervisor Mgr. Ján Antolík, Ph.D. for introducing me to the intriguing field of neuroscience. His supportive attitude and advice helped me way beyond this thesis. In a similar manner I would like to thank Mgr. Jiří Hammer, Ph.D. who offered me not only this project but importantly also his time and knowledge. 
+
+I also want to express my gratitude to Mr. Robin Tibor Schirrmeister, soon to be Ph.D. and professor Tonio Ball for their invaluable and welcoming consultations regarding the Deep4Net and brain signal processing in general.
+
+Further I would like to manifest my appreciation for at least some of the people who, more or less directly, contributed to me starting and also finishing this thesis. For encouraging me not to content myself with something I would not enjoy doing, for standing me in times of quarantine and for all the emotional support and food, thank you, Vít Kabele, Jana, Jiří, Jana and Lenka Vystrčilovi, Anna Bláhová. 
+
+Last, but not least, I would like to thank my cat for sitting on my lap long enough for me to be able to finish the thesis. 
 }
 
 \def\AbstractEN{%
-\xxx{Abstracts are an abstract form of art. Use the most precise, shortest sentences that state what problem the thesis addresses, how it is approached, pinpoint the exact result achieved, and describe the applications and significance of the results. Highlight anything novel that was discovered or improved by the thesis. Maximum length is 200 words, but try to fit into 120. Abstracts are often used for deciding if a reviewer will be suitable for the thesis; a well-written abstract thus increases the probability of getting a reviewer who will like the thesis.}
-Our brain controls the processes of the body including hand movements. In this thesis we try to understand, how the information about hand movement is encoded into its electrical activity and 
+Our brain controls the processes of the body including movement. In this thesis we try to understand, how the information about hand movement is encoded into the brain's electrical activity and how this activity can be used to predict the velocity and absolute velocity of hand movements. Using a well-established deep neural network architecture for EEG decoding - the Deep4Net - we predict hand movement velocity and absolute velocity from intracranial EEG signals. While reaching the expected performance level, we determine the influence of different frequency bands on the network's prediction. We find that modulations in the high-gamma frequency band are less informative than expected based on previous studies. We also identify two architectural modifications which lead to higher performances. 1. the removal of max-pooling layers in the architecture leads to significantly higher correlations. 2. the non-uniform receptive field of the network is a potential drawback making the network biased towards less relevant information. 
 % ABSTRACT IS NOT A COPY OF YOUR THESIS ASSIGNMENT!
 }
 
-\def\AbstractCS{%
-\xxx{You will need to submit both Czech and English abstract to the SIS, no matter what language you use in the thesis. If writing in English, translate the contents of \texttt{\textbackslash{}AbstractEN} into this field. In case you do not speak czech, your supervisor should be able to help you with the translation.}
-}
+\def\AbstractCS{Lidský mozek řídí naše těla včetně pohybů rukou. V této diplomové práci jsme se snažili porozumět tomu, jak je informace o pohybu rukou zakódovaná do elektrické aktivity mozku a jak lze tuto aktivitu použít při predikování rychlosti a absolutní rychlosti pohybu rukou. Pomocí osvědčené hluboké neuronové sítě (Deep4Net), používané k dekódování signálů z EEG, jsme dekódovali rychlost a absolutní rychlost pohybů rukou z intrakraniálního EEG. Úspěšnějsme dosáhli očekávaných hodnot korelace mezi predikovanými a skutečnými proměnnými. Zároveň jsme stanovili vliv amplitud vlnových pásem v různých frekveních na predikce této sítě. Zjistili jsme, že vliv modulací ve vlnovém pásmu high-gamma je menší než se očekávalo na základě předchozích studií. Současně jsme identifikovali dvě možné úpravy architektury Deep4Net, které mohou vést k lepším predikčním schopnostem.  Zaprvé jsme odhalili, že odstraněním max-poolingových vrstev lze dosáhnout statisticky signifikantně lepších korelačních koeficientů. Zadruhé jsme objevili, že nerovnoměrné receptivní pole této sítě představuje nevýhodu a způsobuje že se vícesoustřeďují na méně relevantní informace.}
 
 % 3 to 5 keywords (recommended), each enclosed in curly braces.
 % Keywords are useful for indexing and searching for the theses by topic.

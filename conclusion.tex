@@ -2,12 +2,13 @@
 \chapwithtoc{Conclusion}
 
 
-A deeper understanding of which iEEG features CNNs use for movement decoding broadens our understanding of how the brain encodes movement related information and also partially alleviates the \textit{black box} problem associated with deep neural networks.
-The improvement of performance of such networks makes them more prospective for real-life clinical applications.
+A deeper understanding of which iEEG features CNNs use for movement decoding broadens our understanding of how the brain encodes movement related information.
+It also partially alleviates the \textit{black box} problem associated with deep neural networks.
+Improvement of performance of such networks makes them more prospective for real-life clinical applications.
 The work of \cite{Hammer-2021} offers both performance improvement and a deeper understanding of which features are crucial for the CNN to make predictions.
 Nevertheless, their findings also raise some questions.
-Mainly the low importance of the high-gamma frequency band for absolute velocity decoding challenges the previous finding about its informativity for absolute velocity decoding.
-The main goal of the thesis was to further study the frequency bans utilized by the CNN with particular focus on the high-gamma frequencies and to identify modifications to the CNN architecture which improves utilization of information across useful frequency bands. 
+Mainly the low importance of the high-gamma frequency band for absolute velocity decoding challenges previous findings about its informativeness for absolute velocity decoding.
+The main goal of the thesis was to further study the frequency bands utilized by the Deep4Net with particular focus on the high-gamma frequencies and to identify modifications to the CNN architecture which improves utilization of information across useful frequency bands. \\
 
 The contributions of this thesis are following:
 \begin{itemize}
@@ -20,23 +21,26 @@ The contributions of this thesis are following:
 \section*{Main findings}
 
 \subsection*{Informative frequency bands}
-Most of the experiments we performed were motivated by making the networks use information from the high-gamma frequency band in their prediction.
-Building different architectures was motivated by studying a peak in the high-gamma band, shifting the predicted time-point was motivated by the hypothesis, that relevant information is contained in high-gamma only directly before movement execution, and spectral whitening was motivated by a difference reduction in the amplitudes of the different frequencies because we thought that lower amplitudes of high-frequencies are a disadvantage.
+Most of the experiments we performed were motivated by making the network use information from the high-gamma frequency band in their prediction.
+Building different architectures was motivated by studying a peak in the high-gamma band, shifting the predicted time-point was motivated by the hypothesis, that relevant information is contained in high-gamma only directly before movement execution, and spectral whitening was motivated by a difference reduction in the amplitudes of lower vs. higher frequencies because we thought that lower amplitudes of high-frequencies are a disadvantage.
 Based on previous literature, the usage of high-gamma especially for absolute velocity decoding seemed like something that should occur.
 And because it did not, the idea was that forcing the network to use high-gamma would improve their performance.
+
 Nevertheless, despite the substantial effort to show that high-gamma modulations are informative for velocity and absolute velocity decoding, the results repeatedly show that the Deep4Net and similar CNN architectures do not benefit from using high-gamma information when having access to information from all frequency bands.
 While we show that the high-gamma frequencies contain relevant information especially for absolute velocity decoding, the CNNs profit from not using this information when making predictions.
 The most successful architecture, namely the CNN without max-pool layers, was the one least focused on modulations in the high-gamma frequency band.
-It was also the network which despite spectral whitening stayed focused mainly on low-frequency modulations and its performance dropped least. \\
+It was also the network which despite spectral whitening stayed focused mainly on low-frequency modulations and its performance dropped least.
 
 \subsection*{Architecture modifications}
 We have identified two main possibilities for architectural improvement of the Deep4Net. 
 First, removing the max-pool layers from the architecture improves performance significantly compared to the original Deep4Net. 
-It appears that this modification allows the network to use information from low frequency bands more effectively. 
-Secondly, the non-uniformity of the receptive field could also be a drawback of the architecture.
+Based on the performance evaluation on filtered datasets and the gradient visualization, we find that this modification allows the network to use information from low frequency bands more effectively. 
+
+Secondly, the non-uniformity of the receptive field could be a drawback of the architecture.
 It causes the network to consider mostly information which are to far in the past with respect to the predicted time-point.
-We hypothesise, that making the receptive field uniform, at least in the direction from the centre of the receptive field towards the predicted time-point would improve the achieved correlation coefficients.
+We hypothesise, that making the receptive field uniform, by allowing padding at least in the direction from the centre of the receptive field towards the predicted time-point, would improve the achieved correlation coefficients.
 While the experiments we conducted in this thesis cannot clearly confirm this hypothesis, the performance improvement when shifting the predicted time-point to the centre of the receptive field speaks at least partially in its favor. 
+
 These two findings are useful for designing CNNs for movement decoding in the future.
 
 \section*{Future work}
@@ -44,9 +48,9 @@ Our research offers a wide range of future directions.
 The most prominent next step would be building a network with a uniform receptive field which would still be useful for on-line BCI and would likely make better predictions.
 Further steps could also be taken in studying which frequencies the network uses.
 Even though our research was fairly thorough in this regard, there is always more to find.
-The frequencies are not consisting only of the amplitude but also contain phase information which has been shown to also hold movement related information. 
-Thus a similar analysis on the influence of phase of the different frequencies might be an interesting future project.
-And even when considering amplitudes again, besides the high-passed and low-passed datasets, datasets band-passed to only certain, more narrow, frequency bands could be created and the performance and gradients of the networks analysed similarly to what we did in our thesis.
+The signal consist not only from amplitudes of different frequencies but also contains phase information which has been shown to also hold movement related information \cite{Hammer-2021, hartmann-hierarchical-2018}. 
+Thus a similar analysis of the influence of phase of the different frequencies might be an interesting future project.
+And even when considering amplitudes again, besides the high-passed and low-passed datasets, datasets band-passed to only certain, more narrow, frequency bands could be created and the performance and gradients of the networks could be analysed similarly to what we did in our thesis.
 
 
 

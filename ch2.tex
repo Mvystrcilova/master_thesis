@@ -195,11 +195,11 @@ Another popular regularization technique for CNNs is batch normalization (\cite{
 In CNNs this method now often substitutes dropout layers which are more suited for fully connected layers (\cite{cnn-description}).
 
 
-\subsubsection{Dilated networks}
+\subsubsection{Dilated networks}\label{subsec:dilated-networks}
 Convolutional neural networks are widely used in computer vision, more specifically in pattern recognition where they substantialy raised state-of-the-art (\cite{alexnet, dnn-computer-vision}) and their localized focus is well suited to image processing.
 Nevertheless, CNNs are increasingly used for dense predictions.
 Dense prediction in the sense of computer vision means assigning a label to each pixel of an image (\cite{dense-prediction-images}).
-But this notion of one output per one input point can be extended to other fields such as machine translation (\cite{dense-prediction-machine-translation}), speech synthesis (\cite{wavenet}) or prediction from EEG (\cite{schirrmeister-deep-2017}) and iEEG (\cite{Hammer-2021}).
+But this notion of one output per one input point can be extended to other fields such as machine translation (\cite{dense-prediction-machine-translation}), speech synthesis (\cite{angrick-speech-2018}) or prediction from EEG (\cite{schirrmeister-deep-2017}) and iEEG (\cite{Hammer-2021}).
 The above mentioned tasks were solved using CNNs where an additional parameter called dilation was introduced (\cite{dense-prediction-images}).
 Dilation inserts zeros between the elements of the convolutional filter and so enlarges the CNNs receptive field allowing it to cover more relevant information.
 This way, the networks are more suitable for sequence processing (\cite{cnn-description}).
@@ -221,7 +221,7 @@ It could also help identify ways in which these networks can be optimized to yie
 Because the strength of DNNs often lies in large datasets, in a field where data is less available, such optimizations are particularly important.
 
 Substantial effort has been made to explain how deep neural networks make their predictions.
-Many of the popular methods, such as maximal activating inputs \cite{maximizing-activation}, class-activation maps \cite{class-activation-maps}, saliency maps \cite{gradient-visualization} or layer-wise relevance propagation \cite{sturm-interpretable-2016} have been used also in interpreting DNNs used for brain signal decoding \cite{goodfellow-towards-2018, hartmann-hierarchical-2018, rieke-visualizing-2018, yang-visual-2018,  sturm-interpretable-2016, }.
+Many of the popular methods, such as maximal activating inputs (\cite{maximizing-activation}), class-activation maps (\cite{class-activation-maps}), saliency maps (\cite{gradient-visualization}) or layer-wise relevance propagation (\cite{sturm-interpretable-2016}) have been used also in interpreting DNNs used for brain signal decoding (\cite{goodfellow-towards-2018, hartmann-hierarchical-2018, rieke-visualizing-2018, yang-visual-2018,  sturm-interpretable-2016,}).
 
 \section{DNNs for (i)EEG decoding}
 \label{sec:dnn-decoding}
@@ -229,7 +229,7 @@ In this section, we introduce the Deep4Net proposed by~\cite{schirrmeister-deep-
 Then we go on to describe another paper - by~\cite{Hammer-2021} - who used the Deep4Net to solve the same task as we are solving in this thesis on the same data and laid the foundation of the here presented research.
 
 \subsection{Schirrmeister et al.}\label{subsec:schirrmeister-et-al}
-The paper by~\cite{schirrmeister-deep-2017} published in 2017 introduced multiple CNN and hybrid architectures suitable for movement decoding from raw EEG signals, including the Deep4Net.
+The paper by~\cite{schirrmeister-deep-2017} introduced multiple CNN and hybrid architectures suitable for movement decoding from raw EEG signals, including the Deep4Net.
 It has several important contributions.
 First of all, it shows that CNNs are able to achieve at least as good performance on classification from raw EEG signals as the widely used Filter bank common spatial patterns (FBCSP) do from manually extracted features.
 Besides that, it shows that recent advances in machine learning such as batch normalization or the exponential linear unit (ELU) transfer function help boost the decoding accuracies of networks used for movement decoding task.
@@ -241,7 +241,7 @@ Multiple datasets were used to estimate the abilities of the introduced architec
 One was the BCI IV 2a competition dataset (\cite{brunner2008bci}) where the task was to classify whether the participants (9 in total) imagine to move the right hand, left hand, both feet or tongue.
 The second dataset they used was one they acquired in their lab called High Gamma dataset (HGD) because it is especially well-suited for extracting information from high frequencies.
 Two additional datasets were used to determine if the main results hold also on other datasets. 
-To this extend the BCI IV 2b competition and the Mixed Imagedy Dataset (MID) were used and confirmed their findings.
+To this extend the BCI IV 2b competition and the Mixed Imagedy Dataset (MID) were used and confirmed their findings. More details about the datasets can be found in the supplementary material for this paper.
 
 
 \subsection{Hammer et al.}\label{subsec:hammer-et-al}
@@ -258,7 +258,7 @@ The joystick allowed for left and right movement and the velocity and absolute v
 The dataset and the task are described in more detail in Section~\ref{subsec:ieeg-data-preprocessing}.
 
 Unsurprisingly, the Deep4Net significantly outperformed linear regression used as a baseline on this task, especially for absolute velocity as is apparent from Figure~\ref{fig:hammer-performance}.
-It was not evaluated on a public dataset, therefore, a comparison to more decoding methods is not possible, nevertheless, the correlation values it achieved are quite high.
+The dataset is not public, therefore, a comparison to more decoding methods is not possible, nevertheless, the correlation values it achieved are quite high.
 
 \begin{figure}[!htpb]
 \centering
@@ -272,8 +272,8 @@ It was not evaluated on a public dataset, therefore, a comparison to more decodi
 
 \subsubsection{Training regime}
 The Deep4Net was trained using the ADAM optimizer with learning rate 0.01 for 100 epochs.
-To calculate the error of the networks predictions, the mean squared error (MSE) was used as the loss function.
-A leave-one-out-cross-validation on 25 second long data segments (see Section~\ref{subsec:ieeg-data-preprocessing} was employed to estimate the networks performance.
+To calculate the error of the network's predictions, the mean squared error (MSE) was used as the loss function.
+A leave-one-out-cross-validation on 25 second long data segments (see Section~\ref{subsec:ieeg-data-preprocessing} was employed to estimate performance.
 The goodness of prediction was evaluated on the one fold not included in training using the linear Pearson's correlation coefficient (\cite{pearson-vii-1895}).
 Chance level performance was assessed by randomly pairing the inputs and gold labels.
 For example iEEG data from fold 2 were paired with gold kinematic data from fold 6.
@@ -292,13 +292,13 @@ Especially considering two things:
 In this section we describe more works which are relevant for movement decoding from EEG or iEEG using deep learning, but are not directly used or referenced in our experiments.
 We specifically introduce a few other neural network architectures which have been employed to decode movement related variables.
 
-One such networks is the EEGNet~\cite{eeg-net}.
+One such networks is the EEGNet from~\cite{eeg-net}.
 The authors build a CNN architecture which is able to generalize over different BCI paradigms.
 They show that the EEGNet is able to learn a wide variety of interpretable features over a range of different EEG decoding tasks including movement related cortical potentials and sensoroy motor rythms.
 
 An architecture idea recently repeatedly used for decoding from EEG and iEEG signals is combining recurrent layers and convolutional layers to form a hybrid networks.
 Examples of utilizing such networks in movement-related paradigms ar for example~\cite{xie-cnn-lstm-finger-movement, Zhang-2019}.
-In~\cite{xie-cnn-lstm-finger-movement} a network constituting of 4 convolutional layers followed by one LSTM~\cite{lstm-paper} layer was utilized to decode individual finger flexion.
-In~\cite{Zhang-2019}, three convolutional layers followed by three LSMT layers were utilized to solve the BCI IV 2a competition task (same as in~\cite{schirrmeister-deep-2017}).
+In~\cite{xie-cnn-lstm-finger-movement} a network constituting of 4 convolutional layers followed by one long-short term memory (LSTM)~(\cite{lstm-paper}) layer was utilized to decode individual finger flexion.
+In~\cite{Zhang-2019}, three convolutional layers followed by three LSTM layers were utilized to solve the BCI IV 2a competition task (same as in~\cite{schirrmeister-deep-2017}).
 
 
