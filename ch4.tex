@@ -187,7 +187,7 @@ We summarize how the shift inlucences performances on the different datasets in 
     
     We can also notice that in shifted setting the velocity correlation coefficients are higher than the absolute velocity correlation coefficients. This seems a bit counter-intuitive because absolute velocity can be derived from velocity only using the absolute value of velocity and therefore should be at least as well decoded.
     To see if indeed absolute velocity can be decoded better when taking absolute values of velocity we trained a network on velocity data and validated it on absolute values of the predictions and absolute values of the velocity data.
-    The results showed that the correlation coefficients \todo{add figure} are significantly worse than when training the network on absolute velocity data. 
+    The results show that the correlation coefficients are significantly worse than when training the network on absolute velocity data (Figure~\ref{fig:absVel-vs-abs-vel-performance}). 
     This might come as surprising but can be explained mathematically. It happens because the correlation coefficient is derived from the mean and standard deviation of the variables. And there is equitation that would tell us how absolute value changes the mean and standard deviation of an arbitrary variable. Therefore, the means and standard deviation of the predicted values and the gold labels change independently when taking their absolute values and the correlation coefficient changes.
     It is not equivalent to take the correlation coefficients of two variables and the correlation of absolute values of two variables. 
     Even though it seems that it might be better to learn to decode absolute velocity as velocity and then take the absolute value, we find that it is not. 
@@ -199,6 +199,16 @@ We summarize how the shift inlucences performances on the different datasets in 
     \item \textbf{Full training and high-pass validation} After the shift, the performance of the networks trained on full data and validated on high-pass data decreased. For absolute velocity and velocity, less networks were able to perform above chance level and those which stayed above chance level often perform above chance level less significantly. This suggests that the network when having access to full data depends on the information from the high frequencies less than in the original non-shifted setting.
 
 \end{itemize}
+
+\begin{figure}[!htpb]
+\centering
+   \includegraphics[width=1\linewidth]{img/ch4/absVel_vs_abs_vel_performance_comparison}
+   \caption[Absolute velocity vs. absolute value of velocity comparison]{Absolute velocity decoding from a absolute velocity data \textbf{Graphs A, C} and absolute velocity decoding when taking absolute values of networks trained on velocity data \textbf{Graphs B, D}. In all settings \textbf{
+   A - D} the Deep4Net (k3\_d3\_sbp0) from~\cite{Hammer-2021} is labeled red.\\ \textbf{Graphs A} and \textbf{B} compare the performance of the networks when trained and validated on the full dataset. A The stars in \textbf{B} denote performance significantly below the same architecture in graph \textbf{A}. (** p <0.01), (* p < 0.05), Wilcoxon signed rank test.
+   \\\textbf{Graphs C} and \textbf{D} compare the performance of the networks when trained and validated on the full dataset in the shifted setting. A The stars in \textbf{D} denote performance significantly below the same architecture in graph \textbf{C}. (** p <0.01), (* p < 0.05), Wilcoxon signed rank test.}
+   \label{fig:absVel-vs-abs-vel-performance}
+\end{figure}
+
 
 \begin{figure}[!htpb]
 \centering
