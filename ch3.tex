@@ -337,7 +337,6 @@ When we change the parameters of the max-pool layers as we describe above, the n
 It also causes changes in the receptive field of the network.
 To see how, consider just one max-pool layer with dilation 3 (L3) and one max-pool layer with dilation 1 (L1), both without padding.
 If we use a window of the same length as input for L3 and L1 and compare the dimensions of the outputs from these layers, the dimension of the output of L3 will be smaller than of the L1.
-\todo{illustration of this}
 Consequently, if we alter the dilation (and also kernel size) parameters of the max-pool layers in the Deep4Net, we get a different number of outputs from the altered network.
 
 When one network has dilations 3, 9, 27 and 81 in the max-pool layers (the k*\_d3) and the other one 1, 1, 1 and 1 (k*\_d1), the difference in the dimension of the output is significant.

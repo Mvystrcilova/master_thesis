@@ -2,11 +2,11 @@
 \label{chap:background}
 In this chapter, we give a brief introduction to topics most relevant for this thesis to equip the reader with the necessary background.
 We start by shortly describing (intracranial) EEG signals, their standard feature extraction and decoding techniques. We further provide a concise introduction to deep neural networks (DNNs) paying special attention to convolutional neural networks (CNNs).
-Lastly, we introduce the two most relevant papers (\cite{Hammer-2021}) and (\cite{schirrmeister-deep-2017}) in more detail, followed by brief descriptions of other DNNs used for movement decoding.
+Lastly, we introduce the two most relevant papers (\cite{Hammer-2021}) and (\cite{schirrmeister-deep-2017}) in more detail, followed by brief descriptions of other DNN architectures used for movement decoding.
 
 \section{Decoding from (i)EEG signals}
 Neural decoding refers to a neuroscience field concerned with the reconstruction of external stimuli from information that is already encoded in the brain.
-It consists of multiple stages, namely, signal recording, spectral and spatial feature extraction and the final classification or regression algorithm\footnote{depending on the task}. 
+It consists of multiple stages, namely, signal recording, spectral and spatial feature extraction and the final classification or regression algorithm. 
 In this section, we describe the methods traditionally used in each of these stages highlighting their advantages and disadvantages. 
 While many things, such as sleep stages (\cite{sleep-eegnet}), epileptic seizures (\cite{epileptic-seizures-eeg}) or emotions (\cite{emotion-eeg}) can be decoded from brain signals, we introduce mainly methods used for movement decoding because they are most relevant for this thesis. 
 
