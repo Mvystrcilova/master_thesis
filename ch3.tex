@@ -228,7 +228,7 @@ An example of such a network is a CNN where in two consecutive layers with a dil
 This cannot happen if we follow Algorithm~\ref{alg:stride-to-dilation} thus, such a CNN was not derived from a one-crop network.
 
 \begin{algorithm}
-\begin{lstlisting}[language=Python,label={lst:lstlisting}]
+\begin{lstlisting}[language=Python, label={lst:lstlisting}]
 def to_dense_prediction(network):
 	current_stride = 1
 	for module in network.modules:
