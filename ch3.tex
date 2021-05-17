@@ -170,17 +170,12 @@ To use this network for a regression task that the present thesis focuses on, on
 This last layer is called the conv\_classifier.
 The architecture already transformed for regression is depicted in Figure~\ref{fig:architecture}.
 
-The Deep4Net is able to process varying input lengths.
-In each convolutional layer it simply slides its filters over the input and gives a respective number of outputs.
+The Deep4Net is able to process varying input lengths. In each convolutional or max-pool layer, it simply slides its filters over the input and gives a respective number of outputs.
 Therefore, before training, the number of outputs needs to be calculated based on the size of the input window that was chosen.
 The corresponding values (gold labels) of the predicted kinematic variables are cropped accordingly.
-In this thesis, we used 1200 samples as input window length which corresponds to 4.8 seconds.
-For the Deep4Net as used in~\cite{Hammer-2021} a window of 1200 samples gives 679 predictions.
-Therefore, one prediction is made from $11200 - 679 + 1 = 522 $ samples.
-These samples are recorded before execution of the predicted movement which makes the network suitable for online BCI.
+In this thesis, we used 1200 samples as input window length (which corresponds to 4.8 seconds) to be consistent with~\cite{Hammer-2021}. The Deep4Net as used in~\cite{Hammer-2021} gives 679 predictions (Figure~\ref{fig:architecture}).
 
-
-Lastly we point out, that the network does not use any padding. 
+Lastly, we point out that the network does not use any padding. 
 This makes its receptive field non-uniform and we discuss the consequences in Section~\ref{subsec:receptive-field}.
 Nevertheless it is necessary to avoid padding to perform cropped decoding described in Section~\ref{subsec:cropped-decoding}.
 
@@ -193,7 +188,7 @@ Nevertheless it is necessary to avoid padding to perform cropped decoding descri
 
 \subsection{Cropped decoding}\label{subsec:cropped-decoding}
 The possibility to use cropped decoding is implemented the Braindecode library together with the original Deep4Net.
-Cropped decoding allows, instead of obtaining one prediction per trial (Figure~\ref{fig:trial-wise-decoding-trial-wise}) to separate the trial window into multiple smaller overlapping sub-windows (crops) each of which produces a prediction (Figure~\ref{fig:trial-wise-decoding-cropped}).
+Cropped decoding allows, instead of obtaining one prediction per trial (Figure~\ref{fig:trial-wise-decoding-trial-wise}), to separate the trial window into multiple smaller overlapping sub-windows (crops) each of which produces a prediction (Figure~\ref{fig:trial-wise-decoding-cropped}).
 
 \begin{figure}[!htbp]
 \centering
@@ -315,10 +310,10 @@ To obtain representative gradients, the above described procedure was always rep
 Gradients are useful in showing to modulations in which frequencies the network reacts more strongly.
 The higher gradient value for a certain frequency, the more the change is this frequency influences the prediction.
 
-Throughout the thesis, the input window size used in the above described algorithm was set to twice the size of the receptive field of the network to be consistent with~\cite{Hammer-2021}.
-A special case is the gradient visualization when the input window is shortened so that the network has only one output was also briefly explored as a part of this thesis.
-See section~\ref{sec:architectural-modifications}.
-In this special case, the outputs did not have to be averaged before using the \texttt{torch.autograd.backward()} function to derive the gradients.
+As described in Section~\ref{subsec:architecture} the network can process varying input window lengths. With a change in input window length a change in the number of outputs occurs.
+Throughout the thesis, the input window length used in the above described algorithm was set to twice the size of the receptive field of the network to be consistent with~\cite{Hammer-2021}.
+A special case is the gradient visualization when the input window is shortened so that the network has only one output was also briefly explored as a part of this thesis in section~\ref{sec:architectural-modifications}.
+In this special case, the outputs do not have to be averaged before using the \texttt{torch.autograd.backward()} function to derive the gradients. 
  
 Because there are no significant differences between the gradients of the networks on the training set and the validation set we chose to always display the gradient values for the training set.
 Also note that in this thesis we only address the gradients for the amplitudes of frequencies.

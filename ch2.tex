@@ -174,15 +174,20 @@ A more recent and also popular activation is the ELU function which we are using
 Deep neural networks tend to have large numbers of parameters and therefore, cannot be trained analytically.
 Instead, they are trained using fitting based methods.
 These methods are variations of the gradient descent back-propagation algorithm (\cite{back-prop}).
-One of the recent popular variations is called ADAM (\cite{kingma-adam-2017}).
+Some popular variations are Stochastic gradient descent (\cite{sgd}), Adagrad (\cite{adagrad}) or more recently ADAM (\cite{kingma-adam-2017}).
 To give the reader an idea of the fitting process, we describe it in a simplified manner. 
 First a small subset of the input (a \textit{batch}) is randomly sampled from the training set. 
-The batch is used as input into the network and is passed throught the networks in a \textit{forward pass} to get the output of the network. 
+The batch is used as input into the network and is passed through the networks in a \textit{forward pass} to get the output of the network. 
 The output and the \textit{gold labels} (desired output based on the selected inputs) are given to the \textit{loss function} which serves as a indicator of how far the model is from the correct output. 
 Finally, the first derivatives of the loss function (the \textit{gradient}) with respect to the parameters (the \textit{weights}) of the model are subtracted from these parameters.
-This last step in theory decreases the value of the loss function in the next forward pass.
+This allows moving in the direction of the steepest descent in the loss function value, in theory decreases the value of the loss function in the next forward pass.
+To limit the size of the descent steps we use the \textit{learning rate} by which we multiply the gradient.
 The forward pass is repeated for all batches in the dataset.
 When all batches pass through the network, we can say one \textit{epoch} was completed.
+The goal is to train a network for a number of epochs until it \textit{converges} to a low value of the loss function.
+
+A low loss value on the training set means the model predicts the training data well.
+Nevertheless, in order to see if the model is able to generalize over unseen data we keep another a portion of data - the validation set - out of training and only use it at the end of each epoch to estimate, how it performs on unseen data. 
 
 \subsubsection{Regularization}
 Overfitting - the adaptation to the training set distribution to an extend that the model does not generalize well over unseen data - is an unneglectable problem in deep neural networks including CNNs.
@@ -292,12 +297,12 @@ Especially considering two things:
 In this section we describe more works which are relevant for movement decoding from EEG or iEEG using deep learning, but are not directly used or referenced in our experiments.
 We specifically introduce a few other neural network architectures which have been employed to decode movement related variables.
 
-One such networks is the EEGNet from~\cite{eeg-net}.
+One such networks is the EEGNet from~\cite{lawhern-eegnet-2018}.
 The authors build a CNN architecture which is able to generalize over different BCI paradigms.
-They show that the EEGNet is able to learn a wide variety of interpretable features over a range of different EEG decoding tasks including movement related cortical potentials and sensoroy motor rythms.
+They show that the EEGNet is able to learn a wide variety of interpretable features over a range of different EEG decoding tasks including movement related cortical potentials and sensory motor rhythms.
 
 An architecture idea recently repeatedly used for decoding from EEG and iEEG signals is combining recurrent layers and convolutional layers to form a hybrid networks.
-Examples of utilizing such networks in movement-related paradigms ar for example~\cite{xie-cnn-lstm-finger-movement, Zhang-2019}.
+Examples of utilizing such networks in movement-related paradigms are for example~\cite{xie-cnn-lstm-finger-movement, Zhang-2019}.
 In~\cite{xie-cnn-lstm-finger-movement} a network constituting of 4 convolutional layers followed by one long-short term memory (LSTM)~(\cite{lstm-paper}) layer was utilized to decode individual finger flexion.
 In~\cite{Zhang-2019}, three convolutional layers followed by three LSTM layers were utilized to solve the BCI IV 2a competition task (same as in~\cite{schirrmeister-deep-2017}).
 

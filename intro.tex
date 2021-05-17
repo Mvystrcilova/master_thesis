@@ -8,53 +8,48 @@ New recording techniques, theoretical models, and detailed simulations facilitat
 But to this day, a lot remains unclear about how the activity of billions of neural cells interconnected through a dense web of dynamic circuits translates into complex processes such as perception, movement, reasoning or learning.  
 
 One of the recent subfields of neuroscience, namely \textit{computational neuroscience}, combines neuroscience with mathematics and computer science to formulate theoretical principles governing the nervous system. 
-While the term \textit{computational neuroscience} was introduced 1985, its roots date back to the early nineteen hundreds. 
-One of the earliest theoretical discoveries in the field of neuroscience was done by Louis Lapique who introduced the \textit{integrate and fire} model of a neuron (\cite{lapique-1907}).
-Later followed by Hodgkin and Huxley, among others, they laid the foundation of today's computational neuroscience.
-The Hodgkin \& Huxley model explaining the action potential (\cite{hodgkin1952quantitative}), even though extended in several ways since its formulation, remains one of the greatest achievements of neuroscience. 
-
+The earliest theoretical discoveries in the field of neuroscience were models of single neurons (\cite{lapique-1907, hodgkin1952quantitative}).
 Modeling activity of single neurons, however, cannot capture the brain in its whole complexity.
 Because the billions of neurons and other neural cells are constantly communicating with each other, their coordinated activity is another key to unlocking the brain’s mysteries.
 Methods capturing and interpreting such activity are therefore needed.
 In 1924, Hans Berger was the first one to record human brain activity through electroencephalography (EEG).
-Since then, many other recording techniques based on different principles emerged such as magnetoencephalography (MEG), functional magnetic resonance imaging (fMRI), positron emission tomography (PET), magnetic resonance spectroscopy (MRS), etc.  
+Since then, many other recording techniques for measuring aggregate signal from large population of neurons emerged such as magnetoencephalography (MEG), functional magnetic resonance imaging (fMRI), positron emission tomography (PET), magnetic resonance spectroscopy (MRS), etc.  
 
 There is a long path from recording brain activity to understanding how it translates into processes the brain governs in humans.
 One approach to formulate a relationship between brain signal and a certain process such as movement or sleep is called \textit{brain signal decoding} or also \textit{neural decoding}.
 It studies what information is available in the electrical activity of neurons or networks of neurons through mapping patterns in the electrical activity onto external processes such as movement or sleep.
 To create such a mapping, first, brain signal is recorded simultaneously with a variable describing the process. 
-Then a model predicting the variable based on the brain signal is built.
+Then a model predicting the variable based on the brain signal is built and fitted to the recorded data.
 These models not only allow for a deeper understanding of the information contained in brain activity but have also direct clinical applications.
 They are being used for predicting epileptic seizures (\cite{epileptic-seizures-eeg}), Alzheimer disease diagnosis (\cite{alzheimer-eeg}), classifying sleep stages (\cite{sleep-stage-alg-comparison}) or in Brain-computer interfacing (BCIs) (\cite{ecog-bci, eeg-bci}).
 
-Artificial neural networks, which elevated what is considered state-of-the-art across in various fields, most prominently computer vision (\cite{dnn-computer-vision}) and natural language processing (\cite{dnn-nlp}), are being increasingly utilized as such models (\cite{Roy-2019}). 
+Artificial neural networks, which elevated what is considered state-of-the-art  in various fields, most prominently computer vision (\cite{dnn-computer-vision}) and natural language processing (\cite{dnn-nlp}), are being increasingly utilized as such models (\cite{Roy-2019}). 
 Their ability to process complex data in and end-to-end manner together with good prediction performance makes them suitable for decoding from brain signals. 
 
 
 \section*{Motivation}
 Utilizing recent advances in deep learning (DL) in movement decoding from (EEG) has brought considerable progress in this field.
-In multiple cases, deep neural networks have been shown to be more effective when decoding from EEG and intracranial EEG than standard machine learning methods (\cite{Zhang-2019, eeg-net, sleep-eegnet}).
-Nevertheless, there is still room for considerable improvement in, the decoding accuracies, interpretability and possibility of online applications (\cite{Roy-2019}). 
-These issues are even more substantial in movement decoding from intracranial EEG (iEEG) decoding. 
-Because it is more difficult to acquire iEEG data, it is less researched but very prospective because of the higher signal-to-noise ration of iEEG signal compared to EEG (\cite{volkova-review}). 
+In multiple cases, deep neural networks have been shown to be more effective when decoding from EEG and intracranial EEG than standard machine learning methods (\cite{Zhang-2019, lawhern-eegnet-2018, sleep-eegnet}).
+Nevertheless, there is still room for considerable improvement in the decoding accuracy, interpretability and applicability to online decoding (\cite{Roy-2019}). 
+These issues are even more substantial in movement decoding from intracranial EEG (iEEG). 
+Because it is more difficult to acquire iEEG data, it is less researched but very promising because of the higher signal-to-noise ration of iEEG signal compared to EEG (\cite{volkova-review}). 
 
 To address these issues, \cite{Hammer-2021} employed the Deep4Net - a convolutional neural network introduced in \cite{schirrmeister-deep-2017} - to perform iEEG movement decoding, namely to decode hand velocity and absolute velocity (speed) from intracranial EEG. 
-The Deep4Net was chosen because it has proven successful in movement-related classification tasks, reaching comparable accuracy with state-of-the-art methods without the necessity of manual feature extraction.
-It was also shown to use spectral power modulations in the alpha, beta and also the high-gamma band for making its predictions. 
+The Deep4Net was chosen because in previous studies (\cite{schirrmeister-deep-2017, hartmann-hierarchical-2018}) it has proven successful in movement-related classification tasks, reaching comparable accuracy with state-of-the-art methods without the necessity of manual feature extraction.
 It was the first time that the importance of modulations in the high-gamma band was shown for movement decoding from non-invasive EEG.
-And this fact that the Deep4Net architecture is able to extract information from the high-gamma band suggests its suitability for iEEG decoding, where the high frequency resolution is better than in non-invasive EEG (\cite{gamma-eeg-bad-resolution}). 
+The fact that Deep4Net architecture is able to extract information from the high-gamma band suggests its suitability for iEEG decoding, where the high frequency resolution is better than in non-invasive EEG (\cite{gamma-eeg-bad-resolution}). 
 
-During their research, \cite{Hammer-2021} found that the Deep4Net significantly outperforms multi-linear regression in velocity and absolute velocity decoding.
+\cite{Hammer-2021} found that the Deep4Net significantly outperforms multi-linear regression in velocity and absolute velocity decoding.
 Nevertheless, when visualizing which features it focuses on, the network has not shown the expected interest in the high-gamma frequency modulations. 
-In the context of previous findings on the same dataset, where high-gamma was found significant, especially for aboslute velocity decoding when using multilinear regression (\cite{hammer-predominance-2016}) and the fact that the Deep4Net architecture is able to extract information from the high-gamma frequency (\cite{schirrmeister-deep-2017}), the group briefly continued to explore this surprising finding.
+In the context of previous findings on the same dataset, where high-gamma was found significant, especially for absolute velocity decoding when using multi-linear regression (\cite{hammer-predominance-2016}) and the fact that the Deep4Net architecture is able to extract information from the high-gamma frequency (\cite{schirrmeister-deep-2017}), the group briefly continued to explore this surprising finding.
 
-Without including it in the research paper, using a different visualization method, namely gradient visualization, they discovered a gradient peak at 83.33~Hz (in the high-gamma band).
-But this is where their research ended. 
-Multiple questions that arise from this -- Is the gradient peak significant or is it just an architecture artifact?
-Why did the network not use the high-gamma?
-Would other architectures use high-gamma in this setting?
+Using a different visualization method, namely gradient visualization, they discovered a gradient peak in the high-gamma range at 83.33~Hz showing possible interest of the network in information from the high-gamma frequency (personal communication).
+Multiple questions remain to be answered at this point: Is the gradient peak significant or is it just an architecture artifact?
+If it is an architecture artifact, why did the network not use the high-gamma?
+Would other architectures be able to utilize high-gamma in this setting?
 Could we improve performance by forcing the network to use high-gamma?
-Is high-gamma indeed informative for (absolute) velocity decoding? -- remain to be answered. \\
+Is high-gamma indeed informative for (absolute) velocity of movement decoding? 
+If the peak is not an architecture artifact but reflects the use of information from the high-gamma band by the network, why did the perturbation visualization method performed by \cite{Hammer-2021} not show it?\\
 \\
 
 
@@ -62,10 +57,10 @@ Is high-gamma indeed informative for (absolute) velocity decoding? -- remain to 
 The aim of this thesis is to address the above outlined questions which can be summarized in the two following goals:
 
 \begin{enumerate}
-    \item Understanding which frequency bands are utilized for hand movement decoding with particular focus on the high-gamma band considering previous results from \cite{Hammer-2021} and \cite{schirrmeister-deep-2017} 
+    \item Understanding which frequency bands are utilized by the Deep4Net in \cite{Hammer-2021} for hand movement decoding with particular focus on the high-gamma band 
     \item Identifying which modifications to DNN training/architecture improve the utilization of information across useful frequency bands.
 \end{enumerate}
 
 Achieving these goals will contribute to the interpretability of deep neural networks used for iEEG movement decoding.
-By identifying informative frequency bands and optimizing the network architecture to use them effectively, we can also presumably improve the decoding performance of these networks and increase their prospect of being used in real-life clinical settings.
+By identifying informative frequency bands and optimizing the network architecture to use them effectively, we can also potentially improve the decoding performance of these networks, advancing their clinical application.
 
