@@ -2,10 +2,10 @@
 \let\openright=\cleardoublepage
 
 \input{metadata}
-
+\usepackage{ifthen}
 \usepackage[a-2u]{pdfx}
 
-\ifEN\else\usepackage[czech,shorthands=off]{babel}\fi
+%\ifEN\else\usepackage[czech,shorthands=off]{babel}\fi
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 
@@ -90,7 +90,7 @@
 \usetikzlibrary{positioning} %add libraries as needed (shapes, decorations, ...)
 
 % remove this if you won't typeset any pseudocode
-\usepackage{algpseudocode}
+%\usepackage{algpseudocode}
 \usepackage{algorithm}
 % remove this if you won't list any source code
 \usepackage{listings}
@@ -105,10 +105,9 @@
 \usepackage{algorithmicx}
 \usepackage{lipsum}
 
-%\input{todos} % remove this before compiling the final version
+\input{todos} % remove this before compiling the final version
 
 \input{macros} % use this file for various custom definitions
-
 
 \begin{document}
 
