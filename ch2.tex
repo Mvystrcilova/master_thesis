@@ -1,10 +1,11 @@
 \chapter{Background and related work}
 \label{chap:background}
 In this chapter, we give a brief introduction to topics most relevant for this thesis to equip the reader with the necessary background.
-We start by shortly describing (intracranial) EEG signals, their standard feature extraction and decoding techniques. We further provide a concise introduction to deep neural networks (DNNs) paying special attention to convolutional neural networks (CNNs).
-Lastly, we introduce the two most relevant papers (\cite{Hammer-2021}) and (\cite{schirrmeister-deep-2017}) in more detail, followed by brief descriptions of other DNN architectures used for movement decoding.
+We start by shortly describing (intracranial) EEG signals, their standard feature extraction and decoding techniques (Section \ref{sec:decoding-from-ieeg}). We further provide a concise introduction to deep neural networks (DNNs) paying special attention to convolutional neural networks (CNNs)(Section \ref{sec:artificial-neural-networks}).
+Lastly, we introduce the two most relevant papers (\cite{Hammer-2021}) and (\cite{schirrmeister-deep-2017}) in more detail, followed by brief descriptions of other DNN architectures used for movement decoding (Section \ref{sec:dnn-decoding}).
 
 \section{Decoding from (i)EEG signals}
+\label{sec:decoding-from-ieeg}
 Neural decoding refers to a neuroscience field concerned with the reconstruction of external stimuli from information that is already encoded in the brain.
 It consists of multiple stages, namely, signal recording, spectral and spatial feature extraction and the final classification or regression algorithm. 
 In this section, we describe the methods traditionally used in each of these stages highlighting their advantages and disadvantages. 
@@ -152,7 +153,7 @@ To arrive at a complete convolutional layer from the convolutional filter, more 
 Consider a 2D convolutional layer with input $I$ with $D$ input channels which is parametrized by a kernel $K$ of total size $WxHxDxF$. The output of this layer is computed as:
 
 \begin{equation}
-    (K \convolution I)_{i,j,o} = f(\sum_{m,n,d} I_{i*s_1+m,j*s_2+n,c} K_{m,n,c,o})
+    (K * I)_{i,j,o} = f(\sum_{m,n,d} I_{i*s_1+m,j*s_2+n,c} K_{m,n,c,o})
     \label{eq:convolution}
 \end{equation}
 
