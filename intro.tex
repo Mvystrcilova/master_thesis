@@ -36,7 +36,7 @@ Because it is more difficult to acquire iEEG data, it is less researched but ver
 
 To address these issues, \cite{Hammer-2021} employed the Deep4Net - a convolutional neural network introduced in \cite{schirrmeister-deep-2017} - to perform iEEG movement decoding, namely to decode hand velocity and absolute velocity (speed) from intracranial EEG. 
 The Deep4Net was chosen because in previous studies (\cite{schirrmeister-deep-2017, hartmann-hierarchical-2018}) it has proven successful in movement-related classification tasks, reaching comparable accuracy with state-of-the-art methods without the necessity of manual feature extraction.
-It was the first time that the importance of modulations in the high-gamma band was shown for movement decoding from non-invasive EEG.
+When using it, \cite{schirrmeister-deep-2017} also inspected the which frequency bands are important for the network's decisions. Besides confirming the informativeness of the alpha and beta bands, it was the first time that the importance of modulations in the high-gamma band was shown for movement decoding from non-invasive EEG.
 The fact that Deep4Net architecture is able to extract information from the high-gamma band suggests its suitability for iEEG decoding, where the high frequency resolution is better than in non-invasive EEG (\cite{gamma-eeg-bad-resolution}). 
 
 \cite{Hammer-2021} found that the Deep4Net significantly outperforms multi-linear regression in velocity and absolute velocity decoding.

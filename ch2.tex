@@ -17,14 +17,14 @@ Electroencephalography (EEG), electrocorticography (ECoG) and stereo-tactic EEG 
 We describe basic properties of each of these recording methods. For a more detailed introduction to EEG please refer to \cite{NiedermeyersElectroencephalography}.
 
 \subsubsection{Electroencephalography (EEG)}
-Electroencephalography (EEG) records electrical brain activity of the cerebral cortex using multiple electrodes (also called channels) which are placed on the surface of the head. The recorded activity, originating as the postsynaptic potential of excitable neural tissue (\cite{buzsaki-origin-2012}), is attenuated through cerebrospinal fluid, the dura and the skull on its way to the recording electrodes. Besides weakening the signal, these structures also act as low-pass filters limiting the useful frequency bands to below 100~Hz (\cite{tam-human-2019}). Another limitation of EEG recordings is the interference of activity of muscles located in the region of the head. Muscle activity has higher amplitudes than brain signals and can therefore affect the recording quality (\cite{scholg-presence-2002}). It lowers the signal to noise ratio of EEG signals. EEG has also relatively poor spatial resolution (\cite{buzsaki-origin-2012}). Despite the aforementioned drawbacks, EEG is a widely used tool in brain signal recording. Its high temporal resolution, safety and a relatively low cost motivate researchers to develop new quality control and artifact processing techniques (\cite{lotte2018review}) to alleviate the disadvantages of EEG. 
+Electroencephalography (EEG) records electrical brain activity of the cerebral cortex using multiple electrodes (also called channels) which are placed on the surface of the head. The recorded activity, originating as the postsynaptic potential of excitable neural tissue (\cite{buzsaki-origin-2012}), is attenuated through cerebrospinal fluid, the dura and the skull on its way to the recording electrodes. Besides weakening the signal, these structures also act as low-pass filters limiting the useful frequency bands to below 100~Hz (\cite{tam-human-2019}). Another limitation of EEG recordings is the interference of activity of muscles located in the region of the head. Muscle activity has higher amplitudes than brain signals and can therefore affect the recording quality (\cite{scholg-presence-2002}). It lowers the signal to noise ratio of EEG signals. EEG has also relatively poor spatial resolution (\cite{buzsaki-origin-2012}). Despite the aforementioned drawbacks, EEG is a widely used tool in brain signal recording. Its high temporal resolution, non-invasivness and a relatively low cost motivate researchers to develop new quality control and artifact processing techniques (\cite{lotte2018review}) to alleviate the disadvantages of non-invasive EEG. 
 
 \subsubsection{Electrocorticography and stereo-tactic EEG}
 Electrocorticography (ECoG) and stereo-tactic electroencephalography (sEEG) are variations of EEG commonly referred to as intracranial EEG (iEEG).
 In ECoG, a grid with multiple recording electrodes (channels) is placed on the surface of the brain instead of the surface of the head.
 For stereo-tactic EEG, the electrodes penetrate the skull and reach deeper inside the brain. Both are very invasive methods and cannot be performed for the sake of research only.
 Therefore, intracranial EEG studies are mainly conducted on patients with medication resistant epilepsy.
-The electrodes are used to find the locus of seizures which is then surgically removed. When Special measures have to be taken to remove channels displaying pathological symptoms when using ECoG signal for research.
+The electrodes are used to find the locus of seizures which is then surgically removed. Special measures have to be taken to remove channels displaying pathological symptoms when using ECoG signal for research.
 The quality of signal from non-epileptic brain tissue is, however, superior to standard EEG. It has higher spatial resolution as well as better resolution in the high frequencies (\cite{volkova-review}).
 
 \subsection{Feature extraction}
@@ -61,7 +61,7 @@ Fourier analysis involves convolving the brain signal with a sinusoidal function
 Moreover, it is only useful in a limited frequency range, based on the window size and the size fixes also the scale of the signal that is to be detected (\cite{36-vugt-2007}). 
 Both multi-tapering methods and wavelets were designed to ameliorate these issues. 
 
-Decomposing the signals into shifted and scaled versions of an oscillating waveform of a wavelet function allows the proportion between the temporal width and frequency band-with to stay the same for all frequencies. 
+Decomposing the signals into shifted and scaled versions of an oscillating waveform of a wavelet function allows the proportion between the temporal width and frequency band-width to stay the same for all frequencies. 
 This contributes to a higher temporal resolution in higher frequencies. The good time-frequency trade-off of wavelets makes them suitable for analysing non-stationary signals (\cite{36-vugt-2007}).  
 
 Multi-taper methods were designed to reduce bleeding between frequencies making them, too, well-suited for analyzing signals of non-stationary processes. 
@@ -73,7 +73,7 @@ Auto-regressive spectral estimators (AR) are parametric spectral feature extract
 They have proven successful for modelling both EEG (\cite{auto-regressive-eeg}) and iEEG (\cite{anderson-offline-2009}).
 Even though ARs have an inherent capacity to model peaky spectra characteristic for bio-signal, their effectivity largely depends on parameterization, which is not particularly straight-forward (\cite{anderson-offline-2009}). 
 
-More recently proposed approaches based on Riemann geometry which use covariance matrices to for feature learning and representation have shown promising results (\cite{coherence-based}).
+More recently proposed approaches based on Riemann geometry which use covariance matrices for feature learning and representation have shown promising results (\cite{coherence-based}).
 Temporal modulations can also be modeled probabilistically using hidden Markov's models or conditional random fields (\cite{markov-models-decoding, bayesian-decoding}).
 Importantly, also neural networks can be integrated in the movement decoding pipeline as feature extractors.
 For example auto-encoders are suited for dimensionality reduction \cite{autoencoder}.
@@ -208,14 +208,14 @@ Nevertheless, CNNs are increasingly used for dense predictions.
 Dense prediction in the sense of computer vision means assigning a label to each pixel of an image (\cite{dense-prediction-images}).
 But this notion of one output per one input point can be extended to other fields such as machine translation (\cite{dense-prediction-machine-translation}), speech synthesis (\cite{angrick-speech-2018}) or prediction from EEG (\cite{schirrmeister-deep-2017}) and iEEG (\cite{Hammer-2021}).
 The above mentioned tasks were solved using CNNs where an additional parameter called dilation was introduced (\cite{dense-prediction-images}).
-Dilation inserts zeros between the elements of the convolutional filter and so enlarges the CNNs receptive field allowing it to cover more relevant information.
+Dilation creates gaps between the elements of the convolutional filter and so enlarges the CNN's receptive field allowing it to cover more relevant information.
 This way, the networks are more suitable for sequence processing (\cite{cnn-description}).
 For a visual explanation of dilation see Figure~\ref{fig:dilation}.
 
 \begin{figure}[!htpb]
 \centering
    \includegraphics[width=0.8\linewidth]{img/ch3/dilated-conv}
-   \caption[Dilated convolution]{An illustration of a dilated convolution with kernel size (3, 3) and dilation (2, 2) from \cite{dilated-conv}.}
+   \caption[Dilated convolution]{An illustration of a dilated convolution with kernel size (3, 3) and dilation (2, 2) from \cite{dilated-conv}. The dilation creates the }
    \label{fig:dilation}
 \end{figure}
 
@@ -241,14 +241,13 @@ It has several important contributions.
 First of all, it shows that CNNs are able to achieve at least as good performance on classification from raw EEG signals as the widely used Filter bank common spatial patterns (FBCSP) do from manually extracted features.
 Besides that, it shows that recent advances in machine learning such as batch normalization or the exponential linear unit (ELU) transfer function help boost the decoding accuracies of networks used for movement decoding task.
 Lastly, using a perturbation visualization method they explore, which spectral power features are important for the network's predictions.
-They show a substantial effect of the frequencies in the alpha and beta band and also also observe an effect of the high-gamma freuquencies on the predictions which, they claim, is for the first time when using non-invasive EEG data.
+They show a substantial effect of the frequencies in the alpha and beta band and also observe an effect of the high-gamma freuquencies on the predictions which, they claim, is for the first time when using non-invasive EEG data.
 
 \subsubsection{Classification task}
 Multiple datasets were used to estimate the abilities of the introduced architectures.
 One was the BCI IV 2a competition dataset (\cite{brunner2008bci}) where the task was to classify whether the participants (9 in total) imagine to move the right hand, left hand, both feet or tongue.
 The second dataset they used was one they acquired in their lab called High Gamma dataset (HGD) because it is especially well-suited for extracting information from high frequencies.
-Two additional datasets were used to determine if the main results hold also on other datasets. 
-To this extend the BCI IV 2b competition and the Mixed Imagedy Dataset (MID) were used and confirmed their findings. More details about the datasets can be found in the supplementary material for this paper.
+
 
 
 \subsection{Hammer et al.}\label{subsec:hammer-et-al}
@@ -265,7 +264,7 @@ The joystick allowed for left and right movement and the velocity and absolute v
 The dataset and the task are described in more detail in Section~\ref{subsec:ieeg-data-preprocessing}.
 
 Unsurprisingly, the Deep4Net significantly outperformed linear regression used as a baseline on this task, especially for absolute velocity as is apparent from Figure~\ref{fig:hammer-performance}.
-The dataset is not public, therefore, a comparison to more decoding methods is not possible, nevertheless, the correlation values it achieved are quite high.
+
 
 \begin{figure}[!htpb]
 \centering
@@ -280,7 +279,7 @@ The dataset is not public, therefore, a comparison to more decoding methods is n
 \subsubsection{Training regime}
 The Deep4Net was trained using the ADAM optimizer with learning rate 0.01 for 100 epochs.
 To calculate the error of the network's predictions, the mean squared error (MSE) was used as the loss function.
-A leave-one-out-cross-validation on 25 second long data segments (see Section~\ref{subsec:ieeg-data-preprocessing} was employed to estimate performance.
+A leave-one-out-cross-validation on 25 second long data segments (see Section~\ref{subsec:ieeg-data-preprocessing} was employed to estimate performance).
 The goodness of prediction was evaluated on the one fold not included in training using the linear Pearson's correlation coefficient (\cite{pearson-vii-1895}).
 Chance level performance was assessed by randomly pairing the inputs and gold labels.
 For example iEEG data from fold 2 were paired with gold kinematic data from fold 6.
@@ -296,10 +295,8 @@ Especially considering two things:
 
 
 \subsection{Related work}
-In this section we describe more works which are relevant for movement decoding from EEG or iEEG using deep learning, but are not directly used or referenced in our experiments.
-We specifically introduce a few other neural network architectures which have been employed to decode movement related variables.
-
-One such networks is the EEGNet from~\cite{lawhern-eegnet-2018}.
+Besides the Deep4Net, other networks were designed to decode EEG signals.
+One of these networks is the EEGNet from~\cite{lawhern-eegnet-2018}.
 The authors build a CNN architecture which is able to generalize over different BCI paradigms.
 They show that the EEGNet is able to learn a wide variety of interpretable features over a range of different EEG decoding tasks including movement related cortical potentials and sensory motor rhythms.
 
