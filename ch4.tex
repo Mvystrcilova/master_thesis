@@ -9,15 +9,16 @@ The code for the experiments is included in the thesis attachment.
 \section{Architectural modifications}\label{sec:architectural-modifications}
 In~\cite{Hammer-2021} their input perturbation visualization technique did not show the expected effect of modulations in the high-gamma frequency bands on the network's predictions.
 Without including it in their paper they studied it further using a different visualization technique, namely the gradient visualization (see Section~\ref{subsec:gradinet-visualization}). 
-They found that this visualization technique also does not show any interest of the Deep4Net in the high-gamma frequency band, unless the input window is shortened so that the CNN has only one output i.e. predicts one time-point\footnote{Because the network has no layers accepting a fixed number of inputs, it is able to process varying input lengths. It simply slides its convolutional and max-pool kernels over the input giving the corresponding number of outputs. Therefore, it is possible to set the input size so, that the network only has one output. See Section \ref{subsec:gradinet-visualization}.}.
+They found that this visualization technique also does not show any interest of the Deep4Net in the high-gamma frequency band, unless the input window is shortened so that the CNN has only one output i.e. predicts one time-point\footnote{Because the network has no layers accepting a fixed number of inputs, it is able to process varying input lengths. It simply slides its convolutional and max-pool kernels over the input giving the corresponding number of outputs. Therefore, it is possible to set the input size so, that the network only has one output. See Section \ref{subsec:gradinet-visualization} for more details.}.
 In such a scenario a significant gradient peak occurred at 83.33~Hz.
 
 
-We adopted their visualization technique and investigated this gradient peak further. We have hypothesized, that the 83.33~Hz peak is the artefact of the network architecture. We have thus 
+We adopted their visualization technique and investigated this gradient peak further. We have hypothesized, that the 83.33~Hz peak is the artefact of the network's architecture. We have thus 
 performed a series of experiments, where we have modified the Deep4Net architecture parameters, and 
 studied the influence of these architecture parameters changes on the network's gradient profile.
-Specifically, we changed the kernel sizes and dilations of the max-pool layers. We explored kernel sizes 1, 2 and 3 and dilations powers of 1 (i.e. dilations 1, 1, 1, 1  for the four max-pool layers present in the network) powers of 2 (i.e. dilations 2, 4, 8, 16) and powers of 3 (i.e. 3, 9, 27, 81). Detailed information about the different architectures can be found in Table~\ref{tab:architectures-description}.
-The conclusion of these experiments was, that the 83.33~Hz peak occurs due to frequency alignment between the sampling rate (250~Hz) and the dilation of the max-pool layers (which are powers of three) because $ 250/3 = 83.33$.
+Specifically, we changed the kernel sizes and dilations of the max-pool layers. We explored kernel sizes 1 (i. e. kernel size 1, 1, 1, 1 for the four max-pool layers present in the network), 2 (i.e. kernel sizes 2, 2, 2, 2, 2) and 3 (i.e. kernel sizes 3, 3, 3, 3) and dilations powers of 1 (i.e. dilations 1, 1, 1, 1  for the four max-pool layers present in the network) powers of 2 (i.e. dilations 2, 4, 8, 16) and powers of 3 (i.e. 3, 9, 27, 81). Detailed information about the different architectures can be found in Table~\ref{tab:architectures-description}.
+
+The conclusion of these experiments was, that the 83.33~Hz peak occurs due to frequency alignment between the sampling rate (250~Hz) and the dilation of the max-pool layers (which are powers of three) because $ 250/3 = 83.33$. 
 
 During the examination of the gradient peak, we noticed substantial differences in performance among the different architectures.
 Especially those with smaller kernel sizes and/or dilation parameters in their max-pool layers seemed to perform significantly better.
@@ -29,20 +30,23 @@ The performances of the different architectures can be seen in Figure~\ref{fig:o
 In the following points we summarize the findings on the different datasets.
 
 \begin{itemize}
-    \item \textbf{Full training and validation:} Some of the networks significantly outperformed the original Deep4Net (vel\_k3\_d3\_sbp0) from~\cite{Hammer-2021} when both trained and validated on full data.
+    \item \textbf{Full training and validation:} Some of the networks significantly outperformed the original Deep4Net (vel\_k3\_d3\_sbp0)\footnote{See Table \ref{tab:architectures-description} for abbreviation explanation.} from~\cite{Hammer-2021} when both trained and validated on full data.
     The best performing network was the network where the max-pool layer had no influence, namely the one with max-pool layer kernel size 1. It achieved best correlation coefficients for both velocity and absolute velocity.
     
-    \item \textbf{Full training and low-pass validation:} Training the networks on the full dataset and validating them on the low-passed dataset (<~40~Hz) caused a significant performance decrease for all the networks as is obvious from Figure~\ref{fig:original-performances}.
-    This suggests that then networks use information from frequencies above 40~Hz to make their predictions when having access to all frequency bands.
-    Nevertheless, in order to achieve a statistically significant decrease in performance, we had to use a Butterworth filter of order 15 instead of order 3 which was previously used in~\cite{Hammer-2021}. The 3rd order filter caused no apparent change in the correlation coefficients.
+    \item \textbf{Full training and low-pass validation:} Training the networks on the full dataset and validating them on the low-passed dataset (<~40~Hz) caused a slight performance decrease for all the networks. While the decrease in performance was statistically significant, there is almost visible difference between the correlation coefficients of networks trained and validated on full data and networks trained on full data and validated on low-passed data Figure~\ref{fig:original-performances}.
+    
+    Moreover, in order to achieve a statistically significant decrease in performance, we had to use a Butterworth filter of order 15 instead of order 3 which was previously used in~\cite{Hammer-2021}. The 3rd order filter caused no significant change in the correlation coefficients. 
     
     A Butterworth filter gradually attenuates the frequencies above the cut-off frequency (40~Hz in this case).
     The higher the filter order, the steeper the attenuation is~(\cite{butterworth1930theory}).
-    Therefore, the fact that the performance decrease followed only after the stronger filter was employed suggests, that the networks indeed use some information from frequencies above 40~Hz but not particularly high frequencies (those in the high-gamma band) which were attenuated by both the 3rd as well as 15th order filter (Figure~\ref{fig:filters}).
+    Therefore, the fact that the performance decrease followed only after the stronger filter was employed suggests, that the networks use some very limited information from frequencies above 40~Hz but not particularly high frequencies (those in the high-gamma band) which were attenuated by both the 3rd as well as 15th order filter (Figure~\ref{fig:filters}).
+    Overall, the importance of frequencies above 40~Hz seems to be low 
     
     \item \textbf{High-pass training and validation:} To see if the networks are able to use information from the high-gamma frequency band, the networks were trained and validated on the high-passed dataset (>~60~Hz).
-    As is clear from the above chance correlations in Figure~\ref{fig:original-performances}, the networks are able to use some information from the frequency bands above 60~Hz. 
-    The correlations for all the different architectures significantly above chance when decoding both velocity and absolute velocity. We can also see, that the correlation coefficients values for absolute velocity are higher than for velocity, suggesting that frequencies above 60~Hz are more informative for absolute velocity decoding.
+    The above chance correlations in Figure~\ref{fig:original-performances}, show that the networks are able to use some information from the frequency bands above 60~Hz. 
+    Nevertheless, the correlation coefficients for velocity are all below 0.1 suggests that the information about velocity in the high-gamma band is very limited.
+    We can see, that the correlation coefficients values for absolute velocity are higher than for velocity, suggesting that frequencies above 60~Hz are more informative for absolute velocity decoding.
+    Still, even for absolute velocity the medians of the correlation coefficients stay below 0.2 showing that the information encoded in the high frequencies is not very informative.
     
     \item \textbf{Full training and high-pass validation:} We trained the networks on the full dataset and validate only on the high-passed data to test whether the networks when having access to full data are using information from the high-gamma frequency band.
     It is obvious from Figure~\ref{fig:original-performances} most of the networks perform significantly better than chance level decoding.
@@ -54,7 +58,7 @@ In the following points we summarize the findings on the different datasets.
     We wanted to find out if they are able to somehow transfer information between two completely separate datasets.
     Because the cut-off frequency for the low-passed data is 40~Hz and for the high-passed data 60~Hz with a very steep filter, there is no frequency overlap between the two sets.
     Therefore, it would be interesting but also rather surprising if from modulation in the low frequencies (below 40~Hz) the network would learn to use information about modulations in the high frequencies (above 60~Hz).
-    Nevertheless, as obvious from Figure~\ref{fig:original-performances}, the networks were unable to transfer any information.
+    Nevertheless, as can be seen in Figure~\ref{fig:original-performances}, the networks were unable to transfer any information.
     
 \begin{figure}[!htpb]
 \centering
@@ -88,13 +92,8 @@ In the following points we summarize the findings on the different datasets.
 
 \end{itemize}
 
-The findings presented in this section lead to two interesting questions.
-The first one  is what do the gradients of the various architectures look like and do some of them use high-gamma?
+We continue our analysis by looking at what the gradients of the various architectures look like.
 This analysis is described in Section~\ref{subsec:gradients}.
-The second question arises when we notice that the performance seems to drop with an increasing size of the receptive field: Figure~\ref{fig:figure-distance}.
-Networks with a smaller receptive field seem to perform better possibly because the predicted time-point is closer to the centre of the receptive field. As described in more detail in Section~\ref{subsec:receptive-field} the non-uniformity of the receptive field together with causal prediction place the predicted time-point at the end of the receptive field while the network mostly focuses on the centre of the receptive field.
-Therefore, it is interesting to see what happens when we shift the predicted time-point to the centre of the receptive field.
-This analysis are described in Section~\ref{sec:shifting-the-predicted-time-point}.
 
 \begin{figure}[!htpb]
 \centering
@@ -119,7 +118,7 @@ We perform the gradient visualization of all the architectures with max-pool ker
 
 The results show differences in gradients among the architectures.
 Gradients of all intermediate layers and the visualizations can be found in Appendix~\ref{appendixA}.
-Figure~\ref{fig:last-layer-grads} depicts the gradients of the output layer of each of the inspected architectures. The output layer in our opinion best represents the gradients of the other layers.
+Figure~\ref{fig:last-layer-grads} depicts the gradients of the output layer of each of the inspected architectures.
 
 \begin{figure}[!htpb]
 \centering
@@ -147,32 +146,56 @@ This is to be expected when they are tasked with decoding movement.
     Nevertheless, networks with interest in wider frequency ranges for velocity decoding have interest in wider frequency ranges for absolute velocity decoding and vice-versa.
     \item For both variables the network without max-pool, denoted as \{variable\}\_k1 is the best performing architecture.
     And in both cases is it also the network which is most interested in modulations in the low frequency bands.
-    This suggests that using the information in the high-gamma frequency band is not necessarily an asset.
+    This suggests that using the information in the high-gamma frequency band is not necessarily advantageous.
     \item The networks which exhibit higher interest in information from the higher frequencies, namely the \{variable\}\_k2\_d1, \{variable\}\_k3\_d1 and \{variable\}\_k2\_d2 are also those, which are able to perform significantly above chance when trained on full data and validated on high-passed data for both velocity and absolute velocity.
     This suggests consistency between the gradient visualization and the performance analysis.
 
 \end{itemize}
 
+\subsection{Decoding absolute velocity vs. absolute value of velocity}
+We can see in Figures \ref{fig:shifted-performance-vel} and \ref{fig:shifted-performance-absVel} that when training and validating on the full data in shifted setting (Graphs B) the velocity correlation coefficients are higher than the absolute velocity correlation coefficients. 
+This seems a bit counter-intuitive because absolute velocity can be derived from velocity only using the absolute value of velocity. 
+Therefore, it could be at least as well decoded.
+To see if indeed absolute velocity can be decoded better when taking absolute values of velocity we trained a network on velocity data and validated it on absolute values of the predictions and absolute velocity data.
+The results show that the correlation coefficients are significantly worse than when training the network on absolute velocity data (Figure~\ref{fig:absVel-vs-abs-vel-performance}). Even though it seems that it might be better to learn to decode absolute velocity as velocity and then take the absolute value, we find that it is not. 
+
+This might come as surprising but can be explained mathematically. The correlation coefficient is derived from the mean and standard deviation of the variables as:
+
+\begin{equation}
+    CC_{(X, Y)}= \frac{E[(X - \mu_X)(Y - \mu_Y)] }{\sigma_x \sigma_y}
+    \label{eq:correlation}
+\end{equation}
+
+where $X$ and $Y$ are two random variables $\sigma_x, \sigma_y$ are the standard deviations of X and Y, $ \mu_x, \mu_y$ are the means of X and Y.
+
+There is no equitation that would tell us how absolute value changes the mean and standard deviation of an arbitrary variable. Therefore, the means and standard deviations of the predicted values and the gold values change independently when taking their absolute values and the correlation coefficient changes.
+It is not equivalent to take the correlation coefficients of two variables and the correlation of absolute values of two variables. 
+To show this non-equivalency, let $X$ be a random variable with values $X = \{1, 0, 1, 0, 1\} $ and $Y$ be a random variable with values $Y = \{2, 1, -2, 1, 2\}$. In this case $CC_{(X,Y)} = -0.1111$ and $CC_{(|X|,|Y|)} = 1$.
+
 
 \section{Shifting the predicted time-point}\label{sec:shifting-the-predicted-time-point}
-In this section we describe how the performance and gradients change when the predicted time-point is shifted with respect to the receptive field. In Section~\ref{subsec:receptive-field} we described how the non-uniformity of the receptive field causes the network to focus on information from the centre of its receptive field while the predicted time-point lies at the edge of the receptive field to allow for causal prediction. To see what happens if we shift the predicted time-point across the receptive field\footnote{By shifting the predicted time-point from the edge of the receptive field we are giving up causal prediction.} two kinds of analyses are introduced here.
+We described in Section~\ref{subsec:receptive-field} that the receptive field is non-uniform - it considers mostly input-points in its centre; and that in the original, non-shifted setting (causal prediction), the predicted time-point is located just outside the receptive field which places it relatively far from the centre of the receptive field. 
+In Section \ref{subsec:performance} we discovered differences in performance among networks. We also noticed that better performance seemingly correlates with a smaller receptive field. To visualize this we created Figure~\ref{fig:figure-distance} where we observed a clear descending pattern of performance with increased size of receptive field. The only exceptional network is the k3\_d3 network which performs well with a relatively large receptive field. 
 
-\begin{enumerate}
-    \item Shifting the predicted time-point to the centre of the receptive field.
-This analysis was performed on all the network architectures and compares how the different architectures react to the shift, both performance-wise and gradient-wise.
-We highlight the differences and similarities between the architectures.
-    \item Shifting the predicted time-point in steps across the receptive field.
-This analysis was performed only on the original Deep4Net which we denote as \{variable\}\_k3\_d3\_sbp0.
-It compares how the performance and gradients of the network change when the predicted time-point is shifted across the receptive field, using a different ratio of information from the future and from the past.
-\end{enumerate}
+This descending pattern and the non-uniformity of the receptive field corroborate the hypothesis that the distance of the predicted time-point to the centre of the receptive field plays an important role in the prediction power of the architectures.
+Smaller size of the receptive field means smaller distance between predicted time-point and receptive field centre and therefore, possibly access to more relevant signals recorded closer to the predicted movement execution.
 
+To study this further, we shift the inputs and predictions so that the iEEG signal, which was recorded at the same time as the predicted movement was executed, is in the centre of the receptive field\footnote{This causes the procedure to be unsuitable for online BCI because half of the input window uses information from the future.}. An illustration of this is in Figure~\ref{fig:image-of-shifting}. 
+We present how this affects the performances and gradients of the various architectures in Section~\ref{subsec:shifting-the-predicted-time-point-to-the-centre-of-the-receptive-field}.
+
+\begin{figure}[!htbp]
+\centering
+   \includegraphics[width=0.8\linewidth]{img/ch4/shifted-vs-non-shifted-image.png}
+   \caption[Shifted vs. non-shifted setting - scheme]{This Figure shows the difference between the original non-shifted setting (causal prediction) - \textbf{Graph A} and the shifted setting - \textbf{Graph B}. In Graph \textbf{A} we can see that the receptive field used for predicting the yellow time-point is recorded prior to the predicted time-point. This allows for causal prediction and usability in online BCI. In Graph \textbf{B} the predicted time-point is in the middle of the receptive field. Half of the signals used for its prediction was recorded prior to it and the other half was recorded later than the movement was executed.}
+   \label{fig:image-of-shifting}
+\end{figure}
+
+Besides shifting the predicted time point in one big step to the centre of the receptive field, we also tried shifting the predicted time-point in steps across the receptive field.
+This analysis which is introduced in Section \ref{subsec:shifting-the-predicted-time-point-across-receptive-field} was performed only on the original Deep4Net which we denote as \{variable\}\_k3\_d3\_sbp0.
+It compares how the performance and gradients of the network change when the predicted time-point is shifted in small steps across the receptive field, using a changing ratio of information from the future and from the past.
 
 \subsection{Shifting the predicted time-point to the centre of the receptive field}\label{subsec:shifting-the-predicted-time-point-to-the-centre-of-the-receptive-field}
-An important observation when looking at the performance of the different architectures described in Section~\ref{sec:architectural-modifications} was made.
-We noticed that a smaller receptive field seemingly correlates with a higher prediction accuracy especially for absolute velocity decoding.
-To visualize this, we created Figure~\ref{fig:figure-distance} which sorts the different architectures based on the size of the receptive field from smallest to largest and plots the average correlation coefficient each of these networks achieved.
-There is a clear descending pattern especially for absolute velocity where the only exceptional network is the k3\_d3 network which performs well with a relatively large receptive field.
-
+In this section we look at 
 
 \begin{figure}[!htbp]
 \centering
@@ -181,12 +204,6 @@ There is a clear descending pattern especially for absolute velocity where the o
    \label{fig:figure-distance}
 \end{figure}
 
-We described in Section~\ref{subsec:receptive-field} that the receptive field is non-uniform - it considers mostly input-points in its centre; and that in the original, non-shifted setting (causal prediction), the predicted time-point is located just outside the receptive field which places it relatively far from the centre of the receptive field. 
-This and the descending pattern of the performance with an increasing receptive field size from Figure~\ref{fig:figure-distance}, corroborate the hypothesis that the distance of the predicted time-point to the centre of the receptive field plays an important role in the prediction power of the architectures.
-Smaller size of the receptive field means smaller distance between predicted time-point and receptive field centre and therefore, possibly access to more relevant signals recorded closer to the predicted movement execution.
-
-To study this further, we shift the inputs and predictions so that the iEEG signal, which was recorded at the same time as the predicted movement was executed, is in the centre of the receptive field\footnote{This causes the procedure to be unsuitable for online BCI because half of the input window uses information from the future.}. 
-We present how this affects the performances and gradients of the various architectures.
 
 \subsubsection{Performance}
 The performance related results are displayed in Figure~\ref{fig:shifted-performance}.
@@ -243,26 +260,8 @@ Conclusion about how much each of the above described possibilities influences t
 It would be interesting to build a network with a uniform receptive field and then conduct experiments which would clarify this.
 
 If the performance improvement was caused solely or mainly by access to information directly preceding the predicted time-step a network with a uniform receptive field (one which allows padding) could potentially bring an improvement, similar to the one we achieved by shifting the predicted time-point, while retaining its usability for online BCI.
+Its uniform receptive field would allow focusing on information directly preceding the movement without also considering information from the future.
 Nevertheless, such an analysis is out of the scope of this thesis.
-
-On a side note, we can see in Figures \ref{fig:shifted-performance-vel} and \ref{fig:shifted-performance-absVel} that when training and validating on the full data in shifted setting (Graphs B) the velocity correlation coefficients are higher than the absolute velocity correlation coefficients. 
-This seems a bit counter-intuitive because absolute velocity can be derived from velocity only using the absolute value of velocity. 
-Therefore, it could be at least as well decoded.
-To see if indeed absolute velocity can be decoded better when taking absolute values of velocity we trained a network on velocity data and validated it on absolute values of the predictions and absolute velocity data.
-The results show that the correlation coefficients are significantly worse than when training the network on absolute velocity data (Figure~\ref{fig:absVel-vs-abs-vel-performance}). Even though it seems that it might be better to learn to decode absolute velocity as velocity and then take the absolute value, we find that it is not. 
-
-This might come as surprising but can be explained mathematically. The correlation coefficient is derived from the mean and standard deviation of the variables as:
-
-\begin{equation}
-    CC_{(X, Y)}= \frac{E[(X - \mu_X)(Y - \mu_Y)] }{\sigma_x \sigma_y}
-    \label{eq:correlation}
-\end{equation}
-
-where $X$ and $Y$ are two random variables $\sigma_x, \sigma_y$ are the standard deviations of X and Y, $ \mu_x, \mu_y$ are the means of X and Y.
-
-There is no equitation that would tell us how absolute value changes the mean and standard deviation of an arbitrary variable. Therefore, the means and standard deviations of the predicted values and the gold values change independently when taking their absolute values and the correlation coefficient changes.
-It is not equivalent to take the correlation coefficients of two variables and the correlation of absolute values of two variables. 
-To show this non-equivalency, let $X$ be a random variable with values $X = \{1, 0, 1, 0, 1\} $ and $Y$ be a random variable with values $Y = \{2, 1, -2, 1, 2\}$. In this case $CC_{(X,Y)} = -0.1111$ and $CC_{(|X|,|Y|)} = 1$.
 
     
 \begin{figure}[!htpb]
@@ -291,14 +290,18 @@ Below, we show results from the convolutional layer in the third convolutional b
     In the shifted setting Figure~\ref{fig:vel-conv3-layer-grads-shifted} the band with high gradient values of the same network vel\_k1 narrows to frequencies closer to 0.
     
     For no network  did the shift cause an increase in the use of information from the high-gamma frequency band.
-    Rather it seems, that the shift allowed access to less noisy information in the clearly informative bands such as the alpha and beta bands, and the network did not compensate with information from other frequencies.
+    Rather it seems, that the shift allowed access to less noisy information in the clearly informative bands such as the alpha (4 - 12 Hz) and beta (13 - 30 Hz) bands, and the network did not compensate with information from other frequencies.
     
     \item Networks which were \textbf{trained and validated on high-passed data} can be found in Figures~\ref{fig:vel-shifted-vs-non-shifted-grads-hp} (velocity) and~\ref{fig:absVel-shifted-vs-non-shifted-grads-hp} (absolute velocity).
     Again, we only chose to display gradients of one layer to illustrate a behaviour shared by all layers.
     The gradients of the remaining layers can be found in Appendix~\ref{appendixB}.
     What we observe in the gradients of the networks trained on high-passed datasets is different (even opposite) from what we observe in gradients of networks trained on the full dataset.
-    The networks trained on high-passed data in the shifted setting exhibit interest in the same or a broader range of frequencies above the 60~Hz cut-off frequency than the networks trained on high-passed data in the original, non-shifted setting.
-    This and the increase in performance on high-passed datasets suggests that indeed the information in high-frequency bands in signals from the future or directly preceding the movement contains more information about movement.
+    The networks trained on high-passed data in the shifted setting exhibit interest in the same or sometimes a broader range of frequencies above the 60~Hz cut-off frequency than the networks trained on high-passed data in the original, non-shifted setting. 
+    For the velocity gradients in Figure~\ref{fig:vel-shifted-vs-non-shifted-grads-hp} the frequency ranges broaden especially for the vel\_k3\_d3\_sbp0 model and generally, the gradients become higher for non-motor channels.
+    In Figure~\ref{fig:absVel-shifted-vs-non-shifted-grads-hp} for absolute velocity, we do not see a broadening of interesting frequency bands. Rather they stay the same.
+    
+    The increase in performance on high-passed datasets suggests that indeed the information in high-frequency bands in signals from the future or directly preceding the movement contains more information about movement.
+    The broadening of interesting frequency ranges above 60~Hz for velocity also corroborates it, at least for this variable. 
     But the fact that the networks trained in the shifted setting on full data do not increasingly use high-gamma, while their performance increases significantly compared to the non-shifted setting, points to the information in high-gamma being informative but redundant when having access to information from all frequencies.
 \end{enumerate}
 
@@ -406,16 +409,14 @@ Vice-versa, when shifting towards positive values, we increasingly use informati
 The step size is 0.1 s which is equivalent to 25 samples.
 This experiments allows us to observe how the shifting gradually influences the performance and gradients of the network. 
 
-Unlike the previous experiments we chose to perform this analysis only on one architecture, namely, the original Deep4Net (k3\_d3\_sbp0). 
-The shift seems to influence the gradients of all the networks similarly.
-Therefore, the amount of time and computational power necessary to train multiple networks for each of the shift steps appeared excessive.  
+We chose to perform this analysis only on one architecture, namely, the original Deep4Net (k3\_d3\_sbp0). 
 
 \subsubsection{Performance}\label{subsubsec:across-shiftig-performace}
 How the performance changes with the gradual shifting of the predicted time-point is displayed in Figure~\ref{fig:shifting-performance}.
 We can observe the slow decrease in performance when increasing the distance of the predicted time-point to the receptive field centre, in both directions. 
 This is to be expected. 
 Similarly to performance in Section~\ref{subsec:shifting-the-predicted-time-point-to-the-centre-of-the-receptive-field} we do not know if the fact that the performance peaks in the centre of the receptive field is due to having information directly preceding the movement or having access to information from the future. 
-Interestingly, the decoding performance drops slower when using information predominantly from the future than when using information predominantly from the past.
+Interestingly, the decoding performance drops slower when using information predominantly from the future than when using information predominantly from the past. This could indicate that the information about movement in iEEG signals is dominated by the representation of movement execution rather than its planning/preparation. 
 To properly investigate the informativeness of past vs. future signals however, we would need to have a network with an uniform receptive field. 
 
 \begin{figure}[!hpbp]

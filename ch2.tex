@@ -1,34 +1,34 @@
 \chapter{Background and related work}
 \label{chap:background}
-In this chapter, we give a brief introduction to topics most relevant for this thesis to equip the reader with the necessary background.
-We start by shortly describing (intracranial) EEG signals, their standard feature extraction and decoding techniques (Section \ref{sec:decoding-from-ieeg}). We further provide a concise introduction to deep neural networks (DNNs) paying special attention to convolutional neural networks (CNNs)(Section \ref{sec:artificial-neural-networks}).
+In this chapter, we give a brief introduction of topics most relevant for this thesis to equip the reader with the necessary background.
+We start by shortly describing (intracranial) EEG signals, their standard feature extraction and decoding techniques (Section \ref{sec:decoding-from-ieeg}). We further provide a concise introduction to deep neural networks (DNNs) paying special attention to convolutional neural networks (CNNs) (Section \ref{sec:artificial-neural-networks}).
 Lastly, we introduce the two most relevant papers (\cite{Hammer-2021}) and (\cite{schirrmeister-deep-2017}) in more detail, followed by brief descriptions of other DNN architectures used for movement decoding (Section \ref{sec:dnn-decoding}).
 
 \section{Decoding from (i)EEG signals}
 \label{sec:decoding-from-ieeg}
-Neural decoding refers to a neuroscience field concerned with the reconstruction of external stimuli from information that is already encoded in the brain.
+Neural decoding refers to a neuroscience field concerned with the reconstruction of external stimuli from information that is already encoded in the brain. 
 It consists of multiple stages, namely, signal recording, spectral and spatial feature extraction and the final classification or regression algorithm. 
 In this section, we describe the methods traditionally used in each of these stages highlighting their advantages and disadvantages. 
 While many things, such as sleep stages (\cite{sleep-eegnet}), epileptic seizures (\cite{epileptic-seizures-eeg}) or emotions (\cite{emotion-eeg}) can be decoded from brain signals, we introduce mainly methods used for movement decoding because they are most relevant for this thesis. 
 
 \subsection{Recording methods}
 An existing correlation between neural modulations and motor parameters for a wide range of motor tasks makes electrical brain activity suitable for movement decoding  (\cite{lebedev-cortical-2005}).
-Electroencephalography (EEG), electrocorticography (ECoG) and stereotactic EEG (sEEG) are the most commonly used techniques of recording electrical activity of the brain (\cite{tam-human-2019}).
+Electroencephalography (EEG), electrocorticography (ECoG) and stereo-tactic EEG (sEEG) are the most commonly used techniques of recording electrical activity of the brain (\cite{tam-human-2019}).
 We describe basic properties of each of these recording methods. For a more detailed introduction to EEG please refer to \cite{NiedermeyersElectroencephalography}.
 
 \subsubsection{Electroencephalography (EEG)}
 Electroencephalography (EEG) records electrical brain activity of the cerebral cortex using multiple electrodes (also called channels) which are placed on the surface of the head. The recorded activity, originating as the postsynaptic potential of excitable neural tissue (\cite{buzsaki-origin-2012}), is attenuated through cerebrospinal fluid, the dura and the skull on its way to the recording electrodes. Besides weakening the signal, these structures also act as low-pass filters limiting the useful frequency bands to below 100~Hz (\cite{tam-human-2019}). Another limitation of EEG recordings is the interference of activity of muscles located in the region of the head. Muscle activity has higher amplitudes than brain signals and can therefore affect the recording quality (\cite{scholg-presence-2002}). It lowers the signal to noise ratio of EEG signals. EEG has also relatively poor spatial resolution (\cite{buzsaki-origin-2012}). Despite the aforementioned drawbacks, EEG is a widely used tool in brain signal recording. Its high temporal resolution, safety and a relatively low cost motivate researchers to develop new quality control and artifact processing techniques (\cite{lotte2018review}) to alleviate the disadvantages of EEG. 
 
-\subsubsection{Electrocorticography and stereotactic EEG}
-Electrocorticography (ECoG) and streotactic electroencephalography (sEEG) are variations of EEG commonly referred to as intracranial EEG (iEEG).
+\subsubsection{Electrocorticography and stereo-tactic EEG}
+Electrocorticography (ECoG) and stereo-tactic electroencephalography (sEEG) are variations of EEG commonly referred to as intracranial EEG (iEEG).
 In ECoG, a grid with multiple recording electrodes (channels) is placed on the surface of the brain instead of the surface of the head.
-For stereotactic EEG, the electrodes penetrate the skull and reach deeper inside the brain. Both are very invasive methods and cannot be performed for the sake of research only.
+For stereo-tactic EEG, the electrodes penetrate the skull and reach deeper inside the brain. Both are very invasive methods and cannot be performed for the sake of research only.
 Therefore, intracranial EEG studies are mainly conducted on patients with medication resistant epilepsy.
-The electrodes are used to find the locus of seizures which then is surgically removed. Special measures have to be taken to remove channels displaying pathological symptoms when using ECoG signal for research.
-The quality of signal from non-epileptic brain tissue is, however, superior to standard EEG. It has higher spatial resolution as well as better resolution in the high frequencies.
+The electrodes are used to find the locus of seizures which is then surgically removed. When Special measures have to be taken to remove channels displaying pathological symptoms when using ECoG signal for research.
+The quality of signal from non-epileptic brain tissue is, however, superior to standard EEG. It has higher spatial resolution as well as better resolution in the high frequencies (\cite{volkova-review}).
 
 \subsection{Feature extraction}
-End-to-end learning has started to be used only recently and manual feature extraction is still common when designing movement decoders.
+End-to-end learning has started to be used only recently and manual feature extraction is still common when designing movement decoders from EEG and iEEG.
 We will describe some widely used feature extraction methods. 
 Often distinct methods are used for spatial and temporal information both of which are present in EEG and iEEG signals. 
 Spatial information tells us where in or on the brain the signal was measured depending on the position of the electrode.
@@ -96,26 +96,26 @@ Movement decoding tasks which fall in the category of regression include finger 
 kinematic variables such as speed or velocity decoding of hand movements (\cite{hammer-role-2013, hammer-predominance-2016, Hammer-2021, kalman-filters-velocity, linear-regression-eeg-hand-3d}).
 Various algorithms have been employed to solve the above listed tasks. 
 Models based on linear regression combined with various feature extraction methods are very common (\cite{hammer-role-2013, hammer-predominance-2016, eeg-hand-moving, linear-regression-eeg-hand-3d}).
-More sophisticated models include Kalman filters (\cite{kalman-filters-velocity}) or their unscented versions (\cite{uns-kalman-filters-gait-decoding}).
+More sophisticated models include Kalman filters (\cite{kalman-filters-velocity}) and their unscented versions (\cite{uns-kalman-filters-gait-decoding}).
 Neural networks which we describe separately in Section~\ref{sec:dnn-decoding} have also been proposed to solve movement related regression tasks.
 
 \section{Artificial neural networks}\label{sec:artificial-neural-networks}
 In this section we provide a quick overview of the fundamentals of deep learning (DL). 
-We introduce basic prinicples of deep neural networks (DNNs) relevant for this thesis and the related terminology.
+We introduce basic principles of deep neural networks (DNNs) relevant for this thesis.
 
 
 \subsection{Convolutional neural networks}\label{subsec:convolutional-neural-networks}
 DNNs are statistical machine learning models which are somewhat based on the functioning of the brain.
 The networks are composed of interconnected neurons also called units.
-A neuron is defined as a weighted sum of its inputs followed by a activation function which is usually non-linear.
+A neuron in an artificial neural network is defined as a weighted sum of its inputs followed by a activation function which is usually non-linear.
 In deep neural network architectures, multiple layers of interconnected neurons are stacked on top each other, thus the depth in the term.
 The neurons in the layers can be interconnected in various ways.
 Feed-forward networks are such that the connections do not form a cycle.
 The outputs of the preceding layer are always used as inputs of the following one. 
-Networks in which the connections do form cycles are called Reccurent neural networks (RNNs). 
+Networks in which the connections do form cycles are called Recurrent neural networks (RNNs). 
 For more information on RNNs please refer to~\cite{reccurent-neural-networks}.
 
-In feed-forward networks, to which we limit the introduction here, a simple approach of connecting neurons between two layers is connecting every pair of neurons. 
+In feed-forward networks, to which we limit the introduction here, a simple approach of connecting neurons between two layers is connecting every pair of neurons with a weight creating a \textit{fully connected} network. 
 Consider layers $A$ with a neurons and $B$ with b neurons.
 The output of a neuron k from layer $B$ is then defined as:
 \begin{equation}
@@ -131,7 +131,8 @@ where $f$ is the activation function, $x_i$ is the output of neuron $a_i$ and $w
 \end{figure}
 
 Besides assigning a separate weight to each pair of neurons there are other possibilities of connecting neurons of consecutive layers.
-We can create a smaller weight matrix, often called filter or kernel which is then used to perform convolution (i. e. a sliding dot product between the filter and a correspondingly sized part of the layer's input matrix). 
+Instead of assigning one weight to each pair of neurons, we can create a smaller weight matrix, often called filter or kernel which we reuse for multiple pairs of neurons. 
+To do so, we perform convolution (i. e. a sliding dot product between the filter and a correspondingly sized part of the layer's input matrix). 
 For visual explanation see Figure~\ref{fig:convolution}.
 To arrive at a complete convolutional layer from the convolutional filter, more parameters need to be specified:
 \begin{itemize}
@@ -140,8 +141,8 @@ To arrive at a complete convolutional layer from the convolutional filter, more 
     It specifies how many input channels the layer's input has.
     What channels can represent can be illustrated for example on images.
     Imagine a colored image of size 32x32 pixels.
-    Besides the width and height the image also has a 3rd dimesion - 3 channels specifying the RGB color.
-    Therefore, the dimension of the input (the image) is 32x32x3 and the kernel sliding over it has to have an additional dimension to handle the third input dimension - the depth.
+    Besides the width and height the image also has a 3rd dimesion specifying the RGB color. This third dimension are the channels, in this case three.
+    Therefore, the dimension of the input (the image) is 32x32x3 and the kernel sliding over it has to have an additional dimension to handle the third input dimension. This additional dimension is the depth.
     \item $F$ - the number of output channels. 
     It specifies the number of different filters of size $WxHxD$ which all slide over the input giving $F$ output channels. 
     Similarly to the RGB channels of the input described above, each of the different filters allows the network to create its own representation of some feature of the layer's input.    

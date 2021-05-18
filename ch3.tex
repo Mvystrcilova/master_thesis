@@ -254,9 +254,9 @@ And we do so in Section~\ref{sec:architectural-modifications}.
 
 \subsection{Receptive field}\label{subsec:receptive-field}
 The fact that the Deep4Net cannot have right padding in order to process multiple crops at the same time affects its receptive field.
-By receptive field we mean the part of the input of the network which affects one specific output (in our case it corresponds to one crop from which one predicion is made).
+By receptive field we mean the part of the input of the network which affects one specific output (in our case it corresponds to one crop from which one prediction is made).
 In Figure~\ref{fig:receptive-field} we visualize the receptive field used to predict one time-point.
-The figure illustrates how many times each input sample, and the values derived from it, are used in a forward pass through the CNN to obtain the specific prediction.
+The figure shows how many times each input sample, and the values derived from it, are used in a forward pass through the CNN to obtain the specific prediction.
 Note, that the receptive field in no way illustrates the weights of the network.
 
 \begin{figure}[!htbp]
@@ -273,15 +273,16 @@ The gradient bar on the right shows the number of times each input sample was us
 Figure~\ref{fig:receptive-field} illustrates that the predicted time-point is fairly far from the centre of the receptive field.
 This is because we make the prediction only based on the data recorder prior to the predicted movement and do not use padding.
 The CNN mostly focuses on signals around the centre of the receptive field and therefore, is biased towards data are far from those that directly precede the movement.
+Another illustration of the relation between the receptive field and the predicted time-point is in Figure~\ref{fig:image-of-shifting}, \textbf{Graph A}.
 
 For classification this is not as critical, because the same label is predicted from multiple crops, and the actual classified movement does not happen at the end of the last crop but at some point during the whole input window from which the crops are derived (\cite{schirrmeister-deep-2017}).
 This gives the network a chance to focus on information directly preceding the actual movement.
 
 We focus on the changed role of the receptive field between classification and regression because as previously stated in~\cite{schirrmeister-deep-2017} and \cite{hartmann-hierarchical-2018}, this same CNN architecture was shown to utilize information from the high-gamma frequency bands.
-Since we are investigating the frequency bands and their effective utilization, we inspect this difference as a possible reason for why the network, when employed to predict velocity and absolute velocity of hand movement, does not use high-gamma.
+Since we are investigating the frequency bands and their effective utilization, we inspect this difference as a possible reason for why the network, when employed to predict velocity and absolute velocity of hand movement, does presumably not use high-gamma.
 The hypothesis here is, that the high-gamma signal is most informative directly before the predicted movement execution.
 Therefore, the distance of the network's receptive field centre to the predicted time-point hinders its usage.
-We test this hypothesis in the \cref{sec:shifting-the-predicted-time-point}.
+We test this hypothesis in Section~\ref{sec:shifting-the-predicted-time-point}.
 
 \subsection{Training}\label{subsec:training}
 We left all hyper-parameters equal to those from~\cite{Hammer-2021}, because it was our goal to reproduce their results and build up on their research.
