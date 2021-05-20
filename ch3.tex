@@ -1,28 +1,28 @@
 \chapter{Methodology}\label{ch:methodology}
 In this chapter, we go over the details and specifics of the dataset and the methods used in this thesis.
-We first provide information related to the dataset and then give a detailed description of the Deep4Net architecture together with information about the training regime.
-We also describe the gradient visualization method which we chose to interpret the decisions of the CNNs.
+We first provide information related to the dataset (Section~\ref{sec:dataset}) and then give a detailed description of the Deep4Net architecture (Section~\ref{subsec:architecture}) together with information about the training regime (Section~\ref{subsec:training}).
+We also describe the gradient visualization method which we chose to interpret the decisions of the CNNs (Section~\ref{subsec:gradinet-visualization}).
 
 \section{Dataset}\label{sec:dataset}
 The dataset was the same as in the unpublished study of~\cite{Hammer-2021}.
-Modified with the authors permission, the description of the experiment settings, and the pre-processing follows.
+Modified with the authors permission, the description of the experiment settings and the pre-processing follows.
 
 \subsection{Movement task and kinematic variables}\label{subsec:movement-task-and-kinematic-variables}
 A dataset that was already used in several other iEEG studies to examine decoding of movement kinematic parameters (\cite{Hammer-2021,hammer-predominance-2016,hammer-role-2013}) was utilized for the purposes of this thesis.
-The participants performed a motor task based on driving a car in a computer simulation.
-They controlled the position of the car on a computer screen using a steering wheel which they held in both hands.
+The participants performed a motor task-based on driving a car in a computer simulation.
+They controlled the car's position on a computer screen using a steering wheel that they held in both hands.
 The task was to keep the car on a curved road.
 The road was random without any repetitions, following a low-pass filtered white noise trajectory.
 During the movement task, the position of the car on the road was measured.
-The position of the car linearly corresponded to the deflection of the steering wheel and was measured relative to the screen center, which corresponded to zero-deflection of the steering wheel.
-Importantly, the control of the car's position was possible only in the horizontal dimension (left - right).
+The position of the car linearly corresponded to the deflection of the steering wheel and was measured relative to the screen centre, which corresponded to zero-deflection of the steering wheel.
+Notably, the control of the car's position was possible only in the horizontal dimension (left-right).
 The upward movements of the car (vertical scrolling speed) were kept constant in each run of the game and adjusted for each subject individually.
 
-The difficulty and the recording time of each subject was also adjusted based on the participant's motivation/ability to participate, lasting 25 $\pm$ 7 min (mean $\pm$ SD).
+The difficulty and the recording time of each subject were also adjusted based on the participant's motivation/ability to participate, lasting 25 $\pm$ 7 min (mean $\pm$ SD).
 The car game difficulty was modified by the vertical scrolling speed of the car.
-Therefore, to account for faster movements, the low-pass cutoff frequency was set to 10~Hz for smoothing the raw tracker data prior to the derivation of the kinematic parameters.
+Therefore, to account for faster movements, the low-pass cutoff frequency was set to 10~Hz for smoothing the raw tracker data before the derivation of the kinematic parameters.
 
-From the horizontal - 1-D trajectory, the following two kinematic parameters were derived:
+From the horizontal, 1-D trajectory, the following two kinematic parameters were derived:
 1. velocity computed as a derivative of position, 2. speed as the absolute value of velocity.
 Velocity thus contained the directional information in its sign;
 specifically, velocity values smaller than zero implicated movement to the left and vice versa, while speed indicated how fast the car was moving left or right (irrespective of its direction).
@@ -30,11 +30,11 @@ The time-series of the kinematic parameters were resampled at 250~Hz and tempora
 
 \subsection{Recording}\label{subsec:recording}
 The recordings were performed in the University Medical Centre in Freiburg, Germany and in the Motol University Hospital in Prague, Czech Republic.
-The study included 12 epilepsy patients (6 male, age 19--50,  33 $\pm$ 10, (mean $\pm$ SD ) all of which had intracranial EEG implantations.
+The study included 12 epilepsy patients (6 male, age 19--50,  33 $\pm$ 10, (mean $\pm$ SD), all of which had intracranial EEG implantations.
 Some of the implantations were placed in the region of the motor cortex.
 The location of the electrodes was dependent solely on the needs for medical evaluation of their medication-resistant epilepsy.
 Both sEEG and ECoG electrodes were present among patients.
-Detailed information about electrode type and placement is presented in Table\ref{tab:patient-table} and Figure\ref{fig:electrodes}.
+Detailed information about electrode type and placement is presented in Table~\ref{tab:patient-table} and Figure~\ref{fig:electrodes}.
 
 \begin{figure}[!htbp]
 \centering
@@ -86,29 +86,29 @@ The specific separation criteria are described below as provided by~\cite{Hammer
 
 One of the aims of the~\cite{Hammer-2021} study was to show what the CNNs learned from the raw brain signals.
 The hypothesis was that the CNNs would focus on information from the hand-motor cortex when solving a movement-related task.
-To verify this hypothesis, the recorded channels were divided into two distinct, non-overlapping groups: 1. hand-motor channels and 2. non-motor channels.
+The recorded channels were divided into two distinct, non-overlapping groups: 1. hand-motor channels and 2. non-motor channels to verify this hypothesis.
 The hand-motor channels induced a clear hand motor response after the electrical stimulation at low intensities underneath or around the electrode contacts.
 The non-motor channels, on the other hand, produced no sensory/motor response after the stimulation.
 Furthermore, a requirement of at least 1 cm distance from the motor and pre-motor areas (i.e. Area 4a, Area 4p and Area 6 from the SPM Anatomy toolbox\cite{eickhoff-new-2005}) had to be satisfied for a channel to be included in the non-motor group.
 To this end, all MRI brain scans (T1-weighted sequence) were normalized to the MNI space and the electrodes' coordinates were read out from either the post-implantation MRI or CT scans53. \\
 
 The average number of hand-motor channels was 13 $\pm$ 9 (mean $\pm$ SD), while there were 29 $\pm$ 18 (mean $\pm$ SD) non-motor channels.
-Some electrodes did not fall into either of the hand-motor and non-motor channel groups (e.g. channels in the motor cortex the electrical stimulation of which induced leg-motor response).
-These electrodes were then left out in some analysis, because the aim was to delineate the difference between the two distinct groups of channels (the hand-motor channel group and the non-motor channel group clearly far away from the motor cortex).
+Some electrodes did not fall into either the hand-motor or non-motor channel groups (e.g. channels in the motor cortex, the electrical stimulation of which induced leg-motor response).
+These electrodes were then left out in some analysis because the aim was to delineate the difference between the two distinct groups of channels (the hand-motor channel group and the non-motor channel group clearly far away from the motor cortex).
 
 
 
 \subsection{IEEG data preprocessing}\label{subsec:ieeg-data-preprocessing}
-The iEEG data pre-processing was also already completed when we obtained the dataset and it was not carried out as a part of this thesis.
-Nevertheless, we provide the description of pre-processing from ~\cite{Hammer-2021}.
-A comprehensive rejection of \textit{epileptic} channels based on the information from the respective epilepsy centers was performed, because the primary aim was to investigate the physiological brain activity.
-Thus, the channels, i.e. those located in the seizure onset zone and/or containing a large number of inter-ictal epileptiform discharges, were rejected from this study (20 $\pm$ 13, mean $\pm$ SD) over subjects; see Table \ref{tab:patient-table}.
+The iEEG data pre-processing was also already completed when we obtained the dataset, and it was not carried out as a part of this thesis.
+Nevertheless, we provide the description of pre-processing from ~\cite{Hammer-2021}:
+A comprehensive rejection of \textit{epileptic} channels based on the information from the respective epilepsy centres was performed because the primary aim was to investigate the physiological brain activity.
+Thus, the epileptic channels, i.e. those located in the seizure onset zone and/or containing a large number of interictal epileptiform discharges, were rejected from this study (20 $\pm$ 13, mean $\pm$ SD) over subjects; see Table \ref{tab:patient-table}.
 All non-rejected iEEG channels (85 $\pm$ 28, mean $\pm$ SD) were referenced to their common average (CAR), high-pass filtered at 0.15~Hz (3rd order Butterworth filter), normalized to the inter-quartile range of each channel, and resampled to 250~Hz, to yield consistent data sets from the different recording systems used at both aforementioned epilepsy centers\footnote{Motol University Hospital and University Medical Centre Freiburg}.
-The iEEG data were resampled to 250~Hz in order to emulate the same setup of the Deep4Net from~\cite{schirrmeister-deep-2017}, which was successfully applied to demonstrate high-gamma (70 - 90~Hz) effects in decoding motor behaviour from non-invasive EEG. Importantly, any over-fitting in the pre-processing was carefully avoided (i.e., all parameters of the pre-processing of the test set were estimated on the training set) and only causal, finite impulse response filters were applied.
+The iEEG data were resampled to 250~Hz to emulate the same setup of the Deep4Net from~\cite{schirrmeister-deep-2017}, which was successfully applied to demonstrate high-gamma (70 - 90~Hz) effects in decoding motor behaviour from non-invasive EEG. Importantly, any over-fitting in the pre-processing was carefully avoided (i.e., all parameters of the pre-processing of the test set were estimated on the training set) and only causal, finite impulse response filters were applied.
 Therefore, the decoding approach could be readily applied also in a closed-loop, online BMI.
 
 The aligned iEEG and kinematic time-series were divided into 25-s long data segments.
-In order to minimize a potential influence of temporal correlations in neighbouring data parts, the segments had a 2-s margins in between each other.
+In order to minimize the potential influence of temporal correlations in neighbouring data parts, the segments had a 2-s margin in between each other.
 Additionally, the last two minutes of the recordings were left as a test set.
 The test set was not a part of the dataset that was utilized in this thesis.
 
@@ -116,7 +116,7 @@ The test set was not a part of the dataset that was utilized in this thesis.
 \subsection{Multiple dataset conditions}\label{subsec:modifications-to-the-dataset}
 In this thesis, we refer to multiple variations of the original dataset provided by the Motol University Hospital.
 Following modifications were explored:
-1. filtering out certain frequencies, 2. shifting the predicted time-point with respect to the input window, 3. spectral whitening.
+1.~filtering out certain frequencies, 2.~shifting the predicted time-point with respect to the input window, 3.~spectral whitening.
 \begin{itemize}
 \item \textbf{Filtering} We created two types of datasets using filtering.
 A \textit{high-pass filtered dataset} using a 15th order Butterworth filter, cut-off frequency 60~Hz, non-zero phase shift and a \textit{low-pass filtered dataset} using a Butterworth filter order 15, cut-off frequency 40~Hz, non-zero phase shift.
@@ -124,24 +124,24 @@ Besides full training on these datasets, parts of these datasets were combined f
 \\
 
 \item \textbf{Shifting} Originally in~\cite{Hammer-2021} the dataset was constructed so that the predictions were made from signals recorded prior to their execution (causal prediction).
-In addition to this, we also created datasets where the labels (i.e. values of kinematic variables) were shifted so that predictions were made also from signals recorded after movement execution (acausal prediction).
-While a network trained in this manner is unsuitable for online BCI, it allows us to inspect which time frame of the signails contains information about the movement.
-More details about how the shift influences the predictions and why can be found in~\ref{subsec:receptive-field}. \\
+In addition to this, we also created datasets where the labels (i.e. values of kinematic variables) were shifted so that predictions were also made from signals recorded after movement execution (acausal prediction).
+While a network trained in this manner is unsuitable for online BCI, it allows us to inspect which time frame of the signals contains information about the movement.
+More details about how the shift influences the predictions and why can be found in Section~\ref{subsec:receptive-field}. \\
 
-\item \textbf{Spectral whitening} Lastly we also created whitened datasets.
+\item \textbf{Spectral whitening} Lastly, we also created whitened datasets.
 Spectral whitening normalizes amplitudes of all frequencies to one.
-It was achieved using a Fourier transformation of each 25s long segment (which the dataset was divided to) into the power spectrum, obtaining information about phase and amplitude.
+Using a Fourier transformation of each 25s long segment (which the dataset was divided to) into the power spectrum, obtaining information about phase and amplitude was achieved.
 Then dividing the amplitudes with their absolute value and then, via inverse Fourier transformation, transforming it back to signal.
-The whitened signal was normalized to its inter-quratile range (IQR).
-This normalization was calculated and applied to each segment on the training set and the same parameters averaged over all 25s long segments of the training set were applied to the validation set.
-Figure~\ref{fig:spectral-whitening} illustrates the effects on a portion of one of the 25s long segments.
+The whitened signal was normalized to its interquartile range (IQR).
+This normalization was calculated and applied to each segment on the training set, and the same parameters averaged over all 25s long segments of the training set were applied to the validation set.
+Figure~\ref{fig:spectral-whitening} illustrates the effects of spectral whitening on a portion of one of the 25s long segments.
 \end{itemize}
 
 \begin{figure}[!htbp]
 \centering
 \includegraphics[width=\linewidth]{img/ch3/spectral-whitening}
-\caption[Spectral whitening]{The top row shows the original power spectrum of the iEEG signal and the original iEEG signals of the 10 seconds of the first 25s long segment.
-The bottom row shows how spectral whitening changed both the spectrum and the signal.}
+\caption[Spectral whitening]{The top row shows the original power spectrum of the iEEG signals and the original iEEG signals of 10 seconds of the first 25s long segment.
+The bottom row shows how spectral whitening changed both the spectrum and the signals.}
 \label{fig:spectral-whitening}
 \end{figure}
 
@@ -149,7 +149,7 @@ The bottom row shows how spectral whitening changed both the spectrum and the si
 \section{Deep4Net}\label{sec:deep4net}
 The Deep4Net, which is freely available in the Braindecode library\footnote{www.braindecode.org}, was already shortly described in Section~\ref{subsec:schirrmeister-et-al}.
 In this section, we describe it in more detail. 
-Besides the describing the architecture as used in~\cite{Hammer-2021} we focus on how cropped decoding is used (Section~\ref{subsec:cropped-decoding}), what the receptive field of the network looks like and how it affects the predictions (Section~\ref{subsec:receptive-field}), we describe the training procedure (Section~\ref{subsec:training}), the visualization of the networks' gradients~\ref{subsec:gradinet-visualization} and architectural modifications we introduce in this thesis Section~(\ref{subsec:architectural-modifications}). Lastly we also state how performance is analyzed Section~(\ref{subsec:performance-analysis}).
+Besides describing the architecture as used in~\cite{Hammer-2021} we focus on how cropped decoding is used (Section~\ref{subsec:cropped-decoding}), what the receptive field of the network looks like and how it affects the predictions (Section~\ref{subsec:receptive-field}), we describe the training procedure (Section~\ref{subsec:training}), the visualization of the network's gradients (Section~\ref{subsec:gradinet-visualization}) and the architectural modifications we introduce in this thesis (Section~\ref{subsec:architectural-modifications}). Lastly, we also state how performance is analyzed Section~(\ref{subsec:performance-analysis}).
 
 
 \subsection{Architecture}\label{subsec:architecture}
@@ -163,21 +163,21 @@ The first convolutional block is split into two parts.
 One performs convolution over time (conv\_temp) and the second over the channels with weights for all possible electrode pairs using filters of the preceding temporal convolution (conv\_spat).
 Because there is no activation function between these two layers, they could be merged, but the authors emphasize the regularization function of this separation because it forces a separation of the linear transformation into a temporal convolution and a spatial filter.
 
-A convolutional block of the Deep4Net starts with a convolutional layer, then a batch normalization layer follows, after which a non-linearity is added, in the case of the Deep4Net it is the exponential linear unit (ELU) function.
+A convolutional block of the Deep4Net starts with a convolutional layer, then a batch normalization layer follows, after which a non-linearity is added; in the case of the Deep4Net, it is the exponential linear unit (ELU) function.
 Finally, a max-pool layer closes the convolutional block.
-An output layer, which originally was a softmax, comes last.
-To use this network for a regression task that the present thesis focuses on, only a single modification needs to be done: removing the last softmax layer and replacing it with a convolutional layer.
+An output layer, which initially was a softmax, comes last.
+, Only a single modification needs to be done to use this network for the regression task the present thesis focuses on: removing the last softmax layer and replacing it with a convolutional layer.
 This last layer is called the conv\_classifier.
 The architecture already transformed for regression is depicted in Figure~\ref{fig:architecture}.
 
 The Deep4Net is able to process varying input lengths. In each convolutional or max-pool layer, it simply slides its filters over the input and gives a respective number of outputs.
-Therefore, before training, the number of outputs needs to be calculated based on the size of the input window that was chosen.
+Therefore, before training, the number of outputs needs to be calculated based on the input window size that was chosen.
 The corresponding values (gold labels) of the predicted kinematic variables are cropped accordingly.
 In this thesis, we used 1200 samples as input window length (which corresponds to 4.8 seconds) to be consistent with~\cite{Hammer-2021}. The Deep4Net as used in~\cite{Hammer-2021} gives 679 predictions (Figure~\ref{fig:architecture}).
 
 Lastly, we point out that the network does not use any padding. 
-This makes its receptive field non-uniform and we discuss the consequences in Section~\ref{subsec:receptive-field}.
-Nevertheless it is necessary to avoid padding to perform cropped decoding described in Section~\ref{subsec:cropped-decoding}.
+No padding makes its receptive field non-uniform; we discuss the consequences in Section~\ref{subsec:receptive-field}.
+Nevertheless, it is necessary to avoid padding to perform cropped decoding described in Section~\ref{subsec:cropped-decoding}.
 
 \begin{figure}[!htbp]
 \centering
@@ -187,8 +187,8 @@ Nevertheless it is necessary to avoid padding to perform cropped decoding descri
 \end{figure}
 
 \subsection{Cropped decoding}\label{subsec:cropped-decoding}
-The possibility to use cropped decoding is implemented the Braindecode library together with the original Deep4Net.
-Cropped decoding allows, instead of obtaining one prediction per trial (Figure~\ref{fig:trial-wise-decoding-trial-wise}), to separate the trial window into multiple smaller overlapping sub-windows (crops) each of which produces a prediction (Figure~\ref{fig:trial-wise-decoding-cropped}).
+The possibility to use cropped decoding is implemented in the Braindecode library together with the original Deep4Net.
+Cropped decoding allows, instead of obtaining one prediction per trial (Figure~\ref{fig:trial-wise-decoding-trial-wise}), to separate the trial window into multiple smaller overlapping sub-windows (crops), each of which produces a prediction (Figure~\ref{fig:trial-wise-decoding-cropped}).
 
 \begin{figure}[!htbp]
 \centering
@@ -207,8 +207,9 @@ Cropped decoding allows, instead of obtaining one prediction per trial (Figure~\
 \label{fig:trial-wise-decoding} 
 \end{figure}
 
-Cropped decoding can be implemented by processing one crop at a time.
-But it can be sped up with dense prediction (discussed in Section~\ref{subsec:dilated-networks}) because every CNN\footnote{By every we mean standard CNN architecture similar to the Deep4Net consisting of convolution, pooling and batch-normalization layers.} which processes one crop at a time (one-crop network) and has no right padding can be transformed into a dilated network which simultaneously processes multiple crops and gives outputs equivalent to the one-crop network. 
+It is possible to implement cropped decoding as processing one crop at a time.
+It can be sped up with dense prediction (discussed in Section~\ref{subsec:dilated-networks}). 
+Every CNN\footnote{By every we mean standard CNN architecture similar to the Deep4Net consisting of convolution, pooling and batch-normalization layers.}, which processes one crop at a time (one-crop network) and has no right padding, can be transformed into a dilated network that simultaneously processes multiple crops and gives outputs equivalent to the one-crop network. 
 A visual explanation of this is in Figure~\ref{fig:cropped-decoding-scheme}.
 
 
@@ -219,13 +220,13 @@ A visual explanation of this is in Figure~\ref{fig:cropped-decoding-scheme}.
 \label{fig:cropped-decoding-scheme}
 \end{figure}
 
-The transformation of the one-crop network to the corresponding dilated network simply sets the strides in convolutional and max-pooling layers to one and replaces them with increased dilations.
+The transformation of the one-crop network into the corresponding dilated network sets the strides in convolutional and max-pooling layers to one and replaces them with increased dilations.
 The algorithm used to make the transition between strides and dilations is described in Algorithm\ref{alg:stride-to-dilation}. This algorithm allows us to transform every one-crop network without right padding into an equivalent dilated network.
 
 Nevertheless, this transformation relationship is not symmetric.
-For some dilated networks no one-crop network with strides (without right padding) exists.
-An example of such a network is a CNN where in two consecutive layers with a dilation parameter, the first layer has bigger dilation than the second one.
-This cannot happen if we follow Algorithm~\ref{alg:stride-to-dilation} thus, such a CNN was not derived from a one-crop network.
+For some dilated networks, no one-crop network with strides (without right padding) exists.
+An example of such a network is a CNN wherein two consecutive layers with a dilation parameter the first layer has bigger dilation than the second one.
+A bigger dilation followed by a smaller one cannot occur in a network build by following Algorithm~\ref{alg:stride-to-dilation} thus, such a CNN was not derived from a one-crop network.
 
 \begin{algorithm}
 \begin{lstlisting}[language=Python, label={lst:lstlisting}]
@@ -239,110 +240,110 @@ def to_dense_prediction(network):
 			module.stride = 1
 \end{lstlisting}
 \caption{The simplified algorithm used to transform a network with strides to a network with dilations in the Braindecode library.
-This version assumes a 1D stride and dilation which is sufficient for our case as all the strides in the networks are 1D.
+It assumes a 1D stride and dilation. 1D stride and dilation are sufficient in our case because all the strides in the networks are 1D.
 }
 \label{alg:stride-to-dilation}
 \end{algorithm}
 
 
-In~\cite{schirrmeister-deep-2017} where the Deep4Net originated, the architectures were constructed as one-crop nets and were then converted into dilated networks.
-This leaves a whole set of architectures unexplored.
-Namely, those dilated networks which cannot be constructed from a one-crop network.
+In~\cite{schirrmeister-deep-2017} where the Deep4Net originated, the architectures were constructed as one-crop networks. They were then converted into dilated networks.
+This leaves a whole set of architectures unexplored: those dilated networks which cannot be constructed from a one-crop network.
+
 In this thesis, we use the dilated networks to obtain multiple values of kinematic variables from multiple crops processed at the same time. 
-And because there is no reason for our task to consider one-crop networks first and then create dilated networks from them, we are free to explore these architectures.
+Because there is no reason for our task to consider one-crop networks first and then create dilated networks from them, we are free to explore these architectures.
 And we do so in Section~\ref{sec:architectural-modifications}.
 
 \subsection{Receptive field}\label{subsec:receptive-field}
-The fact that the Deep4Net cannot have right padding in order to process multiple crops at the same time affects its receptive field.
-By receptive field we mean the part of the input of the network which affects one specific output (in our case it corresponds to one crop from which one prediction is made).
+The fact that the Deep4Net cannot have any right padding to process multiple crops simultaneously affects its receptive field.
+By receptive field, we mean the part of the network's input, which affects one specific output (in our case, it corresponds to one crop from which one prediction is made).
 In Figure~\ref{fig:receptive-field} we visualize the receptive field used to predict one time-point.
 The figure shows how many times each input sample, and the values derived from it, are used in a forward pass through the CNN to obtain the specific prediction.
-Note, that the receptive field in no way illustrates the weights of the network.
+Note that the receptive field in no way illustrates the weights of the network.
 
 \begin{figure}[!htbp]
 \centering
 \includegraphics[width=0.8\linewidth]{img/ch3/deep4net-receptive-field}
 \caption[Receptive field]{The receptive field of the original Deep4Net, which is the base model derived from~\cite{Hammer-2021}, in this thesis denoted as {variable}\_k3\_d3\_sbp0.
-The vertical red lines delimit the receptive field (crop) of the CNN which is used for calculating the first prediction.
-The whole gray area represents one input window.
-The green line represents the centre of the receptive field and the yellow dot on the x axis the first time-point that is being predicted.
-The gradient bar on the right shows the number of times each input sample was used in the calculations of the output.}
+The vertical red lines delimit the receptive field (crop) of the CNN, which is used for calculating the first prediction.
+The whole grey area represents one input window.
+The green line represents the centre of the receptive field, the yellow dot on the x-axis the first time-point that is being predicted.
+The gradient bar on the right shows the number of times each input sample was used in the output calculations.}
 \label{fig:receptive-field}
 \end{figure}
 
 Figure~\ref{fig:receptive-field} illustrates that the predicted time-point is fairly far from the centre of the receptive field.
 This is because we make the prediction only based on the data recorder prior to the predicted movement and do not use padding.
-The CNN mostly focuses on signals around the centre of the receptive field and therefore, is biased towards data are far from those that directly precede the movement.
+The CNN mainly focuses on signals around the centre of the receptive field and, therefore, is biased towards data that are far from those that directly precede the movement.
 Another illustration of the relation between the receptive field and the predicted time-point is in Figure~\ref{fig:image-of-shifting}, \textbf{Graph A}.
 
-For classification this is not as critical, because the same label is predicted from multiple crops, and the actual classified movement does not happen at the end of the last crop but at some point during the whole input window from which the crops are derived (\cite{schirrmeister-deep-2017}).
+For classification, this is not as critical because the same label is predicted from multiple crops, and the actual classified movement does not happen at the end of the last crop but at some point during the whole input window from which the crops are derived (\cite{schirrmeister-deep-2017}).
 This gives the network a chance to focus on information directly preceding the actual movement.
 
-We focus on the changed role of the receptive field between classification and regression because as previously stated in~\cite{schirrmeister-deep-2017} and \cite{hartmann-hierarchical-2018}, this same CNN architecture was shown to utilize information from the high-gamma frequency bands.
-Since we are investigating the frequency bands and their effective utilization, we inspect this difference as a possible reason for why the network, when employed to predict velocity and absolute velocity of hand movement, does presumably not use high-gamma.
-The hypothesis here is, that the high-gamma signal is most informative directly before the predicted movement execution.
+We focus on the changing role of the receptive field between classification and regression because, as previously stated in~\cite{schirrmeister-deep-2017} and \cite{hartmann-hierarchical-2018}, this same CNN architecture was shown to utilize information from the high-gamma frequency bands.
+Since we are investigating the frequency bands and their effective utilization, we inspect this difference as a possible reason why the network, when employed to predict velocity and absolute velocity of hand movement, does presumably not use information from the high-gamma frequency band.
+The hypothesis here is that the high-gamma signal is most informative directly before the predicted movement execution.
 Therefore, the distance of the network's receptive field centre to the predicted time-point hinders its usage.
 We test this hypothesis in Section~\ref{sec:shifting-the-predicted-time-point}.
 
 \subsection{Training}\label{subsec:training}
-We left all hyper-parameters equal to those from~\cite{Hammer-2021}, because it was our goal to reproduce their results and build up on their research.
-The only thing we changed was the learning rate.
+We left all hyper-parameters equal to those from~\cite{Hammer-2021} because it was our goal to reproduce their results and build upon their research.
+The only parameter that we changed was the learning rate.
 The network was trained for 100 epochs with batch size 32, using the ADAM~ optimizer and learning rate 0.001.
 The reported learning rate in \cite{Hammer-2021} was 0.01.
 We used a lower learning rate because otherwise, the results were significantly worse than reported.
 
 In~\cite{Hammer-2021} they performed leave-one-out cross-validation on the 25s-long segments.
 Nevertheless, with the amount of different architecture and dataset modifications we explored, this would be extremely time-consuming.
-A 5-fold cross-validation gave us a good estimation of the networks' performances while also saving computational power. 
-To perform 5-fold-cross-validation we divided the 25s-long segments into 5 equal or almost equal subsets.
-For each patient a separate 5-fold cross-validation was conducted.
-The final performance was estimated from all 5 folds over each patient (see Section~\ref{subsec:performance-analysis}).
+5-fold-cross-validation gave us a good estimation of the networks' performances while also saving computational power. 
+To perform a 5-fold-cross-validation, we divided the 25s-long segments into five equal or almost equal subsets.
+For each patient, a separate 5-fold cross-validation was conducted.
+The final performance was estimated from all five folds over each patient (see Section~\ref{subsec:performance-analysis}).
 
 
 \subsection{Gradient visualization}\label{subsec:gradinet-visualization}
 The gradient visualization algorithm is the following.
 First, the input signal is converted into the power spectrum using Fourier transformation.
 After this transformation, hooks are created for the amplitude and phase values.
-Then it is converted back into the original signal, this time using the torch functions so PyTorch can start building its computational graph reaching back to the amplitudes and phases.
+Then it is converted back into the original signal, this time using the \texttt{torch} functions so PyTorch can start building its computational graph reaching back to the amplitudes and phases.
 This tracked signal is then given to the network, whose weights are frozen, as input.
 After obtaining the outputs, they are averaged and the \texttt{torch.autograd.backward()} function is used to derive the gradients with respect to the frequency amplitudes and phases (\cite{gradient-visualization}).
 
-To obtain representative gradients, the above described procedure was always repeated over multiple batches for each patient and the resulting gradients were averages over the batches.
-Gradients are useful in showing to modulations in which frequencies the network reacts more strongly.
-The higher gradient value for a certain frequency, the more the change is this frequency influences the prediction.
+The above-described procedure was always repeated over multiple batches for each patient, and the resulting gradients were averages over the batches to obtain representative gradients.
+Gradients are useful in showing to which frequencies' modulations the network reacts strongly.
+The higher the gradient value for a certain frequency, the more the change is this frequency's amplitude influences the prediction.
 
-As described in Section~\ref{subsec:architecture} the network can process varying input window lengths. With a change in input window length a change in the number of outputs occurs.
-Throughout the thesis, the input window length used in the above described algorithm was set to twice the size of the receptive field of the network to be consistent with~\cite{Hammer-2021}.
-A special case is the gradient visualization when the input window is shortened so that the network has only one output was also briefly explored as a part of this thesis in section~\ref{sec:architectural-modifications}.
+As described in Section~\ref{subsec:architecture} the network can process varying input window lengths. With a change in input window length, a change in the number of outputs occurs.
+Throughout the thesis, the input window length used in the above-described algorithm was set to twice the size of the receptive field of the network to be consistent with~\cite{Hammer-2021}.
+A special case is the gradient visualization when the input window is shortened so that the network has only one output was also briefly explored as a part of this thesis in Section~\ref{sec:architectural-modifications}.
 In this special case, the outputs do not have to be averaged before using the \texttt{torch.autograd.backward()} function to derive the gradients. 
  
-Because there are no significant differences between the gradients of the networks on the training set and the validation set we chose to always display the gradient values for the training set.
-Also note that in this thesis we only address the gradients for the amplitudes of frequencies.
+We chose to always display the gradient values for the training set because there are no significant differences between the gradients of the networks on the training set and the validation set.
+Also, note that in this thesis, we only address the gradients for the amplitudes of frequencies.
 While inspecting the phase gradients would also be interesting, it is out of the scope of this thesis.
 
 \subsection{Architectural modifications}\label{subsec:architectural-modifications}
-During our research, we made a set of modifications to the architecture of the Deep4Net creating multiple new CNNs.
-With our changes we focused on the kernel sizes and dilation parameters of the four max-pool layers present in the network.
-Table~\ref{tab:architectures-description} explains the terminology used with respect to the changing max-pool parameters used throughout the thesis.
+During our research, we made a set of modifications to the architecture of the Deep4Net, creating multiple new CNNs.
+We focused on the kernel sizes and dilation parameters of the four max-pool layers present in the network with our changes.
+Besides the original kernel sizes of the max-pool layers, which were set to (3, 1) for all layers, we also explored kernel sizes (2, 1) and (1, 1).
+The dilations in the original network were (1, 1), (3, 1), (9, 1), (27, 1) for the four max-pool layers. We considered also dilations: 1.~powers of three: (3, 1), (9, 1), (27, 1), (81, 1); 2.~powers of two: (2, 1), (4, 1), (8, 1), (16, 1); 3.~powers of one: (1, 1), (1, 1), (1, 1), (1, 1). Because the second dimension of the kernel sizes and max-pool layers is always one, from now on, we only specify the first dimension, and when not said otherwise, the second dimension is one.
+Table~\ref{tab:architectures-description} explains the terminology used concerning the changing max-pool parameters used throughout the thesis.
 The original Deep4Net corresponds to the \{variable\}\_k3\_d3\_sbp0 in Table\ref{tab:architectures-description}.
 The suffix \texttt{sbp} refers to a parameter of the Deep4Net, namely the \texttt{stride\_before\_pool} parameter.
 This parameter influences the dilations in the max-pool layers of the network.
 In~\cite{Hammer-2021} and~\cite{schirrmeister-deep-2017} this parameter was set to \texttt{False (sbp0)}.
-The only analysis where the \texttt{stride\_before\_pool} was set to \texttt{True (sbp1)} was when analyzing a gradient peak (briefly discussed in Section~\ref{sec:architectural-modifications}) and also to study the dependence of the size of the receptive field on the performance of the network.
-See Figure~\ref{fig:figure-distance}. \\
-
+The only analysis where the \texttt{stride\_before\_pool} was set to \texttt{True (sbp1)} was when analyzing a gradient peak (briefly discussed in Section~\ref{sec:architectural-modifications}) and also to study the dependence of the size of the receptive field on the performance of the network (Figure~\ref{fig:figure-distance}). 
 Therefore, we mention the Deep4Net with \texttt{sbp1} in Section~\ref{sec:architectural-modifications} but the default Deep4Net architecture is the one with \texttt{sbp0} as in~\cite{Hammer-2021} and~\cite{schirrmeister-deep-2017}.
 We do not specify the \texttt{stride\_before\_pool} parameter for the other CNNs we created. It becomes meaningless because we manually set the sizes of the dilations for all the max-pool layers with no consideration of this parameter.
 
 When we change the parameters of the max-pool layers as we describe above, the number of outputs of the network changes.
 It also causes changes in the receptive field of the network.
 To see how, consider just one max-pool layer with dilation 3 (L3) and one max-pool layer with dilation 1 (L1), both without padding.
-If we use a window of the same length as input for L3 and L1 and compare the dimensions of the outputs from these layers, the dimension of the output of L3 will be smaller than of the L1.
-Consequently, if we alter the dilation (and also kernel size) parameters of the max-pool layers in the Deep4Net, we get a different number of outputs from the altered network.
+If we use windows of the same length as input for L3 and L1 and compare their outputs, the output dimension of L3 will be smaller than of L1.
+Consequently, if we alter the dilation (and kernel size) parameters of the max-pool layers in the Deep4Net, we get a different number of outputs from the altered network.
 
-When one network has dilations 3, 9, 27 and 81 in the max-pool layers (the k*\_d3) and the other one 1, 1, 1 and 1 (k*\_d1), the difference in the dimension of the output is significant.
-The latter network makes more predictions from the same input window length because the dimension of the output is larger.
-It also has a smaller receptive field for one prediction as is visualized in Figure~\ref{fig:receptive-field-comparison}.
+When one network has dilations 1, 3, 9, 27 in the max-pool layers (the k*\_d3) and the other 1, 1, 1, 1 (k*\_d1), the difference in the dimension of the output is significant.
+The latter network makes more predictions from the same input window length because the output dimension is larger.
+It also has a smaller receptive field for one prediction, as is visualized in Figure~\ref{fig:receptive-field-comparison}.
 Information about the size of the receptive field can be found in Table~\ref{tab:architectures-description}.
 
 \begin{figure}[!htpb]
@@ -356,7 +357,7 @@ Information about the size of the receptive field can be found in Table~\ref{tab
    \caption{Receptive field of the CNN without max-pool (k1).}
 \end{subfigure}
 \caption[Receptive field comparison]{Both graphs \textbf{(a)} and \textbf{(b)} show the receptive fields (delimited by red lines) used for predictig the first time-point (yellow dot on the x-axis).
-The receptive field in \textbf{(b)} is smaller, reaching to less than 450, where as the receptive field of \textbf{(a)} reaches beyond 500.}
+The receptive field in \textbf{(b)} belongs to a network with dilations 1 in all max-pool layers. It is smaller, reaching less than 450. The receptive field of the original Deep4Net in graph \textbf{(a)} is larger; it reaches beyond 500. This difference is caused by the different kernel sizes and dilation parameters of the max-pool layers.}
 \label{fig:receptive-field-comparison}
 \end{figure}
 
@@ -393,9 +394,9 @@ I.e. max-pool kernel sizes 2, 2, 2, 2 actually represent kernel sizes (2, 1), (2
 \end{table}
 
 \subsection{Performance analysis}\label{subsec:performance-analysis}
-When comparing two CNNs, we are not comparing them based on the mean-square error (MSE) which is the loss function of the training, but on the correlation coefficient (CC) between the model's predictions and the predicted kinematic variable.
+When comparing two CNNs, we are not comparing them based on the mean-square error (MSE), which is the loss function of the training, but on the correlation coefficient (CC) between the model's predictions and the predicted kinematic variable on the validation set.
 Specifically the Pearson's correlation coefficient~(\cite{pearson-vii-1895}).
-Often throughout the thesis we show boxplots of CCs of different architectures.
-Each boxplot is obtained from performing a 5-fold cross-validation for each of the 12 participants.
-The results from the 5 folds are averaged and the box-plot is created from the 12 averages.
-While it is possible to create the box-plots from all the folds, not averaging them for each patient, we are interested in the distribution of correlation among patients rather than among individual runs.
+Often throughout the thesis, we show boxplots of CCs of different architectures.
+Each boxplot is obtained from performing a 5-fold-cross-validation for each of the 12 participants.
+The validation set CCs from the five folds are averaged, and the boxplot is created from the 12 averages.
+While it is possible to create the boxplots from all the folds, not averaging them for each patient, we are interested in the distribution of correlation among patients rather than among individual runs.
